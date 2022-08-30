@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CountryController
+class CountryController implements ControllerInterface
 {
     public function listAction(): void
     {

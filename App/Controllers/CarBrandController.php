@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CarBrandController
+class CarBrandController implements ControllerInterface
 {
     public function listAction(): void
     {

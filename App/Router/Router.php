@@ -12,52 +12,41 @@ use App\Controllers\NotFoundController;
 
 class Router
 {
-    public function chooseController(string $filePath)
+    public function chooseController(string $webPath)
     {
-        $controller = false;
-
-        switch ($filePath) {
+        switch ($webPath) {
             case '/': {
                 echo 'Welcome to homepage';
-                break;
+                return false;
             }
 
             case '/car': {
-                $controller = new CarController();
-                break;
+                return new CarController();
             }
 
             case '/factory': {
-                $controller = new FactoryController();
-                break;
+                return new FactoryController();
             }
 
             case '/carBrand': {
-                $controller = new CarBrandController();
-                break;
+                return new CarBrandController();
             }
 
             case '/carModel': {
-                $controller = new CarModelController();
-                break;
+                return new CarModelController();
             }
 
             case '/carLine': {
-                $controller = new CarLineController();
-                break;
+                return new CarLineController();
             }
 
             case '/country': {
-                $controller = new CountryController();
-                break;
+                return new CountryController();
             }
 
             default: {
-                $controller = new NotFoundController();
-                break;
+                return new NotFoundController();
             }
         }
-
-        return $controller;
     }
 }

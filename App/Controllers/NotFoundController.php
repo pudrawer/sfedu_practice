@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-class NotFoundController
+class NotFoundController implements ControllerInterface
 {
-    public function listAction()
+    public function listAction(): void
     {
         echo '404 - Page not found';
     }

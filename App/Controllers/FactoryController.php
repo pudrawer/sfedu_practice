@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class FactoryController
+class FactoryController implements  ControllerInterface
 {
     public function listAction(): void
     {
