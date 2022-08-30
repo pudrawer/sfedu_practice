@@ -6,18 +6,19 @@ use App\Controllers\CarBrandController;
 use App\Controllers\CarController;
 use App\Controllers\CarLineController;
 use App\Controllers\CarModelController;
+use App\Controllers\ControllerInterface;
 use App\Controllers\CountryController;
 use App\Controllers\FactoryController;
 use App\Controllers\NotFoundController;
 
 class Router
 {
-    public function chooseController(string $webPath)
+    public function chooseController(string $webPath): ?ControllerInterface
     {
         switch ($webPath) {
             case '/': {
                 echo 'Welcome to homepage';
-                return false;
+                return null;
             }
 
             case '/car': {
