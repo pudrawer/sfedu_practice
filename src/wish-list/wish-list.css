@@ -1,0 +1,23 @@
+.wish-list {
+    display: flex;
+    flex-direction: row;
+}
+
+.wish-list__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px;
+    margin-right: 34px;
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+
+    background: #9360BC;
+    border-radius: 50%;
+}
+
+.wish-list__link:last-of-type {
+    margin-right: 0;
+}

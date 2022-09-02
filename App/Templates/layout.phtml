@@ -1,0 +1,38 @@
+<?php
+
+use App\Blocks\BlockInterface;
+
+function layout_render(
+    string $title,
+    string $fileRender,
+    int $linkNum,
+    BlockInterface $block
+) {
+    echo '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title> ' . $title . ' - AUTO</title>
+    ';
+
+    require APP_ROOT . '/App/Templates/stylesheet.phtml';
+    require APP_ROOT . '/App/Templates/header.phtml';
+
+    echo '    
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    </head>
+    <body>
+    ';
+
+    echo render_header($linkNum);
+
+    require APP_ROOT . "/App/Views/$fileRender.phtml";
+    require APP_ROOT . "/App/Templates/footer.phtml";
+
+    echo '    
+    </body>
+    ';
+}

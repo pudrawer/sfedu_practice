@@ -1,0 +1,31 @@
+.faq {
+    border-top: 1px #490083 solid;
+    border-bottom: 1px #490083 solid;
+}
+
+.faq__content {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 127px 129px;
+}
+
+.faq__section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    max-width: 25%;
+}
+
+.faq__text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 22px;
+    text-align: center;
+}
+
+.faq__button {
+    margin-top: 60px;
+    padding: 24px 107px;
+}

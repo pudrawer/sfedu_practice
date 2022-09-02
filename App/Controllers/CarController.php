@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class CarController implements  ControllerInterface
 {
-    public function listAction(): void
+    public function execute(): void
     {
         echo 'Welcome to car page';
     }

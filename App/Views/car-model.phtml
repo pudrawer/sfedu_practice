@@ -1,0 +1,62 @@
+<?php
+/**
+ * @var App\Blocks\BrandBlock $block
+ */
+?>
+
+<div class="car-info block">
+    <section class="car-info__img">
+    </section>
+
+    <h1 class="car-info__title">
+        <?= $block->getData()['brand'] . '&nbsp;' . $block->getData()['line'] . '&nbsp;' . $block->getData()['model'] ?>
+    </h1>
+
+    <div class="info">
+        <section class="info__info-stat info-stat">
+            <div class="info-stat__content">
+                <h2 class="info-stat__title stat-title">
+                    Info
+                </h2>
+
+                <div class="info-stat__table">
+                    <div class="info-stat__row">
+                        <div class="info-stat__column info-stat__column_name">
+                            country
+                        </div>
+
+                        <div class="info-stat__column">
+                            <?php
+                            echo $block->getData()['country'];
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="info-stat__row">
+                        <div class="info-stat__column info-stat__column_name">
+                            year
+                        </div>
+
+                        <div class="info-stat__column">
+                            <?php
+                            echo $block->getData()['year'];
+                            ?>
+                        </div>
+                    </div>
+
+                    <div class="info-stat__row">
+                        <div class="info-stat__column info-stat__column_name">
+                            previous
+                        </div>
+
+                        <div class="info-stat__column">
+                            <?php
+                            echo $block->getData()['previous'];
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

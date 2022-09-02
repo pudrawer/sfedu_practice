@@ -1,0 +1,21 @@
+.logo {
+    display: flex;
+
+    padding: 0 20px;
+    height: fit-content;
+
+    background: #B7B0FF;
+
+    color: #A65A5A;
+    text-transform: uppercase;
+}
+
+.logo__word {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.logo__word_light {
+    font-weight: 400;
+    font-size: 16px;
+}

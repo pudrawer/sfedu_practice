@@ -2,52 +2,27 @@
 
 namespace App\Router;
 
-use App\Controllers\CarBrandController;
-use App\Controllers\CarController;
-use App\Controllers\CarLineController;
-use App\Controllers\CarModelController;
 use App\Controllers\ControllerInterface;
-use App\Controllers\CountryController;
-use App\Controllers\FactoryController;
+use App\Controllers\HomepageController;
 use App\Controllers\NotFoundController;
 
 class Router
 {
     public function chooseController(string $webPath): ?ControllerInterface
     {
-        switch ($webPath) {
-            case '/': {
-                echo 'Welcome to homepage';
-                return null;
-            }
+        $page = explode('/', $webPath)[1];
 
-            case '/car': {
-                return new CarController();
-            }
+        if ($page == "") {
+            return new HomepageController();
+        }
 
-            case '/factory': {
-                return new FactoryController();
-            }
+        $page = ucfirst($page) . 'Controller';
+        $controller = 'App\Controllers\\' . $page;
 
-            case '/carBrand': {
-                return new CarBrandController();
-            }
-
-            case '/carModel': {
-                return new CarModelController();
-            }
-
-            case '/carLine': {
-                return new CarLineController();
-            }
-
-            case '/country': {
-                return new CountryController();
-            }
-
-            default: {
-                return new NotFoundController();
-            }
+        if (class_exists($controller)) {
+            return new $controller;
+        } else {
+            return new NotFoundController();
         }
     }
 }

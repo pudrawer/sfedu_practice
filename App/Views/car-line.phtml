@@ -1,0 +1,60 @@
+<?php
+/**
+ * @var App\Blocks\LineBlock $block
+ */
+?>
+
+<div class="car-info block">
+    <section class="car-info__img">
+    </section>
+
+    <h1 class="car-info__title">
+        <?= $block->getData()['brand'] . '&nbsp;' . $block->getData()['line']?>
+    </h1>
+
+    <div class="info">
+        <section class="info-stat">
+            <div class="info-stat__content">
+                <h2 class="info-stat__title stat-title">
+                    Info
+                </h2>
+
+                <div class="info-stat__table">
+                    <div class="info-stat__row">
+                        <div class="info-stat__column info-stat__column_name">
+                            country
+                        </div>
+
+                        <div class="info-stat__column">
+                            <?= $block->getData()['country']?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="car-info__common-info common-info">
+            <div class="common-info__content">
+                <h2 class="common-info__title stat-title">
+                    Line Models
+                </h2>
+
+                <div class="common-info__line">
+                </div>
+
+                <ul class="common-info__list">
+                    <?php foreach ($block->getData()['modelLine'] as $item): ?>
+                        <li class='common-info__item'>
+                            <a
+                                href='carModel'
+                                class='common-info__link'
+                            >
+                                <?= $item ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>

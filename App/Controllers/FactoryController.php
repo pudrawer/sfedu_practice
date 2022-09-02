@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 class FactoryController implements  ControllerInterface
 {
-    public function listAction(): void
+    public function execute(): void
     {
         echo 'Welcome to factory page';
     }

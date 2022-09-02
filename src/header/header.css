@@ -1,0 +1,25 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    padding: 0 137px;
+    box-sizing: border-box;
+
+    background: #E7B4FF;
+}
+
+.header__logo {
+    margin: 24px 0;
+
+    height: min-content;
+}
+
+.header__nav {
+    margin-top: 42px;
+}
+
+.header__wish-list {
+    margin-top: 24px;
+    margin-bottom: 26px;
+}
