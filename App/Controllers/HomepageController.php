@@ -7,7 +7,6 @@ use App\Blocks\HomepageBlock;
 
 class HomepageController implements ControllerInterface
 {
-
     public function execute(): BlockInterface
     {
         $block = new HomepageBlock();

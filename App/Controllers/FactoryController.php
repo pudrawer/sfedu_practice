@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class FactoryController implements  ControllerInterface
+class FactoryController implements ControllerInterface
 {
     public function execute(): void
     {

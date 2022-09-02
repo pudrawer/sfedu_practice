@@ -20,7 +20,7 @@ class Router
         $controller = 'App\Controllers\\' . $page;
 
         if (class_exists($controller)) {
-            return new $controller;
+            return new $controller();
         } else {
             return new NotFoundController();
         }
