@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var App\Blocks\FooterBlock $this;
+ */
+?>
+
 <footer class="header-footer block">
     <div class="footer">
         <section class="footer__text">
@@ -12,70 +18,32 @@
 
         <nav class="footer__nav">
             <h6 class="footer__nav-header">
-                Links
+                quick Links
             </h6>
 
+            <?php foreach ($this->data['quickLinks'] as $link): ?>
             <a
                 href=""
                 class="footer__link"
             >
-                main
+                <?= $link ?>
             </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
+            <?php endforeach; ?>
         </nav>
 
         <nav class="footer__nav">
             <h6 class="footer__nav-header">
-                Links
+                page Links
             </h6>
 
+            <?php foreach ($this->data['pageLinks'] as $link): ?>
             <a
                 href=""
                 class="footer__link"
             >
-                main
+                <?= $link ?>
             </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
-
-            <a
-                href=""
-                class="footer__link"
-            >
-                main
-            </a>
+            <?php endforeach; ?>
         </nav>
 
         <div class="footer__logo logo">

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var App\Blocks\LineBlock $block
+ * @var App\Blocks\LineBlock $this
  */
 ?>
 
@@ -9,7 +9,7 @@
     </section>
 
     <h1 class="car-info__title">
-        <?= $block->getData()['brand'] . '&nbsp;' . $block->getData()['line']?>
+        <?= $this->getHeader() ?>
     </h1>
 
     <div class="info">
@@ -26,7 +26,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $block->getData()['country']?>
+                            <?= $this->data['country']?>
                         </div>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                 </div>
 
                 <ul class="common-info__list">
-                    <?php foreach ($block->getData()['modelLine'] as $item): ?>
+                    <?php foreach ($this->data['modelLine'] as $item): ?>
                         <li class='common-info__item'>
                             <a
                                 href='carModel'

@@ -10,6 +10,6 @@ class HomepageController implements ControllerInterface
     public function execute(): BlockInterface
     {
         $block = new HomepageBlock();
-        return $block->setData([])->render();
+        return $block->setData(['page' => 'MAIN'])->render();
     }
 }

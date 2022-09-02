@@ -2,13 +2,37 @@
 
 namespace App\Blocks;
 
-class HomepageBlock implements BlockInterface
+class HomepageBlock extends AbstractBlock
 {
-    private $data = [];
+    protected $fileRender = 'homepage';
 
     public function render(): self
     {
-        require APP_ROOT . '/App/Views/homepage.phtml';
+        $headerBlock = new HeaderBlock();
+        $styleBlock = new StylesheetBlock();
+        $footerBlock = new FooterBlock();
+
+        $footerBlock->setData([
+            'quickLinks' => [
+                'main',
+                'main',
+                'main',
+                'main',
+            ],
+            'pageLinks' => [
+                'main',
+                'main',
+                'main',
+                'main',
+            ],
+        ]);
+        $headerBlock->setData(['activeLink' => 'main']);
+        $styleBlock
+            ->setData(array_slice(scandir($this->srcPath), 2))
+            ->render()
+        ;
+
+        require "$this->viewsPath/Components/layout.phtml";
 
         return $this;
     }
@@ -20,7 +44,16 @@ class HomepageBlock implements BlockInterface
 
     public function setData(array $data): self
     {
-        $this->data = $data;
+        $tempData = $data;
+        $this->header = [
+            'page' => $tempData['page'],
+        ];
+
+        foreach ($this->header as $key => $item) {
+            unset($tempData[$key]);
+        }
+
+        $this->data = $tempData;
 
         return $this;
     }

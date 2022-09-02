@@ -1,0 +1,38 @@
+<?php
+/**
+ * @var App\Blocks\HeaderBlock $headerBlock
+ * @var App\Blocks\StylesheetBlock $styleBlock
+ * @var App\Blocks\AbstractBlock $this
+ * @var App\Blocks\FooterBlock $footerBlock
+ */
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <?= $this->getHeader() ?>
+        - AUTO
+    </title>
+
+    <?php foreach ($styleBlock->getData() as $styleFile): ?>
+    <link rel="stylesheet" href="<?= $styleFile ?>">
+    <?php endforeach; ?>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap"
+        rel="stylesheet">
+</head>
+<body>
+
+<?php $headerBlock->render() ?>
+
+<?php require APP_ROOT . "/App/Views/$this->fileRender.phtml" ?>
+
+<?php $footerBlock->render() ?>
+
+</body>
+</html>
