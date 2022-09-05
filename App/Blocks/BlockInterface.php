@@ -10,5 +10,5 @@ interface BlockInterface
 
     public function setData(array $data);
 
-    public function getHeader(): string;
+    public function getHeader(string $separator): string;
 }

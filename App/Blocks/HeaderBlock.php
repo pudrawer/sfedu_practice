@@ -4,6 +4,12 @@ namespace App\Blocks;
 
 class HeaderBlock extends AbstractBlock
 {
+    protected $childStylesheetList = [
+        'header/header.css',
+        'nav/nav.css',
+        'wish-list/wish-list.css',
+    ];
+
     private $linkStatus = [
         'main'        => '',
         'carInfo'     => '',
@@ -26,8 +32,13 @@ class HeaderBlock extends AbstractBlock
 
     public function setData(array $data): self
     {
-        if ($this->linkStatus[$data['activeLink']] == '') {
-            $this->linkStatus[$data['activeLink']] = 'nav__link_active';
+        return $this;
+    }
+
+    public function setActiveLink(string $link): self
+    {
+        if ($this->linkStatus[$link] == '') {
+            $this->linkStatus[$link] = 'nav__link_active';
         }
 
         return $this;

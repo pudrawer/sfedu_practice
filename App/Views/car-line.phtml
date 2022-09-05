@@ -4,6 +4,8 @@
  */
 ?>
 
+<?php $data = $this->getData() ?>
+
 <div class="car-info block">
     <section class="car-info__img">
     </section>
@@ -26,7 +28,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $this->data['country']?>
+                            <?= $data['country'] ?>
                         </div>
                     </div>
                 </div>
@@ -43,7 +45,7 @@
                 </div>
 
                 <ul class="common-info__list">
-                    <?php foreach ($this->data['modelLine'] as $item): ?>
+                    <?php foreach ($data['modelLine'] as $item): ?>
                         <li class='common-info__item'>
                             <a
                                 href='carModel'

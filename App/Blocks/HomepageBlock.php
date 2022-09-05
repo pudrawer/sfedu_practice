@@ -4,35 +4,17 @@ namespace App\Blocks;
 
 class HomepageBlock extends AbstractBlock
 {
+    protected $childStylesheetList = [
+        'description/description.css',
+        'faq/faq.css',
+        'faq/faq.css',
+        'vehicle/vehicle.css',
+    ];
     protected $fileRender = 'homepage';
 
     public function render(): self
     {
-        $headerBlock = new HeaderBlock();
-        $styleBlock = new StylesheetBlock();
-        $footerBlock = new FooterBlock();
-
-        $footerBlock->setData([
-            'quickLinks' => [
-                'main',
-                'main',
-                'main',
-                'main',
-            ],
-            'pageLinks' => [
-                'main',
-                'main',
-                'main',
-                'main',
-            ],
-        ]);
-        $headerBlock->setData(['activeLink' => 'main']);
-        $styleBlock
-            ->setData(array_slice(scandir($this->srcPath), 2))
-            ->render()
-        ;
-
-        require "$this->viewsPath/Components/layout.phtml";
+        parent::commonRender('main');
 
         return $this;
     }

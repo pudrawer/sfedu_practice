@@ -4,6 +4,10 @@ namespace App\Blocks;
 
 class FooterBlock extends AbstractBlock
 {
+    protected $childStylesheetList = [
+        'footer/footer.css',
+    ];
+
     protected $data = [
         'quickLinks' => [],
         'pageLinks' => [],

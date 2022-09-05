@@ -4,6 +4,8 @@
  */
 ?>
 
+<?php $data = $this->getData() ?>
+
 <div class="car-info block">
     <section class="car-info__img">
     </section>
@@ -27,7 +29,7 @@
 
                         <div class="info-stat__column">
                             <?php
-                            echo $this->data['country'];
+                            echo $data['country'];
                             ?>
                         </div>
                     </div>
@@ -39,7 +41,7 @@
 
                         <div class="info-stat__column">
                             <?php
-                            echo $this->data['year'];
+                            echo $data['year'];
                             ?>
                         </div>
                     </div>
@@ -51,7 +53,7 @@
 
                         <div class="info-stat__column">
                             <?php
-                            echo $this->data['previous'];
+                            echo $data['previous'];
                             ?>
                         </div>
                     </div>

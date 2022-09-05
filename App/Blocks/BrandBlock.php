@@ -4,20 +4,26 @@ namespace App\Blocks;
 
 class BrandBlock extends AbstractBlock
 {
+    protected $childStylesheetList = [
+        'car-info/car-info.css',
+        'common-info/common-info.css',
+        'info/info.css',
+        'info-stat/info-stat.css',
+    ];
+
     protected $fileRender = 'car-brand';
 
     public function setData(array $data): self
     {
-        $tempData = $data;
         $this->header = [
-            'brand' => $tempData['brand'],
+            'brand' => $data['brand'],
         ];
 
         foreach ($this->header as $key => $item) {
-            unset($tempData[$key]);
+            unset($data[$key]);
         }
 
-        $this->data = $tempData;
+        $this->data = $data;
 
         return $this;
     }
@@ -29,34 +35,7 @@ class BrandBlock extends AbstractBlock
 
     public function render(): self
     {
-        $styleBlock = new StylesheetBlock();
-        $headerBlock = new HeaderBlock();
-        $footerBlock = new FooterBlock();
-
-        $footerBlock->setData([
-            'quickLinks' => [
-                'main',
-                'main',
-                'main',
-                'main',
-            ],
-            'pageLinks' => [
-                'main',
-                'main',
-                'main',
-                'main',
-            ],
-        ]);
-
-        $styleBlock
-            ->setData(array_slice(scandir($this->srcPath), 2))
-            ->render()
-        ;
-        $headerBlock->setData([
-            'activeLink' => 'carInfo'
-        ]);
-
-        require "$this->viewsPath/Components/layout.phtml";
+        parent::commonRender('carInfo');
 
         return $this;
     }
