@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CarController implements ControllerInterface
+class CarController extends AbstractController
 {
     public function execute(): void
     {

@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $data['country'] ?>
+                            <?= $data['commonInfo']['country_name'] ?>
                         </div>
                     </div>
                 </div>
@@ -45,13 +45,21 @@
                 </div>
 
                 <ul class="common-info__list">
-                    <?php foreach ($data['modelLine'] as $item): ?>
+                    <?php if(empty($data['list'])): ?>
+                        <li class='common-info__item'>
+                            <div class='common-info__link'>
+                                empty
+                            </div>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php foreach ($data['list'] as $item): ?>
                         <li class='common-info__item'>
                             <a
-                                href='carModel'
+                                href='carModel?brand=<?= $data['commonInfo']['brand_id'] ?>&line=<?= $data['commonInfo']['id'] ?>&model=<?= $item['id'] ?>'
                                 class='common-info__link'
                             >
-                                <?= $item ?>
+                                <?= $item['name'] ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

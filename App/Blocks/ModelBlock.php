@@ -18,21 +18,16 @@ class ModelBlock extends AbstractBlock
         return $this;
     }
 
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
     public function setData(array $data): self
     {
         $this->header = [
-            'brand'  => $data['brand'],
-            'line'   => $data['line'],
-            'model'  => $data['model'],
+            'brand'  => $data['commonInfo']['brand'],
+            'line'   => $data['commonInfo']['line'],
+            'model'  => $data['commonInfo']['model'],
         ];
 
         foreach ($this->header as $key => $item) {
-            unset($data[$key]);
+            unset($data['commonInfo'][$key]);
         }
 
         $this->data = $data;

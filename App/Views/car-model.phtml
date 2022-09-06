@@ -28,9 +28,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?php
-                            echo $data['country'];
-                            ?>
+                            <?= $data['commonInfo']['country']; ?>
                         </div>
                     </div>
 
@@ -40,9 +38,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?php
-                            echo $data['year'];
-                            ?>
+                            <?= $data['modelInfo']['year']; ?>
                         </div>
                     </div>
 
@@ -51,11 +47,12 @@
                             previous
                         </div>
 
-                        <div class="info-stat__column">
-                            <?php
-                            echo $data['previous'];
-                            ?>
-                        </div>
+                        <a
+                            href="carModel?brand=<?= $data['commonInfo']['brandId'] ?>&line=<?= $data['commonInfo']['lineId'] ?>&model=<?= $data['modelInfo']['previousId'] ?>"
+                            class="info-stat__column"
+                        >
+                            <?= $data['modelInfo']['previousName']; ?>
+                        </a>
                     </div>
                 </div>
             </div>

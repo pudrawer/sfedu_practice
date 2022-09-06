@@ -1,0 +1,51 @@
+<?php
+/**
+ * @var App\Blocks\BrandListBlock $this
+ */
+?>
+
+<div class="brand-list brand-list_margined block">
+    <h1 class="brand-list__title">
+        Brand List
+    </h1>
+
+    <span class="brand-list__line">
+
+    </span>
+
+    <section class="brand-list__content">
+        <div class="brand-list__text">
+            <ul class="brand-list__list">
+                <?php foreach ($this->getData() as $brand): ?>
+                <li class="brand-list__item">
+                    <a href="carBrand?brand=<?= $brand['id'] ?>" class="brand-list__link">
+                        <?= $brand['name'] ?>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+            <svg class="brand-list__background" width="122" height="104" viewBox="0 0 122 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="94" r="10" fill="#F8E6FF"/>
+                <circle cx="44" cy="94" r="10" fill="#F8E6FF"/>
+                <circle cx="78" cy="94" r="10" fill="#F8E6FF"/>
+                <circle cx="112" cy="94" r="10" fill="#F8E6FF"/>
+                <circle cx="10" cy="42" r="10" fill="#F8E6FF"/>
+                <circle cx="44" cy="42" r="10" fill="#F8E6FF"/>
+                <circle cx="78" cy="42" r="10" fill="#F8E6FF"/>
+                <circle cx="112" cy="42" r="10" fill="#F8E6FF"/>
+                <circle cx="10" cy="10" r="10" fill="#F8E6FF"/>
+                <circle cx="44" cy="10" r="10" fill="#F8E6FF"/>
+                <circle cx="78" cy="10" r="10" fill="#F8E6FF"/>
+                <circle cx="112" cy="10" r="10" fill="#F8E6FF"/>
+                <circle cx="10" cy="69" r="10" fill="#F8E6FF"/>
+                <circle cx="44" cy="69" r="10" fill="#F8E6FF"/>
+                <circle cx="78" cy="69" r="10" fill="#F8E6FF"/>
+                <circle cx="112" cy="69" r="10" fill="#F8E6FF"/>
+            </svg>
+        </div>
+
+        <div class="brand-list__img">
+
+        </div>
+    </section>
+</div>

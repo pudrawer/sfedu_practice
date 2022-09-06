@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\HomepageBlock;
 
-class HomepageController implements ControllerInterface
+class HomepageController extends AbstractController
 {
     public function execute(): BlockInterface
     {

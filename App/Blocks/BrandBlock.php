@@ -16,7 +16,7 @@ class BrandBlock extends AbstractBlock
     public function setData(array $data): self
     {
         $this->header = [
-            'brand' => $data['brand'],
+            'brand' => $data['commonInfo']['name'],
         ];
 
         foreach ($this->header as $key => $item) {
@@ -26,11 +26,6 @@ class BrandBlock extends AbstractBlock
         $this->data = $data;
 
         return $this;
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
     }
 
     public function render(): self

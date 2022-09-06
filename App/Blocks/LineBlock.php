@@ -12,11 +12,6 @@ class LineBlock extends AbstractBlock
     ];
     protected $fileRender = 'car-line';
 
-    public function getData(): array
-    {
-        return $this->data;
-    }
-
     public function render(): self
     {
         parent::commonRender('carInfo');
@@ -27,12 +22,12 @@ class LineBlock extends AbstractBlock
     public function setData(array $data): self
     {
         $this->header = [
-            'brand' => $data['brand'],
-            'line'  => $data['line'],
+            'brand' => $data['commonInfo']['brand_name'],
+            'line'  => $data['commonInfo']['name'],
         ];
 
         foreach ($this->header as $key => $item) {
-            unset($data[$key]);
+            unset($data['commonInfo'][$key]);
         }
 
         $this->data = $data;

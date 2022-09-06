@@ -8,21 +8,28 @@ use App\Controllers\NotFoundController;
 
 class Router
 {
+    const CONTROLLER_NAME = 0;
+    const GET_PARAM = 1;
+
     public function chooseController(string $webPath): ?ControllerInterface
     {
-        $page = explode('/', $webPath)[1];
+
+        $page = explode('/', $webPath)[self::GET_PARAM];
+        $page = explode('?', $page)[self::CONTROLLER_NAME];
+
+        $getParam = $_GET;
 
         if ($page == "") {
-            return new HomepageController();
+            return new HomepageController($getParam);
         }
 
         $page = ucfirst($page) . 'Controller';
         $controller = 'App\Controllers\\' . $page;
 
         if (class_exists($controller)) {
-            return new $controller();
+            return new $controller($getParam);
         } else {
-            return new NotFoundController();
+            return new NotFoundController($getParam);
         }
     }
 }

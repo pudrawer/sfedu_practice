@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 
-class NotFoundController implements ControllerInterface
+class NotFoundController extends AbstractController
 {
     public function execute(): BlockInterface
     {

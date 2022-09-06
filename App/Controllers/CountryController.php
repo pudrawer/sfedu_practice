@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CountryController implements ControllerInterface
+class CountryController extends AbstractController
 {
     public function execute(): void
     {

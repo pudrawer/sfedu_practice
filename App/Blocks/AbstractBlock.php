@@ -72,4 +72,9 @@ abstract class AbstractBlock implements BlockInterface
     {
         return $this->childStylesheetList;
     }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
 }
