@@ -10,13 +10,30 @@ class CarBrandController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (empty($this->getParam)) {
-            header('Location: http://localhost:8080/carBrandList');
-            exit;
+        $brandParam = $this->getParams['brand'] ?? null;
+
+        if (!$brandParam) {
+            $this->redirectTo('carBrandList');
         }
 
         $block = new BrandBlock();
 
+        $brandInfo = $this->prepareKeyMap(
+            $this->getBrandInfo($brandParam)
+        );
+        return $block
+            ->setHeader([$brandInfo['name']])
+            ->setData([
+                'list' => $this->getCarLines($brandParam),
+                'countryName' => $brandInfo['countryName'],
+                'brandId' => $brandInfo['id'],
+            ])
+            ->render();
+    }
+
+    private function getBrandInfo(
+        int $brandId
+    ): ?array {
         $connection = Database::getConnection();
 
         $stmt = $connection->prepare('
@@ -26,30 +43,33 @@ class CarBrandController extends AbstractController
         FROM car_brand 
             JOIN country 
                 on car_brand.country_id = country.id 
-        WHERE car_brand.id=:brand;
+        WHERE car_brand.id=:brand_id LIMIT 1;
         ');
         $stmt->bindParam(
-            1,
-            $this->getParam['brand'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
+            ':brand_id',
+            $brandId,
+            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
         );
         $stmt->execute();
-        $brandInfo = $stmt->fetch();
+
+        return $stmt->fetch();
+    }
+
+    private function getCarLines(
+        int $brandId
+    ): ?array {
+        $connection = Database::getConnection();
 
         $stmt = $connection->prepare('
-        SELECT id, name FROM car_line WHERE car_brand_id=:brand;
+        SELECT id, name FROM car_line WHERE car_brand_id = :brand_id;
         ');
         $stmt->bindParam(
-            1,
-            $this->getParam['brand'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
+            ':brand_id',
+            $brandId,
+            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
         );
         $stmt->execute();
-        $lineList = $stmt->fetchAll();
 
-        return $block->setData([
-            'commonInfo' => $brandInfo,
-            'list' => $lineList,
-        ])->render();
+        return $stmt->fetchAll();
     }
 }

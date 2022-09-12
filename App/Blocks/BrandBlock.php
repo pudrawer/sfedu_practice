@@ -13,24 +13,9 @@ class BrandBlock extends AbstractBlock
 
     protected $fileRender = 'car-brand';
 
-    public function setData(array $data): self
-    {
-        $this->header = [
-            'brand' => $data['commonInfo']['name'],
-        ];
-
-        foreach ($this->header as $key => $item) {
-            unset($data[$key]);
-        }
-
-        $this->data = $data;
-
-        return $this;
-    }
-
     public function render(): self
     {
-        parent::commonRender('carInfo');
+        parent::prepareRenderedPage('carInfo');
 
         return $this;
     }

@@ -30,11 +30,6 @@ class HeaderBlock extends AbstractBlock
         return $this->linkStatus;
     }
 
-    public function setData(array $data): self
-    {
-        return $this;
-    }
-
     public function setActiveLink(string $link): self
     {
         if ($this->linkStatus[$link] == '') {

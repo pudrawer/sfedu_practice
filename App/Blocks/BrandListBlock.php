@@ -14,17 +14,7 @@ class BrandListBlock extends AbstractBlock
 
     public function render(): self
     {
-        parent::commonRender('carInfo');
-
-        return $this;
-    }
-
-    public function setData(array $data): self
-    {
-        $this->header['page'] = $data['page'];
-        unset($data['page']);
-
-        $this->data = $data['data'];
+        parent::prepareRenderedPage('carInfo');
 
         return $this;
     }

@@ -11,13 +11,8 @@ class RegistrationBlock extends AbstractBlock
 
     public function render(): self
     {
-        $this->commonRender('main');
+        parent::prepareRenderedPage('main');
 
-        return $this;
-    }
-
-    public function setData(array $data): self
-    {
         return $this;
     }
 }

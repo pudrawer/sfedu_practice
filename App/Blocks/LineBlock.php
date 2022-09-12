@@ -14,23 +14,7 @@ class LineBlock extends AbstractBlock
 
     public function render(): self
     {
-        parent::commonRender('carInfo');
-
-        return $this;
-    }
-
-    public function setData(array $data): self
-    {
-        $this->header = [
-            'brand' => $data['commonInfo']['brand_name'],
-            'line'  => $data['commonInfo']['name'],
-        ];
-
-        foreach ($this->header as $key => $item) {
-            unset($data['commonInfo'][$key]);
-        }
-
-        $this->data = $data;
+        parent::prepareRenderedPage('carInfo');
 
         return $this;
     }

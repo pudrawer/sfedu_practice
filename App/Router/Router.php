@@ -13,18 +13,19 @@ class Router
 
     public function chooseController(string $webPath): ?ControllerInterface
     {
-
-        $page = explode('/', $webPath)[self::GET_PARAM];
-        $page = explode('?', $page)[self::CONTROLLER_NAME];
+        if ($queryPos = strpos($webPath, '?')) {
+            $webPath = substr($webPath, 0, $queryPos);
+        }
+        $webPath = trim($webPath, '/');
 
         $getParam = $_GET;
 
-        if ($page == "") {
+        if ($webPath == "") {
             return new HomepageController($getParam);
         }
 
-        $page = ucfirst($page) . 'Controller';
-        $controller = 'App\Controllers\\' . $page;
+        $webPath = ucfirst($webPath) . 'Controller';
+        $controller = 'App\Controllers\\' . $webPath;
 
         if (class_exists($controller)) {
             return new $controller($getParam);

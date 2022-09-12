@@ -10,18 +10,40 @@ class CarLineController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (
-            empty($this->getParam['brand'])
-            ||
-            empty($this->getParam['line'])
-        ) {
-            header('Location: http://localhost:8080/carBrandList');
-            exit;
+        $brandParam = $this->getParams['brand'] ?? null;
+        $lineParam  = $this->getParams['line'] ?? null;
+
+        if (!$brandParam || !$lineParam) {
+            $this->redirectTo('carBrandList');
         }
 
         $block = new LineBlock();
 
+        $brandInfo = $this->prepareKeyMap(
+            $this->getLineInfo(
+                $brandParam,
+                $lineParam
+            )
+        );
+        return $block
+            ->setHeader([
+                'brandName' => $brandInfo['brandName'],
+                'lineName' => $brandInfo['name'],
+            ])
+            ->setData([
+                'countryName' => $brandInfo['countryName'],
+                'list' => $this->getLineModels($lineParam),
+                'brandId' => $brandInfo['brandId'],
+                'lineId' => $brandInfo['id'],
+            ])->render();
+    }
+
+    private function getLineInfo(
+        int $brandId,
+        int $lineId
+    ): ?array {
         $connection = Database::getConnection();
+
         $stmt = $connection->prepare('
         SELECT
             cl.*,
@@ -33,20 +55,30 @@ class CarLineController extends AbstractController
                 on cl.car_brand_id = cb.id
             JOIN country
                 on cb.country_id = country.id
-        WHERE cb.id=? AND cl.id=?;
+        WHERE cb.id = :brand_id AND cl.id = :line_id LIMIT 1;
         ');
-        $stmt->bindParam(
-            1,
-            $this->getParam['brand'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
-        );
-        $stmt->bindParam(
-            2,
-            $this->getParam['line'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
-        );
+
+        $idParamMap = [
+            ':brand_id' => $brandId,
+            ':line_id' => $lineId,
+        ];
+        foreach ($idParamMap as $alias => &$value) {
+            $stmt->bindParam(
+                $alias,
+                $value,
+                \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
+            );
+        }
+
         $stmt->execute();
-        $brandInfo = $stmt->fetch();
+
+        return $stmt->fetch();
+    }
+
+    private function getLineModels(
+        int $lineId
+    ): ?array {
+        $connection = Database::getConnection();
 
         $stmt = $connection->prepare('
         SELECT
@@ -59,16 +91,11 @@ class CarLineController extends AbstractController
         ');
         $stmt->bindParam(
             1,
-            $this->getParam['line'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
+            $lineId,
+            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
         );
         $stmt->execute();
-        $modelList = $stmt->fetchAll();
 
-
-        return $block->setData([
-            'commonInfo' => $brandInfo,
-            'list' => $modelList,
-        ])->render();
+        return $stmt->fetchAll();
     }
 }

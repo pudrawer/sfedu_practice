@@ -13,11 +13,11 @@ class CarBrandListController extends AbstractController
         $block = new BrandListBlock();
 
         $connection = Database::getConnection();
-        $stmt = $connection->query('SELECT * FROM `car_brand`;');
+        $stmt = $connection->query('SELECT `name`, `id` FROM `car_brand`;');
 
-        return $block->setData([
-            'page' => 'BRAND LIST',
-            'data' => $stmt->fetchAll()
-        ])->render();
+        return $block
+            ->setData($stmt->fetchAll())
+            ->setHeader(['page' => 'BRAND LIST'])
+            ->render();
     }
 }

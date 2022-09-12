@@ -10,6 +10,6 @@ class HomepageController extends AbstractController
     public function execute(): BlockInterface
     {
         $block = new HomepageBlock();
-        return $block->setData(['page' => 'MAIN'])->render();
+        return $block->setHeader(['page' => 'MAIN'])->render();
     }
 }

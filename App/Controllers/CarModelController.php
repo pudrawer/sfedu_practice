@@ -10,19 +10,44 @@ class CarModelController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (
-            empty($this->getParam['brand'])
-            ||
-            empty($this->getParam['line'])
-            ||
-            empty($this->getParam['model'])
-        ) {
-            header('Location: http://localhost:8080/carBrandList');
-            exit;
+        $brandParam = $this->getParams['brand'] ?? null;
+        $lineParam  = $this->getParams['line'] ?? null;
+        $modelParam = $this->getParams['model'] ?? null;
+
+        if (!$brandParam || !$lineParam || !$modelParam) {
+            $this->redirectTo('carBrandList');
         }
 
         $block = new ModelBlock();
 
+        $result = $this->prepareKeyMap($this->getModelInfo(
+            $brandParam,
+            $lineParam,
+            $modelParam
+        ));
+
+        return $block
+            ->setHeader([
+                'brandName' => $result['brandName'],
+                'lineName'  => $result['lineName'],
+                'modelName' => $result['name'],
+            ])
+            ->setData([
+                'countryName'  => $result['countryName'],
+                'modelYear'    => $result['year'],
+                'previousName' => $result['previousName'],
+                'previousId'   => $result['previousId'],
+                'brandId'      => $result['brandId'],
+                'lineId'       => $result['lineId'],
+                'modelId'      => $result['id'],
+            ])->render();
+    }
+
+    private function getModelInfo(
+        int $brandId,
+        int $lineId,
+        int $modelId
+    ): ?array {
         $connection = Database::getConnection();
         $stmt = $connection->prepare('
         SELECT
@@ -35,59 +60,38 @@ class CarModelController extends AbstractController
             cm.year,
             cm.previous_line_model as previous_id,
             country.name as country_name,
-            (
-                SELECT
-                     `name`
-                 FROM car_model
-                 WHERE id = cm.previous_line_model
-            ) as previous_name
-            FROM car_model cm
+            previous.name as  previous_name
+        FROM car_model cm
             JOIN car_line cl
                 ON cm.car_line_id = cl.id
             JOIN car_brand cb
                 ON cl.car_brand_id = cb.id
             JOIN country
                 ON country.id = cb.country_id
-        WHERE car_brand_id = ? AND car_line_id = ? AND cm.id = ?;
+            JOIN car_model previous
+                ON previous.id = cm.previous_line_model
+        WHERE 
+            car_brand_id = :brand_id 
+            AND cm.car_line_id = :line_id 
+            AND cm.id = :model_id 
+        LIMIT 1;
         ');
-        $stmt->bindParam(
-            1,
-            $this->getParam['brand'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
-        );
-        $stmt->bindParam(
-            2,
-            $this->getParam['line'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
-        );
-        $stmt->bindParam(
-            3,
-            $this->getParam['model'],
-            \PDO::PARAM_INT|\PDO::PARAM_INPUT_OUTPUT
-        );
+
+        $idParamMap = [
+            ':brand_id' => $brandId,
+            ':line_id' => $lineId,
+            ':model_id' => $modelId,
+        ];
+        foreach ($idParamMap as $alias => &$value) {
+            $stmt->bindParam(
+                $alias,
+                $value,
+                \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
+            );
+        }
+
         $stmt->execute();
-        $result = $stmt->fetch();
 
-        $commonInfo = [
-            'brand' => $result['brand_name'],
-            'brandId' => $result['brand_id'],
-            'line' => $result['line_name'],
-            'lineId' => $result['line_id'],
-            'model' => $result['name'],
-            'modelId' => $result['id'],
-            'country' => $result['country_name'],
-        ];
-
-        $modelInfo = [
-            'year' => $result['year'],
-            'previousId' => $result['previous_id'],
-            'previousName' => $result['previous_name'],
-        ];
-
-        return $block->setData([
-            'commonInfo' => $commonInfo,
-            'modelInfo' => $modelInfo,
-
-        ])->render();
+        return $stmt->fetch();
     }
 }

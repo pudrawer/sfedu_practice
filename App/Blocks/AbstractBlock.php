@@ -25,6 +25,30 @@ abstract class AbstractBlock implements BlockInterface
         return implode($separator, $this->header);
     }
 
+    public function getStylesheetList(): array
+    {
+        return $this->childStylesheetList;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function setData(array $data): self
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    public function setHeader(array $headerData): self
+    {
+        $this->header = $headerData;
+
+        return $this;
+    }
+
     public function renderChildBlock()
     {
         require "$this->viewsPath/$this->fileRender.phtml";
@@ -48,7 +72,7 @@ abstract class AbstractBlock implements BlockInterface
         ];
     }
 
-    public function commonRender(
+    public function prepareRenderedPage (
         string $activeLink
     ) {
         $headerBlock = new HeaderBlock();
@@ -66,15 +90,5 @@ abstract class AbstractBlock implements BlockInterface
         $headerBlock->setActiveLink($activeLink);
 
         require "$this->viewsPath/Components/layout.phtml";
-    }
-
-    public function getStylesheetList(): array
-    {
-        return $this->childStylesheetList;
-    }
-
-    public function getData(): array
-    {
-        return $this->data;
     }
 }

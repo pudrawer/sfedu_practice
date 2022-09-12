@@ -19,11 +19,4 @@ class FooterBlock extends AbstractBlock
 
         return $this;
     }
-
-    public function setData(array $data): self
-    {
-        $this->data = $data;
-
-        return $this;
-    }
 }

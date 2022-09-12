@@ -14,23 +14,7 @@ class HomepageBlock extends AbstractBlock
 
     public function render(): self
     {
-        parent::commonRender('main');
-
-        return $this;
-    }
-
-    public function setData(array $data): self
-    {
-        $tempData = $data;
-        $this->header = [
-            'page' => $tempData['page'],
-        ];
-
-        foreach ($this->header as $key => $item) {
-            unset($tempData[$key]);
-        }
-
-        $this->data = $tempData;
+        parent::prepareRenderedPage('main');
 
         return $this;
     }

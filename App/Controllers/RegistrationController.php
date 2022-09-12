@@ -16,17 +16,19 @@ class RegistrationController extends AbstractController
             return $block->render();
         }
 
-        $this->userRegistration();
-
-        header("Location: http://localhost:8080/");
-        exit;
+        $this->registerUser();
+        $this->redirectTo();
     }
 
-    private  function userRegistration()
+    private  function registerUser()
     {
-        $inputEmail  = htmlspecialchars($_POST['email']);
-        $inputPass   = htmlspecialchars($_POST['pass']);
-        $inputRepass = htmlspecialchars($_POST['repass']);
+        $inputEmail  = htmlspecialchars($_POST['email']) ?? null;
+        $inputPass   = htmlspecialchars($_POST['pass']) ?? null;
+        $inputRepass = htmlspecialchars($_POST['repass']) ?? null;
+
+        if (!$inputEmail || !$inputPass || !$inputRepass) {
+            $this->redirectTo('registration');
+        }
 
         if ($inputPass == $inputRepass) {
             $connection = Database::getConnection();
