@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandListBlock;
-use App\Models\Resource\BrandRecourse;
+use App\Models\Recourse\BrandRecourse;
 
 class CarBrandListController extends AbstractController
 {

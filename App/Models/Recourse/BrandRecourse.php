@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models\Resource;
+namespace App\Models\Recourse;
 
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
-use App\Models\BrandModel;
+use App\Models\Brand;
 
-class BrandRecourse extends AbstractResource
+class BrandRecourse extends AbstractRecourse
 {
     /**
-     * @return BrandModel[]
+     * @return Brand[]
      */
     public function getBrandList(): ?array
     {
@@ -23,7 +23,7 @@ class BrandRecourse extends AbstractResource
 
     /**
      * @param int $brandId
-     * @return BrandModel
+     * @return Brand
      */
     public function getBrandInfo(int $brandId): AbstractCarModel
     {
@@ -72,7 +72,7 @@ class BrandRecourse extends AbstractResource
     }
 
     /**
-     * @param BrandModel $model
+     * @param Brand $model
      * @return bool
      * @throws Exception
      */

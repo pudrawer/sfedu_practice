@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\ModelBlock;
 use App\Exception\Exception;
 use App\Models\Model;
-use App\Models\Resource\ModelRecourse;
+use App\Models\Recourse\ModelRecourse;
 
 class CarModelController extends AbstractController
 {
@@ -22,8 +22,8 @@ class CarModelController extends AbstractController
             }
 
             $block = new ModelBlock();
-            $model = new ModelRecourse();
-            $data = $model->getModelInfo($brandParam, $lineParam, $modelParam);
+            $modelResource = new ModelRecourse();
+            $data = $modelResource->getModelInfo($brandParam, $lineParam, $modelParam);
             $block
                 ->setHeader([
                     $data['brandModel']->getName(),
@@ -38,34 +38,12 @@ class CarModelController extends AbstractController
             return $block;
         }
 
-        $this->changeProperties();
+        $this->changeProperties([
+            'id',
+            'name',
+            'year',
+            'previousId',
+        ], 'model');
         $this->redirectTo('carBrandList');
-    }
-
-    public function changeProperties(): bool
-    {
-        $idParam   = htmlspecialchars($this->getPostParam('modelId'));
-        $nameParam = htmlspecialchars($this->getPostParam('modelName'));
-        $yearParam = htmlspecialchars($this->getPostParam('modelYear'));
-        $previousParam = htmlspecialchars($this->getPostParam('previousId'));
-
-        if (
-            !$idParam
-            || !$nameParam
-            || !$yearParam
-            || !$previousParam
-        ) {
-            throw new Exception('Bad post params' . PHP_EOL);
-        }
-
-        $model = new Model();
-        $model
-            ->setId($idParam)
-            ->setName($nameParam)
-            ->setYear($yearParam)
-            ->setPreviousId($previousParam);
-
-        $modificator = new ModelRecourse();
-        return $modificator->modifyProperties($model);
     }
 }

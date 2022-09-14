@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Resource;
+namespace App\Models\Recourse;
 
 use App\Database\Database;
 use App\Exception\Exception;
 
-class RegistrationRecourse extends AbstractResource
+class RegistrationRecourse extends AbstractRecourse
 {
     public function registerUser(
         string $email,

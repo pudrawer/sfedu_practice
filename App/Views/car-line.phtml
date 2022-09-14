@@ -1,8 +1,8 @@
 <?php
 /**
  * @var App\Blocks\LineBlock $this
- * @var App\Models\LineModel $data
- * @var App\Models\BrandModel $brandModel
+ * @var App\Models\Line $data
+ * @var App\Models\Brand $brandModel
  * @var App\Models\Model $item
  */
 ?>
@@ -26,7 +26,7 @@
                     type="number"
                     value="<?= $data->getId() ?>"
                     readonly
-                    name="lineId"
+                    name="id"
                 >
             </div>
             <div class="form__row">
@@ -37,7 +37,7 @@
                     class="form__input"
                     type="text"
                     value="<?= $data->getName() ?>"
-                    name="lineName"
+                    name="name"
                 >
             </div>
             <input type="submit" value="SUBMIT">

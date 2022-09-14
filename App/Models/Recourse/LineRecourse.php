@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models\Resource;
+namespace App\Models\Recourse;
 
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
 use App\Database\Database;
-use App\Models\LineModel;
+use App\Models\Brand;
+use App\Models\Line;
 
-class LineRecourse extends AbstractResource
+class LineRecourse extends AbstractRecourse
 {
     public function getLineInfo(
         int $brandId,
@@ -74,7 +75,7 @@ class LineRecourse extends AbstractResource
     }
 
     /**
-     * @param LineModel $model
+     * @param Line $model
      * @return bool
      * @throws Exception
      */
@@ -99,5 +100,29 @@ class LineRecourse extends AbstractResource
         }
 
         return true;
+    }
+
+    protected function brandSelection(array $haystack): ?array
+    {
+        $haveBrand = (bool)$haystack['brandName'];
+
+        if ($haveBrand) {
+            $brand = new Brand();
+            $brand
+                ->setId($haystack['carBrandId'])
+                ->setName($haystack['brandName'])
+                ->setCountryName($haystack['countryName'])
+                ->setCountryId($haystack['countryId'])
+            ;
+
+            unset($haystack['carBrandId']);
+            unset($haystack['brandName']);
+            unset($haystack['countryName']);
+            unset($haystack['countryId']);
+
+            return ['model' => $brand, 'data' => $haystack];
+        }
+
+        throw new Exception();
     }
 }

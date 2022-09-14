@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\LineBlock;
-use App\Models\LineModel;
-use App\Models\Resource\LineRecourse;
+use App\Models\Line;
+use App\Models\Recourse\LineRecourse;
 use App\Exception\Exception;
 
 class CarLineController extends AbstractController
@@ -21,9 +21,9 @@ class CarLineController extends AbstractController
             }
 
             $block = new LineBlock();
-            $model = new LineRecourse();
+            $lineResource = new LineRecourse();
 
-            $data = $model->getLineInfo($brandParam, $lineParam);
+            $data = $lineResource->getLineInfo($brandParam, $lineParam);
             $block
                 ->setChildModels($data['brandModel'])
                 ->setData($data['data'])
@@ -36,25 +36,10 @@ class CarLineController extends AbstractController
             return $block;
         }
 
-        $this->changeProperties();
+        $this->changeProperties([
+            'id',
+            'name',
+        ], 'line');
         $this->redirectTo('carBrandList');
-    }
-
-    public function changeProperties(): bool
-    {
-        $idParam   = htmlspecialchars($this->getPostParam('lineId'));
-        $nameParam = htmlspecialchars($this->getPostParam('lineName'));
-
-        if (!$idParam || !$nameParam) {
-            throw new Exception('Bad post params' . PHP_EOL);
-        }
-
-        $model = new LineModel();
-        $model
-            ->setId($idParam)
-            ->setName($nameParam);
-
-        $modificator = new LineRecourse();
-        return $modificator->modifyProperties($model);
     }
 }

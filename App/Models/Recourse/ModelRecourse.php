@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Models\Resource;
+namespace App\Models\Recourse;
 
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
+use App\Models\Brand;
+use App\Models\Line;
 use App\Models\Model;
 
-class ModelRecourse extends AbstractResource
+class ModelRecourse extends AbstractRecourse
 {
     public function getModelInfo(
         int $brandId,
@@ -65,7 +67,7 @@ class ModelRecourse extends AbstractResource
         $brandModel = $data['model'];
         $data = $this->lineSelection($data['data']);
         $lineModel = $data['model'];
-        $model = $this->prepareValueSimpleMap($data['data']);
+        $model = $this->prepareValueSimpleMap($data['data'], 'model');
 
         return [
             'brandModel' => $brandModel,
@@ -104,5 +106,49 @@ class ModelRecourse extends AbstractResource
         }
 
         return true;
+    }
+
+    protected function brandSelection(array $haystack): ?array
+    {
+        $haveBrand = (bool)$haystack['brandName'];
+
+        if ($haveBrand) {
+            $brand = new Brand();
+            $brand
+                ->setId($haystack['carBrandId'])
+                ->setName($haystack['brandName'])
+                ->setCountryName($haystack['countryName'])
+                ->setCountryId($haystack['countryId'])
+            ;
+
+            unset($haystack['carBrandId']);
+            unset($haystack['brandName']);
+            unset($haystack['countryName']);
+            unset($haystack['countryId']);
+
+            return ['model' => $brand, 'data' => $haystack];
+        }
+
+        throw new Exception();
+    }
+
+    protected function lineSelection(array $haystack): ?array
+    {
+        $haveLine = (bool)$haystack['lineName'];
+
+        if ($haveLine) {
+            $line = new Line();
+            $line
+                ->setId($haystack['lineId'])
+                ->setName($haystack['lineName'])
+            ;
+
+            unset($haystack['lineId']);
+            unset($haystack['lineName']);
+
+            return ['model' => $line, 'data' => $haystack];
+        }
+
+        throw new Exception();
     }
 }

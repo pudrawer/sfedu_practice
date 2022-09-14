@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-class BrandModel extends AbstractCarModel
+class Brand extends AbstractCarModel
 {
     private $lineList = [];
 
     public function setLineList(array $lineList): self
     {
         foreach ($lineList as $value) {
-            $model = new LineModel();
+            $model = new Line();
             $model
                 ->setId($value['id'])
                 ->setName($value['name']);

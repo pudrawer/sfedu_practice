@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-class LineModel extends AbstractCarModel
+class Line extends AbstractCarModel
 {
     private $modelList = [];
 

@@ -2,8 +2,8 @@
 /**
  * @var App\Blocks\ModelBlock $this
  * @var App\Models\Model $data
- * @var App\Models\BrandModel $brandModel
- * @var App\Models\LineModel $lineModel
+ * @var App\Models\Brand $brandModel
+ * @var App\Models\Line $lineModel
  */
 ?>
 
@@ -27,7 +27,7 @@
                     type="number"
                     value="<?= $data->getId() ?>"
                     readonly
-                    name="modelId"
+                    name="id"
                 >
             </div>
             <div class="form__row">
@@ -38,7 +38,7 @@
                     class="form__input"
                     type="text"
                     value="<?= $data->getName() ?>"
-                    name="modelName"
+                    name="name"
                 >
             </div>
             <div class="form__row">
@@ -49,7 +49,7 @@
                     class="form__input"
                     type="number"
                     value="<?= $data->getYear() ?>"
-                    name="modelYear"
+                    name="year"
                 >
             </div>
             <div class="form__row">

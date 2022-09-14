@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\RegistrationBlock;
 use App\Database\Database;
 use App\Exception\Exception;
-use App\Models\Resource\RegistrationRecourse;
+use App\Models\Recourse\RegistrationRecourse;
 
 class RegistrationController extends AbstractController
 {

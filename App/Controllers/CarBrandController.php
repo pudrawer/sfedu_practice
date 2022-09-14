@@ -4,10 +4,8 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
-use App\Database\Database;
 use App\Exception\Exception;
-use App\Models\BrandModel;
-use App\Models\Resource\BrandRecourse;
+use App\Models\Recourse\BrandRecourse;
 
 class CarBrandController extends AbstractController
 {
@@ -21,36 +19,20 @@ class CarBrandController extends AbstractController
             }
 
             $block = new BrandBlock();
-            $model = new BrandRecourse();
+            $brandResource = new BrandRecourse();
 
-            $brand = $model->getBrandInfo($brandParam);
+            $brand = $brandResource->getBrandInfo($brandParam);
             return $block
                 ->setData($brand)
                 ->setHeader([$brand->getName()])
                 ->render($block->getActiveLink());
         }
 
-        $this->changeProperties();
+        $this->changeProperties([
+            'id',
+            'name',
+            'countryId'
+        ], 'brand');
         $this->redirectTo('carBrandList');
-    }
-
-    public function changeProperties(): bool
-    {
-        $idParam      = htmlspecialchars($this->getPostParam('brandId'));
-        $nameParam    = htmlspecialchars($this->getPostParam('brandName'));
-        $countryParam = htmlspecialchars($this->getPostParam('countryId'));
-
-        if (!$idParam || !$nameParam || !$countryParam) {
-            throw new Exception('Bad post params' . PHP_EOL);
-        }
-
-        $model = new BrandModel();
-        $model
-            ->setId($idParam)
-            ->setName($nameParam)
-            ->setCountryId($countryParam);
-
-        $modificator = new BrandRecourse();
-        return $modificator->modifyProperties($model);
     }
 }
