@@ -8,11 +8,5 @@ class RegistrationBlock extends AbstractBlock
         'registration/registration.css',
     ];
     protected $fileRender = 'registration';
-
-    public function render(): self
-    {
-        parent::prepareRenderedPage('main');
-
-        return $this;
-    }
+    protected $activeLink = 'main';
 }

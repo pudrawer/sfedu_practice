@@ -12,6 +12,7 @@ class ModelBlock extends AbstractBlock
         'info-stat/info-stat.css',
     ];
     protected $fileRender = 'car-model';
+    protected $activeLink = 'carInfo';
 
     protected $childModels = [];
 
@@ -25,12 +26,5 @@ class ModelBlock extends AbstractBlock
     public function getChildModels(): array
     {
         return $this->childModels;
-    }
-
-    public function render(): self
-    {
-        parent::prepareRenderedPage('carInfo');
-
-        return $this;
     }
 }

@@ -18,7 +18,7 @@ class HeaderBlock extends AbstractBlock
         'country'     => '',
     ];
 
-    public function render(): self
+    public function renderCommonBlock(): self
     {
         require "$this->viewsPath/Components/header.phtml";
 

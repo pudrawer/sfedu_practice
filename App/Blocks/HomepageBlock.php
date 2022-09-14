@@ -11,11 +11,5 @@ class HomepageBlock extends AbstractBlock
         'vehicle/vehicle.css',
     ];
     protected $fileRender = 'homepage';
-
-    public function render(): self
-    {
-        parent::prepareRenderedPage('main');
-
-        return $this;
-    }
+    protected $activeLink = 'main';
 }

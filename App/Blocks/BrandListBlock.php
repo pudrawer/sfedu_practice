@@ -11,11 +11,5 @@ class BrandListBlock extends AbstractBlock
     ];
     protected $data = [];
     protected $fileRender = 'car-brand-list';
-
-    public function render(): self
-    {
-        parent::prepareRenderedPage('carInfo');
-
-        return $this;
-    }
+    protected $activeLink = 'carInfo';
 }

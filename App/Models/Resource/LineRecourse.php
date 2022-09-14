@@ -5,6 +5,7 @@ namespace App\Models\Resource;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
 use App\Database\Database;
+use App\Models\LineModel;
 
 class LineRecourse extends AbstractResource
 {
@@ -28,17 +29,10 @@ class LineRecourse extends AbstractResource
         WHERE cb.id = :brand_id AND cl.id = :line_id LIMIT 1;
         ');
 
-        $idParamMap = [
+        $stmt = $this->bindParamByMap($stmt, [
             ':brand_id' => $brandId,
             ':line_id' => $lineId,
-        ];
-        foreach ($idParamMap as $alias => &$value) {
-            $stmt->bindParam(
-                $alias,
-                $value,
-                \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-            );
-        }
+        ]);
 
         $stmt->execute();
 
@@ -47,7 +41,7 @@ class LineRecourse extends AbstractResource
             throw new Exception('Data not found' . PHP_EOL);
         }
 
-        $data = $this->brandSelection($this->prepareKeyMap($LineInfo));
+        $data = $this->brandSelection($this->prepareKeyMap($lineInfo));
 
         return [
             'brandModel' => $data['model'],
@@ -69,15 +63,41 @@ class LineRecourse extends AbstractResource
         FROM car_model
         JOIN car_line cl 
             on car_model.car_line_id = cl.id
-        WHERE car_model.car_line_id=?;
+        WHERE car_model.car_line_id = :car_line_id;
         ');
-        $stmt->bindParam(
-            1,
-            $lineId,
-            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-        );
+        $stmt = $this->bindParamByMap($stmt, [
+            ':car_line_id' => $lineId,
+        ]);
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * @param LineModel $model
+     * @return bool
+     * @throws Exception
+     */
+    public function modifyProperties(AbstractCarModel $model): bool
+    {
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare('
+        UPDATE
+            `car_line`
+        SET
+            `name` = :line_name
+        WHERE `id` = :line_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':line_name' => $model->getName(),
+            ':line_id'   => $model->getId(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new Exception('Query error' . PHP_EOL);
+        }
+
+        return true;
     }
 }

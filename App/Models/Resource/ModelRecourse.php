@@ -4,6 +4,8 @@ namespace App\Models\Resource;
 
 use App\Database\Database;
 use App\Exception\Exception;
+use App\Models\AbstractCarModel;
+use App\Models\Model;
 
 class ModelRecourse extends AbstractResource
 {
@@ -42,18 +44,11 @@ class ModelRecourse extends AbstractResource
         LIMIT 1;
         ');
 
-        $idParamMap = [
+        $stmt = $this->bindParamByMap($stmt, [
             ':brand_id' => $brandId,
             ':line_id' => $lineId,
             ':model_id' => $modelId,
-        ];
-        foreach ($idParamMap as $alias => &$value) {
-            $stmt->bindParam(
-                $alias,
-                $value,
-                \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-            );
-        }
+        ]);
 
         $stmt->execute();
         $modelInfo = $stmt->fetch();
@@ -77,5 +72,37 @@ class ModelRecourse extends AbstractResource
             'lineModel'  => $lineModel,
             'data'       => $model,
         ];
+    }
+
+    /**
+     * @param Model $model
+     * @return bool
+     * @throws Exception
+     */
+    public function modifyProperties(AbstractCarModel $model): bool
+    {
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare('
+        UPDATE
+            `car_model`
+        SET
+            `name` = :model_name,
+            `year` = :model_year,
+            `previous_line_model` = :previous_id
+        WHERE `id` = :model_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':model_name'  => $model->getName(),
+            ':model_year'  => $model->getYear(),
+            ':previous_id' => $model->getPreviousId(),
+            ':model_id'    => $model->getId(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new Exception('Query error' . PHP_EOL);
+        }
+
+        return true;
     }
 }

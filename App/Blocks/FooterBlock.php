@@ -13,7 +13,7 @@ class FooterBlock extends AbstractBlock
         'pageLinks' => [],
     ];
 
-    public function render(): self
+    public function renderCommonBlock(): self
     {
         require "$this->viewsPath/Components/footer.phtml";
 

@@ -13,8 +13,6 @@ class PageHandler
 
     public function handlePage()
     {
-        define('REQUEST_METHOD', $_SERVER['REQUEST_METHOD']);
-
         set_error_handler(function (
             int $errno,
             string $errstr,

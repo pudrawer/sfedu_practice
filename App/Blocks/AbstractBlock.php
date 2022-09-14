@@ -17,6 +17,7 @@ abstract class AbstractBlock implements BlockInterface
         'form/form.css',
     ];
     protected $childStylesheetList = [];
+    protected $activeLink;
 
     protected $viewsPath = APP_ROOT . '/App/Views';
     protected $srcPath = APP_ROOT . '/src';
@@ -73,9 +74,9 @@ abstract class AbstractBlock implements BlockInterface
         ];
     }
 
-    public function prepareRenderedPage(
+    public function render(
         string $activeLink
-    ) {
+    ): self {
         $headerBlock = new HeaderBlock();
         $footerBlock = new FooterBlock();
 
@@ -91,5 +92,12 @@ abstract class AbstractBlock implements BlockInterface
         $headerBlock->setActiveLink($activeLink);
 
         require "$this->viewsPath/Components/layout.phtml";
+
+        return $this;
+    }
+
+    public function getActiveLink(): string
+    {
+        return $this->activeLink;
     }
 }

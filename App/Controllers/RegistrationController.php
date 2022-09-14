@@ -12,33 +12,54 @@ class RegistrationController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (REQUEST_METHOD == 'GET') {
+        if ($this->isGetMethod()) {
             $block = new RegistrationBlock();
 
             return $block
                 ->setHeader(['page' => 'USER REGISTRATION'])
-                ->render();
+                ->render($block->getActiveLink());
         }
 
-        $this->registerUser();
-        $this->redirectTo();
+        $this
+            ->registerUser($this->alreadyRegister())
+            ->redirectTo();
+
+
+        throw new Exception('Already registered' . PHP_EOL);
     }
 
-    private function registerUser()
+    private function alreadyRegister(): RegistrationRecourse
     {
-        $inputEmail  = htmlspecialchars($_POST['email']) ?? null;
-        $inputPass   = htmlspecialchars($_POST['pass']) ?? null;
-        $inputRepass = htmlspecialchars($_POST['repass']) ?? null;
+        $inputEmail = htmlspecialchars($this->getPostParam('email'));
 
-        if (!$inputEmail || !$inputPass || !$inputRepass) {
+        if (!$inputEmail) {
             throw new Exception();
         }
 
-        if ($inputPass == $inputRepass) {
-            $model = new RegistrationRecourse();
-            $model->registerUser($inputEmail, $inputPass);
-        } else {
+        $model = new RegistrationRecourse();
+
+        if ($model->checkRegistration($inputEmail)) {
             throw new Exception();
         }
+
+        return $model;
+    }
+
+    private function registerUser(RegistrationRecourse $model): self
+    {
+        $inputEmail  = htmlspecialchars($this->getPostParam('email'));
+        $inputPass   = htmlspecialchars($this->getPostParam('pass'));
+        $inputRepass = htmlspecialchars($this->getPostParam('repass'));
+
+        $hasRequiredData   = $inputEmail && $inputPass && $inputRepass;
+        $hasEqualPasswords = $inputPass === $inputRepass;
+
+        if (!$hasRequiredData || !$hasEqualPasswords) {
+            throw new Exception();
+        }
+
+        $model->registerUser($inputEmail, $inputPass);
+
+        return $this;
     }
 }

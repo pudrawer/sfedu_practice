@@ -6,14 +6,13 @@ use App\Blocks\BlockInterface;
 use App\Blocks\ModelBlock;
 use App\Exception\Exception;
 use App\Models\Model;
-use App\Models\Modification\ModelModification;
 use App\Models\Resource\ModelRecourse;
 
 class CarModelController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (REQUEST_METHOD == 'GET') {
+        if ($this->isGetMethod()) {
             $brandParam = $this->getParams['brand'] ?? null;
             $lineParam = $this->getParams['line'] ?? null;
             $modelParam = $this->getParams['model'] ?? null;
@@ -34,7 +33,7 @@ class CarModelController extends AbstractController
                 ->setChildModels($data['brandModel'])
                 ->setChildModels($data['lineModel'])
                 ->setData($data['data'])
-                ->render();
+                ->render($block->getActiveLink());
 
             return $block;
         }
@@ -45,10 +44,10 @@ class CarModelController extends AbstractController
 
     public function changeProperties(): bool
     {
-        $idParam   = htmlspecialchars($_POST['modelId']) ?? null;
-        $nameParam = htmlspecialchars($_POST['modelName']) ?? null;
-        $yearParam = htmlspecialchars($_POST['modelYear']) ?? null;
-        $previousParam = htmlspecialchars($_POST['previousId']) ?? null;
+        $idParam   = htmlspecialchars($this->getPostParam('modelId'));
+        $nameParam = htmlspecialchars($this->getPostParam('modelName'));
+        $yearParam = htmlspecialchars($this->getPostParam('modelYear'));
+        $previousParam = htmlspecialchars($this->getPostParam('previousId'));
 
         if (
             !$idParam
@@ -66,7 +65,7 @@ class CarModelController extends AbstractController
             ->setYear($yearParam)
             ->setPreviousId($previousParam);
 
-        $modificator = new ModelModification();
+        $modificator = new ModelRecourse();
         return $modificator->modifyProperties($model);
     }
 }

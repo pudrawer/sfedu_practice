@@ -10,13 +10,7 @@ class BrandBlock extends AbstractBlock
         'info/info.css',
         'info-stat/info-stat.css',
     ];
-
     protected $fileRender = 'car-brand';
 
-    public function render(): self
-    {
-        parent::prepareRenderedPage('carInfo');
-
-        return $this;
-    }
+    protected $activeLink = 'carInfo';
 }

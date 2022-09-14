@@ -5,7 +5,6 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\LineBlock;
 use App\Models\LineModel;
-use App\Models\Modification\LineModification;
 use App\Models\Resource\LineRecourse;
 use App\Exception\Exception;
 
@@ -13,7 +12,7 @@ class CarLineController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (REQUEST_METHOD == 'GET') {
+        if ($this->isGetMethod()) {
             $brandParam = $this->getParams['brand'] ?? null;
             $lineParam = $this->getParams['line'] ?? null;
 
@@ -32,7 +31,7 @@ class CarLineController extends AbstractController
                     $data['brandModel']->getName(),
                     $block->getData()->getName()
                 ])
-                ->render();
+                ->render($block->getActiveLink());
 
             return $block;
         }
@@ -43,8 +42,8 @@ class CarLineController extends AbstractController
 
     public function changeProperties(): bool
     {
-        $idParam   = htmlspecialchars($_POST['lineId']) ?? null;
-        $nameParam = htmlspecialchars($_POST['lineName']) ?? null;
+        $idParam   = htmlspecialchars($this->getPostParam('lineId'));
+        $nameParam = htmlspecialchars($this->getPostParam('lineName'));
 
         if (!$idParam || !$nameParam) {
             throw new Exception('Bad post params' . PHP_EOL);
@@ -55,7 +54,7 @@ class CarLineController extends AbstractController
             ->setId($idParam)
             ->setName($nameParam);
 
-        $modificator = new LineModification();
+        $modificator = new LineRecourse();
         return $modificator->modifyProperties($model);
     }
 }

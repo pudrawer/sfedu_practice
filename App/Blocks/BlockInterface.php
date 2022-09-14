@@ -4,7 +4,7 @@ namespace App\Blocks;
 
 interface BlockInterface
 {
-    public function render();
+    public function render(string $activeLink): AbstractBlock;
 
     public function getData();
 

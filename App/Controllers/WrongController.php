@@ -13,6 +13,6 @@ class WrongController extends AbstractController
 
         return $block
             ->setHeader(['page' => '500'])
-            ->render();
+            ->render($block->getActiveLink());
     }
 }

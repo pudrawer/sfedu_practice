@@ -16,4 +16,14 @@ abstract class AbstractController implements ControllerInterface
         header("Location: http://localhost:8080/$webPath");
         exit;
     }
+
+    public function getPostParam(string $key)
+    {
+        return $_POST["$key"] ?? null;
+    }
+
+    public function isGetMethod(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] == 'GET';
+    }
 }

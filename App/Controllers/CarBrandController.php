@@ -7,14 +7,13 @@ use App\Blocks\BrandBlock;
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\BrandModel;
-use App\Models\Modification\BrandModification;
 use App\Models\Resource\BrandRecourse;
 
 class CarBrandController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        if (REQUEST_METHOD == 'GET') {
+        if ($this->isGetMethod()) {
             $brandParam = $this->getParams['brand'] ?? null;
 
             if (!$brandParam) {
@@ -28,7 +27,7 @@ class CarBrandController extends AbstractController
             return $block
                 ->setData($brand)
                 ->setHeader([$brand->getName()])
-                ->render();
+                ->render($block->getActiveLink());
         }
 
         $this->changeProperties();
@@ -37,9 +36,9 @@ class CarBrandController extends AbstractController
 
     public function changeProperties(): bool
     {
-        $idParam   = htmlspecialchars($_POST['brandId']) ?? null;
-        $nameParam = htmlspecialchars($_POST['brandName']) ?? null;
-        $countryParam = htmlspecialchars($_POST['countryId']) ?? null;
+        $idParam      = htmlspecialchars($this->getPostParam('brandId'));
+        $nameParam    = htmlspecialchars($this->getPostParam('brandName'));
+        $countryParam = htmlspecialchars($this->getPostParam('countryId'));
 
         if (!$idParam || !$nameParam || !$countryParam) {
             throw new Exception('Bad post params' . PHP_EOL);
@@ -51,7 +50,7 @@ class CarBrandController extends AbstractController
             ->setName($nameParam)
             ->setCountryId($countryParam);
 
-        $modificator = new BrandModification();
+        $modificator = new BrandRecourse();
         return $modificator->modifyProperties($model);
     }
 }

@@ -128,4 +128,19 @@ abstract class AbstractResource
 
         throw new Exception();
     }
+
+    public function bindParamByMap(
+        \PDOStatement $stmt,
+        array $paramMap
+    ): \PDOStatement {
+        foreach ($paramMap as $alias => &$value) {
+            $stmt->bindParam(
+                $alias,
+                $value,
+                \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
+            );
+        }
+
+        return $stmt;
+    }
 }

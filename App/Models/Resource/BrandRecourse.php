@@ -38,11 +38,9 @@ class BrandRecourse extends AbstractResource
         WHERE car_brand.id=:brand_id LIMIT 1;
         ');
 
-        $stmt->bindParam(
-            ':brand_id',
-            $brandId,
-            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-        );
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_id' => $brandId,
+        ]);
         $stmt->execute();
         $brandInfo = $stmt->fetch();
         if (!$brandInfo) {
@@ -65,13 +63,41 @@ class BrandRecourse extends AbstractResource
         $stmt = $connection->prepare('
         SELECT id, name FROM car_line WHERE car_brand_id = :brand_id;
         ');
-        $stmt->bindParam(
-            ':brand_id',
-            $brandId,
-            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-        );
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_id' => $brandId,
+        ]);
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * @param BrandModel $model
+     * @return bool
+     * @throws Exception
+     */
+    public function modifyProperties(AbstractCarModel $model): bool
+    {
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare('
+        UPDATE
+            `car_brand`
+        SET
+            `name` = :brand_name,
+            `country_id` = :country_id
+        WHERE `id` = :brand_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_name' => $model->getName(),
+            ':country_id' => $model->getCountryId(),
+            ':brand_id'   => $model->getId(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new Exception('Query error' . PHP_EOL);
+        }
+
+        return true;
     }
 }
