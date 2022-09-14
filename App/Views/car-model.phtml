@@ -1,13 +1,70 @@
 <?php
 /**
- * @var App\Blocks\BrandBlock $this
+ * @var App\Blocks\ModelBlock $this
+ * @var App\Models\Model $data
+ * @var App\Models\BrandModel $brandModel
+ * @var App\Models\LineModel $lineModel
  */
 ?>
 
 <?php $data = $this->getData() ?>
+<?php $brandModel = $this->getChildModels()['BrandModel'] ?>
+<?php $lineModel  = $this->getChildModels()['LineModel'] ?>
 
 <div class="car-info block">
     <section class="car-info__img">
+        <form
+            class="form"
+            method="post"
+            action="/carModel"
+        >
+            <div class="form__row">
+                <a>
+                    ID:
+                </a>
+                <input
+                    class="form__input"
+                    type="number"
+                    value="<?= $data->getId() ?>"
+                    readonly
+                    name="modelId"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Name:
+                </a>
+                <input
+                    class="form__input"
+                    type="text"
+                    value="<?= $data->getName() ?>"
+                    name="modelName"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Year:
+                </a>
+                <input
+                    class="form__input"
+                    type="number"
+                    value="<?= $data->getYear() ?>"
+                    name="modelYear"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Previous ID:
+                </a>
+                <input
+                    class="form__input"
+                    type="number"
+                    value="<?= $data->getPreviousId() ?>"
+                    name="previousId"
+                >
+            </div>
+            <input type="submit" value="SUBMIT">
+        </form>
     </section>
 
     <h1 class="car-info__title">
@@ -28,7 +85,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $data['countryName']; ?>
+                            <?= $brandModel->getCountryName() ?>
                         </div>
                     </div>
 
@@ -38,7 +95,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $data['modelYear']; ?>
+                            <?= $data->getYear() ?>
                         </div>
                     </div>
 
@@ -48,10 +105,10 @@
                         </div>
 
                         <a
-                            href="/carModel?brand=<?= $data['brandId'] ?>&line=<?= $data['lineId'] ?>&model=<?= $data['previousId'] ?>"
+                            href="/carModel?brand=<?= $brandModel->getId() ?>&line=<?= $lineModel->getId() ?>&model=<?= $data->getPreviousId() ?>"
                             class="info-stat__column"
                         >
-                            <?= $data['previousName']; ?>
+                            <?= $data->getPreviousName() ?>
                         </a>
                     </div>
                 </div>

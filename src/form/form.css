@@ -1,0 +1,17 @@
+.form {
+    display: flex;
+    flex-direction: column;
+
+    margin: auto;
+}
+
+.form__row {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.form__input {
+    margin-left: 15px;
+}

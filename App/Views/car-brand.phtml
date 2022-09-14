@@ -1,6 +1,8 @@
 <?php
 /**
  * @var App\Blocks\BrandBlock $this
+ * @var App\Models\BrandModel $data
+ * @var App\Models\LineModel $item
  */
 ?>
 
@@ -8,6 +10,47 @@
 
 <div class="car-info block">
     <section class="car-info__img">
+        <form
+            class="form"
+            method="post"
+            action="/carBrand"
+        >
+            <div class="form__row">
+                <a>
+                    ID:
+                </a>
+                <input
+                    class="form__input"
+                    type="number"
+                    value="<?= $data->getId() ?>"
+                    readonly
+                    name="brandId"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Name:
+                </a>
+                <input
+                    class="form__input"
+                    type="text"
+                    value="<?= $data->getName() ?>"
+                    name="brandName"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Country ID:
+                </a>
+                <input
+                    class="form__input"
+                    type="text"
+                    value="<?= $data->getCountryId() ?>"
+                    name="countryId"
+                >
+            </div>
+            <input type="submit" value="SUBMIT">
+        </form>
     </section>
 
     <h1 class="car-info__title">
@@ -28,7 +71,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $data['countryName']; ?>
+                            <?= $data->getCountryName(); ?>
                         </div>
                     </div>
                 </div>
@@ -45,7 +88,7 @@
                 </div>
 
                 <ul class="common-info__list">
-                    <?php if(empty($data['list'])): ?>
+                    <?php if(empty($data->getLineList())): ?>
                         <li class='common-info__item'>
                             <a class="common-info__link">
                                 empty
@@ -53,13 +96,13 @@
                         </li>
                     <?php endif; ?>
 
-                    <?php foreach ($data['list'] as $item): ?>
+                    <?php foreach ($data->getLineList() as $item): ?>
                         <li class='common-info__item'>
                             <a
-                                href='carLine?brand=<?= $data['brandId'] ?>&line=<?= $item['id'] ?>'
+                                href='/carLine?brand=<?= $data->getId() ?>&line=<?= $item->getId() ?>'
                                 class='common-info__link'
                             >
-                                <?= $item['name'] ?>
+                                <?= $item->getName() ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

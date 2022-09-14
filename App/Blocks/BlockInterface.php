@@ -6,9 +6,9 @@ interface BlockInterface
 {
     public function render();
 
-    public function getData(): array;
+    public function getData();
 
-    public function setData(array $data);
+    public function setData($data);
 
     public function getHeader(string $separator): string;
 }

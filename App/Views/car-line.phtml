@@ -1,13 +1,47 @@
 <?php
 /**
  * @var App\Blocks\LineBlock $this
+ * @var App\Models\LineModel $data
+ * @var App\Models\BrandModel $brandModel
+ * @var App\Models\Model $item
  */
 ?>
 
 <?php $data = $this->getData() ?>
+<?php $brandModel = $this->getChildModels()['BrandModel'] ?>
 
 <div class="car-info block">
     <section class="car-info__img">
+        <form
+            class="form"
+            method="post"
+            action="/carLine"
+        >
+            <div class="form__row">
+                <a>
+                    ID:
+                </a>
+                <input
+                    class="form__input"
+                    type="number"
+                    value="<?= $data->getId() ?>"
+                    readonly
+                    name="lineId"
+                >
+            </div>
+            <div class="form__row">
+                <a>
+                    Name:
+                </a>
+                <input
+                    class="form__input"
+                    type="text"
+                    value="<?= $data->getName() ?>"
+                    name="lineName"
+                >
+            </div>
+            <input type="submit" value="SUBMIT">
+        </form>
     </section>
 
     <h1 class="car-info__title">
@@ -28,7 +62,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $data['countryName'] ?>
+                            <?= $brandModel->getCountryName() ?>
                         </div>
                     </div>
                 </div>
@@ -45,7 +79,7 @@
                 </div>
 
                 <ul class="common-info__list">
-                    <?php if(empty($data['list'])): ?>
+                    <?php if(empty($data->getModelList())): ?>
                         <li class='common-info__item'>
                             <div class='common-info__link'>
                                 empty
@@ -53,13 +87,13 @@
                         </li>
                     <?php endif; ?>
 
-                    <?php foreach ($data['list'] as $item): ?>
+                    <?php foreach ($data->getModelList() as $item): ?>
                         <li class='common-info__item'>
                             <a
-                                href='/carModel?brand=<?= $data['brandId'] ?>&line=<?= $data['lineId'] ?>&model=<?= $item['id'] ?>'
+                                href='/carModel?brand=<?= $brandModel->getId() ?>&line=<?= $data->getId() ?>&model=<?= $item->getId() ?>'
                                 class='common-info__link'
                             >
-                                <?= $item['name'] ?>
+                                <?= $item->getName() ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

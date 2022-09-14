@@ -8,8 +8,8 @@ use App\Controllers\NotFoundController;
 
 class Router
 {
-    const CONTROLLER_NAME = 0;
-    const GET_PARAM = 1;
+    public const CONTROLLER_NAME = 0;
+    public const GET_PARAM = 1;
 
     public function chooseController(string $webPath): ?ControllerInterface
     {

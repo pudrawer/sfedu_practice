@@ -5,71 +5,53 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Database\Database;
+use App\Exception\Exception;
+use App\Models\BrandModel;
+use App\Models\Modification\BrandModification;
+use App\Models\Resource\BrandRecourse;
 
 class CarBrandController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        $brandParam = $this->getParams['brand'] ?? null;
+        if (REQUEST_METHOD == 'GET') {
+            $brandParam = $this->getParams['brand'] ?? null;
 
-        if (!$brandParam) {
-            $this->redirectTo('carBrandList');
+            if (!$brandParam) {
+                throw new Exception('Bad get param' . PHP_EOL);
+            }
+
+            $block = new BrandBlock();
+            $model = new BrandRecourse();
+
+            $brand = $model->getBrandInfo($brandParam);
+            return $block
+                ->setData($brand)
+                ->setHeader([$brand->getName()])
+                ->render();
         }
 
-        $block = new BrandBlock();
-
-        $brandInfo = $this->prepareKeyMap(
-            $this->getBrandInfo($brandParam)
-        );
-        return $block
-            ->setHeader([$brandInfo['name']])
-            ->setData([
-                'list' => $this->getCarLines($brandParam),
-                'countryName' => $brandInfo['countryName'],
-                'brandId' => $brandInfo['id'],
-            ])
-            ->render();
+        $this->changeProperties();
+        $this->redirectTo('carBrandList');
     }
 
-    private function getBrandInfo(
-        int $brandId
-    ): ?array {
-        $connection = Database::getConnection();
+    public function changeProperties(): bool
+    {
+        $idParam   = htmlspecialchars($_POST['brandId']) ?? null;
+        $nameParam = htmlspecialchars($_POST['brandName']) ?? null;
+        $countryParam = htmlspecialchars($_POST['countryId']) ?? null;
 
-        $stmt = $connection->prepare('
-        SELECT 
-            car_brand.*, 
-            country.`name` as country_name 
-        FROM car_brand 
-            JOIN country 
-                on car_brand.country_id = country.id 
-        WHERE car_brand.id=:brand_id LIMIT 1;
-        ');
-        $stmt->bindParam(
-            ':brand_id',
-            $brandId,
-            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-        );
-        $stmt->execute();
+        if (!$idParam || !$nameParam || !$countryParam) {
+            throw new Exception('Bad post params' . PHP_EOL);
+        }
 
-        return $stmt->fetch();
-    }
+        $model = new BrandModel();
+        $model
+            ->setId($idParam)
+            ->setName($nameParam)
+            ->setCountryId($countryParam);
 
-    private function getCarLines(
-        int $brandId
-    ): ?array {
-        $connection = Database::getConnection();
-
-        $stmt = $connection->prepare('
-        SELECT id, name FROM car_line WHERE car_brand_id = :brand_id;
-        ');
-        $stmt->bindParam(
-            ':brand_id',
-            $brandId,
-            \PDO::PARAM_INT | \PDO::PARAM_INPUT_OUTPUT
-        );
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+        $modificator = new BrandModification();
+        return $modificator->modifyProperties($model);
     }
 }

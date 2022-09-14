@@ -4,12 +4,12 @@ namespace App\Database;
 
 class Database
 {
-    protected static $connection;
+    private static $instance;
 
-    public static function getConnection(): \PDO
+    public static function getInstance(): \PDO
     {
-        if (self::$connection) {
-            return self::$connection;
+        if (self::$instance) {
+            return self::$instance;
         }
 
         $host = 'localhost';
@@ -25,7 +25,7 @@ class Database
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
 
-        self::$connection = new \PDO($dsn, $user, $pass, $opt);
-        return self::$connection;
+        self::$instance = new \PDO($dsn, $user, $pass, $opt);
+        return self::$instance;
     }
 }

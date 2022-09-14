@@ -4,13 +4,17 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
+use App\Blocks\NotFoundBlock;
 
 class NotFoundController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        echo '404 - Page not found';
+        $block = new NotFoundBlock();
+        $block
+            ->setHeader(['page' => '404'])
+            ->render();
 
-        return new BrandBlock();
+        return $block;
     }
 }

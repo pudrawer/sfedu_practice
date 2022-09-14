@@ -14,6 +14,7 @@ abstract class AbstractBlock implements BlockInterface
         'nav/nav.css',
         'logo/logo.css',
         'header-footer-section/header-footer-section.css',
+        'form/form.css',
     ];
     protected $childStylesheetList = [];
 
@@ -30,12 +31,12 @@ abstract class AbstractBlock implements BlockInterface
         return $this->childStylesheetList;
     }
 
-    public function getData(): array
+    public function getData()
     {
         return $this->data;
     }
 
-    public function setData(array $data): self
+    public function setData($data): self
     {
         $this->data = $data;
 
@@ -72,7 +73,7 @@ abstract class AbstractBlock implements BlockInterface
         ];
     }
 
-    public function prepareRenderedPage (
+    public function prepareRenderedPage(
         string $activeLink
     ) {
         $headerBlock = new HeaderBlock();

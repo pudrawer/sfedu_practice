@@ -2,6 +2,8 @@
 
 namespace App\Blocks;
 
+use App\Models\AbstractCarModel;
+
 class LineBlock extends AbstractBlock
 {
     protected $childStylesheetList = [
@@ -11,6 +13,20 @@ class LineBlock extends AbstractBlock
         'info-stat/info-stat.css',
     ];
     protected $fileRender = 'car-line';
+
+    protected $childModels = [];
+
+    public function setChildModels(AbstractCarModel $model): self
+    {
+        $this->childModels["$model"] = $model;
+
+        return $this;
+    }
+
+    public function getChildModels(): array
+    {
+        return $this->childModels;
+    }
 
     public function render(): self
     {
