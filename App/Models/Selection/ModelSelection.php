@@ -36,7 +36,7 @@ class ModelSelection
         throw new Exception();
     }
 
-    public static function selectLineData(array $haystack): ?array
+    public static function selectLineData(array $haystack): array
     {
         $hasNeededData = $haystack['lineName'] && $haystack['lineId'];
 
