@@ -4,5 +4,5 @@ namespace App\Models\Selection;
 
 interface SelectionInterface
 {
-    public static function selectData(array $haystack): array;
+    public function selectData(array $haystack): array;
 }

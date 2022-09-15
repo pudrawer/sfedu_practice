@@ -3,11 +3,12 @@
 namespace App\Models\Selection;
 
 use App\Exception\Exception;
+use App\Exception\SelectionException;
 use App\Models\Line;
 
 class LineSelection implements SelectionInterface
 {
-    public static function selectData(array $haystack): array
+    public function selectData(array $haystack): array
     {
         $hasNeededData = $haystack['lineName'] && $haystack['lineId'];
 
@@ -23,6 +24,6 @@ class LineSelection implements SelectionInterface
             return ['model' => $line, 'data' => $haystack];
         }
 
-        throw new Exception();
+        throw new SelectionException('Bad selection data' . PHP_EOL);
     }
 }

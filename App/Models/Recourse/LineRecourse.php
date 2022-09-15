@@ -44,8 +44,8 @@ class LineRecourse extends AbstractRecourse
             throw new Exception('Data not found' . PHP_EOL);
         }
 
-
-        $data = BrandSelection::selectData(
+        $brandSelection = new BrandSelection();
+        $data = $brandSelection->selectData(
             $this->prepareKeyMap($lineInfo)
         );
 

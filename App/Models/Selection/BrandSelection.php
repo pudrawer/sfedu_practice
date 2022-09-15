@@ -3,11 +3,12 @@
 namespace App\Models\Selection;
 
 use App\Exception\Exception;
+use App\Exception\SelectionException;
 use App\Models\Brand;
 
 class BrandSelection implements SelectionInterface
 {
-    public static function selectData(array $haystack): array
+    public function selectData(array $haystack): array
     {
         $hasNeededData =
             $haystack['brandName']
@@ -32,6 +33,6 @@ class BrandSelection implements SelectionInterface
             return ['model' => $brand, 'data' => $haystack];
         }
 
-        throw new Exception();
+        throw new SelectionException('Bad selection data' . PHP_EOL);
     }
 }

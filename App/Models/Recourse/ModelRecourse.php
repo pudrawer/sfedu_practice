@@ -63,10 +63,14 @@ class ModelRecourse extends AbstractRecourse
 
     private function splitByModel(array $data): array
     {
-        $data = BrandSelection::selectData($this->prepareKeyMap($data));
+        $selection = new BrandSelection();
+        $data = $selection->selectData($this->prepareKeyMap($data));
         $brandModel = $data['model'];
-        $data = LineSelection::selectData($data['data']);
+
+        $selection = new LineSelection();
+        $data = $selection->selectData($data['data']);
         $lineModel = $data['model'];
+
         $model = $this->prepareValueSimpleMap($data['data'], 'model');
 
         return [

@@ -5,6 +5,7 @@ namespace App;
 use App\Controllers\NotFoundController;
 use App\Controllers\WrongController;
 use App\Exception\Exception;
+use App\Exception\SelectionException;
 use App\Router\Router;
 
 class PageHandler
@@ -32,6 +33,9 @@ class PageHandler
 
             $controller->execute();
         } catch (Exception $e) {
+            $controller = new NotFoundController();
+            $controller->execute();
+        } catch (SelectionException $e) {
             $controller = new NotFoundController();
             $controller->execute();
         } catch (\Exception $e) {
