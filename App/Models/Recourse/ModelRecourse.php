@@ -5,10 +5,9 @@ namespace App\Models\Recourse;
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
-use App\Models\Brand;
-use App\Models\Line;
 use App\Models\Model;
-use App\Models\Selection\ModelSelection;
+use App\Models\Selection\LineSelection;
+use App\Models\Selection\BrandSelection;
 
 class ModelRecourse extends AbstractRecourse
 {
@@ -64,9 +63,9 @@ class ModelRecourse extends AbstractRecourse
 
     private function splitByModel(array $data): array
     {
-        $data = ModelSelection::selectBrandData($this->prepareKeyMap($data));
+        $data = BrandSelection::selectData($this->prepareKeyMap($data));
         $brandModel = $data['model'];
-        $data = ModelSelection::selectLineData($data['data']);
+        $data = LineSelection::selectData($data['data']);
         $lineModel = $data['model'];
         $model = $this->prepareValueSimpleMap($data['data'], 'model');
 

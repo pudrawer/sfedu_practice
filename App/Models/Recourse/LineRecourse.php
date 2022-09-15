@@ -7,7 +7,8 @@ use App\Models\AbstractCarModel;
 use App\Database\Database;
 use App\Models\Brand;
 use App\Models\Line;
-use App\Models\Selection\ModelSelection;
+use App\Models\Selection\BrandSelection;
+use App\Models\Selection\SelectionInterface;
 
 class LineRecourse extends AbstractRecourse
 {
@@ -44,7 +45,7 @@ class LineRecourse extends AbstractRecourse
         }
 
 
-        $data = ModelSelection::selectBrandData(
+        $data = BrandSelection::selectData(
             $this->prepareKeyMap($lineInfo)
         );
 
