@@ -8,6 +8,7 @@ use App\Models\AbstractCarModel;
 use App\Models\Brand;
 use App\Models\Line;
 use App\Models\Model;
+use App\Models\Selection\ModelSelection;
 
 class ModelRecourse extends AbstractRecourse
 {
@@ -63,9 +64,9 @@ class ModelRecourse extends AbstractRecourse
 
     private function splitByModel(array $data): array
     {
-        $data = $this->brandSelection($this->prepareKeyMap($data));
+        $data = ModelSelection::selectBrandData($this->prepareKeyMap($data));
         $brandModel = $data['model'];
-        $data = $this->lineSelection($data['data']);
+        $data = ModelSelection::selectLineData($data['data']);
         $lineModel = $data['model'];
         $model = $this->prepareValueSimpleMap($data['data'], 'model');
 
@@ -106,49 +107,5 @@ class ModelRecourse extends AbstractRecourse
         }
 
         return true;
-    }
-
-    protected function brandSelection(array $haystack): ?array
-    {
-        $haveBrand = (bool)$haystack['brandName'];
-
-        if ($haveBrand) {
-            $brand = new Brand();
-            $brand
-                ->setId($haystack['carBrandId'])
-                ->setName($haystack['brandName'])
-                ->setCountryName($haystack['countryName'])
-                ->setCountryId($haystack['countryId'])
-            ;
-
-            unset($haystack['carBrandId']);
-            unset($haystack['brandName']);
-            unset($haystack['countryName']);
-            unset($haystack['countryId']);
-
-            return ['model' => $brand, 'data' => $haystack];
-        }
-
-        throw new Exception();
-    }
-
-    protected function lineSelection(array $haystack): ?array
-    {
-        $haveLine = (bool)$haystack['lineName'];
-
-        if ($haveLine) {
-            $line = new Line();
-            $line
-                ->setId($haystack['lineId'])
-                ->setName($haystack['lineName'])
-            ;
-
-            unset($haystack['lineId']);
-            unset($haystack['lineName']);
-
-            return ['model' => $line, 'data' => $haystack];
-        }
-
-        throw new Exception();
     }
 }

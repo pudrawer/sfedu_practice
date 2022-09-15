@@ -3,8 +3,6 @@
 namespace App\Controllers;
 
 use App\Exception\Exception;
-use App\Models\Brand;
-use App\Models\Recourse\BrandRecourse;
 
 abstract class AbstractController implements ControllerInterface
 {

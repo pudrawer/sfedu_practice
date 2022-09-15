@@ -7,6 +7,7 @@ use App\Models\AbstractCarModel;
 use App\Database\Database;
 use App\Models\Brand;
 use App\Models\Line;
+use App\Models\Selection\ModelSelection;
 
 class LineRecourse extends AbstractRecourse
 {
@@ -42,7 +43,10 @@ class LineRecourse extends AbstractRecourse
             throw new Exception('Data not found' . PHP_EOL);
         }
 
-        $data = $this->brandSelection($this->prepareKeyMap($lineInfo));
+
+        $data = ModelSelection::selectBrandData(
+            $this->prepareKeyMap($lineInfo)
+        );
 
         return [
             'brandModel' => $data['model'],
@@ -100,29 +104,5 @@ class LineRecourse extends AbstractRecourse
         }
 
         return true;
-    }
-
-    protected function brandSelection(array $haystack): ?array
-    {
-        $haveBrand = (bool)$haystack['brandName'];
-
-        if ($haveBrand) {
-            $brand = new Brand();
-            $brand
-                ->setId($haystack['carBrandId'])
-                ->setName($haystack['brandName'])
-                ->setCountryName($haystack['countryName'])
-                ->setCountryId($haystack['countryId'])
-            ;
-
-            unset($haystack['carBrandId']);
-            unset($haystack['brandName']);
-            unset($haystack['countryName']);
-            unset($haystack['countryId']);
-
-            return ['model' => $brand, 'data' => $haystack];
-        }
-
-        throw new Exception();
     }
 }
