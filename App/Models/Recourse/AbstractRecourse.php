@@ -2,6 +2,7 @@
 
 namespace App\Models\Recourse;
 
+use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
 use App\Models\Brand;
@@ -78,5 +79,63 @@ abstract class AbstractRecourse
         }
 
         return $stmt;
+    }
+
+    protected function deleteEntity(
+        AbstractCarModel $model,
+        string $tableName,
+        string $tableRow
+    ): bool {
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare("
+        DELETE FROM 
+            $tableName 
+        WHERE 
+            $tableRow = :entity_value;
+        ");
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':entity_value' => $model->getId(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new Exception();
+        }
+
+        return true;
+    }
+
+    /**
+     * @param AbstractCarModel[] $modelList
+     * @param string $tableName
+     * @param string $tableRow
+     * @return bool
+     * @throws Exception
+     */
+    protected function deleteEntityList(
+        array $modelList,
+        string $tableName,
+        string $tableRow
+    ): bool {
+        $connection = Database::getInstance();
+
+        foreach ($modelList as $model) {
+            $stmt = $connection->prepare("
+            DELETE FROM
+                $tableName
+            WHERE 
+                $tableRow = :table_value
+            ");
+
+            $stmt = $this->bindParamByMap($stmt, [
+                ':table_value' => $model->getId(),
+            ]);
+
+            if (!$stmt->execute()) {
+                throw new Exception();
+            }
+        }
+
+        return true;
     }
 }

@@ -106,4 +106,13 @@ class LineRecourse extends AbstractRecourse
 
         return true;
     }
+
+    public function deleteNote(int $id): bool
+    {
+        $lineModel = new Line();
+        $lineModel->setId($id);
+
+        $this->deleteEntity($lineModel, 'car_model', 'car_line_id');
+        return $this->deleteEntity($lineModel, 'car_line', 'id');
+    }
 }

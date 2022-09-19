@@ -3,11 +3,11 @@
 namespace App\Controllers;
 
 use App\Exception\Exception;
+use App\Models\Environment\Environment;
 
 abstract class AbstractController implements ControllerInterface
 {
     protected $getParams = [];
-    protected const WEB_URI = 'http://localhost:8080';
 
     public function __construct(array $params = [])
     {
@@ -16,7 +16,9 @@ abstract class AbstractController implements ControllerInterface
 
     public function redirectTo(string $webPath = '')
     {
-        header("Location: " . self::WEB_URI . "/$webPath");
+        $webUri = Environment::getInstance();
+
+        header("Location: " . $webUri->getHost() . "/$webPath");
         exit;
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Database;
 
+use App\Models\Environment\Environment;
+
 class Database
 {
     private static $instance;
@@ -12,11 +14,13 @@ class Database
             return self::$instance;
         }
 
-        $host = 'localhost';
-        $db   = 'Cars';
-        $user = 'sasha';
-        $pass = '123456';
-        $charset = 'utf8';
+        $envModel = Environment::getInstance();
+
+        $host    = $envModel->getDbHost();
+        $db      = $envModel->getDbName();
+        $user    = $envModel->getDbUser();
+        $pass    = $envModel->getDbPass();
+        $charset = $envModel->getDbChar();
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         $opt = [

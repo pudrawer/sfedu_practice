@@ -6,6 +6,7 @@ use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\AbstractCarModel;
 use App\Models\Brand;
+use App\Models\Line;
 
 class BrandRecourse extends AbstractRecourse
 {
@@ -99,5 +100,37 @@ class BrandRecourse extends AbstractRecourse
         }
 
         return true;
+    }
+
+    public function deleteNote(int $id): bool
+    {
+        $brandModel = new Brand();
+        $brandModel->setId($id);
+
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare('
+        SELECT 
+            id 
+        FROM 
+            `car_line` 
+        WHERE 
+            `car_brand_id` = :car_brand_id;
+        ');
+        $stmt = $this->bindParamByMap($stmt, [
+            ':car_brand_id' => $brandModel->getId(),
+        ]);
+        $stmt->execute();
+
+        $lineList = $stmt->fetchAll();
+        foreach ($lineList as &$line) {
+            $lineModel = new Line();
+            $lineModel->setId($line['id']);
+
+            $line = $lineModel;
+        }
+
+        $this->deleteEntityList($lineList, 'car_model', 'car_line_id');
+        $this->deleteEntity($brandModel, 'car_line', 'car_brand_id');
+        return $this->deleteEntity($brandModel, 'car_brand', 'id');
     }
 }

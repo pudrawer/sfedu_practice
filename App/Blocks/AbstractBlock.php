@@ -15,6 +15,7 @@ abstract class AbstractBlock implements BlockInterface
         'logo/logo.css',
         'header-footer-section/header-footer-section.css',
         'form/form.css',
+        'delete/delete.css',
     ];
     protected $childStylesheetList = [];
     protected $activeLink;

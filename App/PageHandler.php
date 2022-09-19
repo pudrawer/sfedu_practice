@@ -22,8 +22,6 @@ class PageHandler
             $controller = new WrongController();
             $controller->execute();
 
-            echo $errstr;
-
             return true;
         }, E_ALL);
 

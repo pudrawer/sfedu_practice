@@ -111,4 +111,12 @@ class ModelRecourse extends AbstractRecourse
 
         return true;
     }
+
+    public function deleteNote(int $id): bool
+    {
+        $model = new Model();
+        $model->setId($id);
+
+        return $this->deleteEntity($model, 'car_model', 'id');
+    }
 }
