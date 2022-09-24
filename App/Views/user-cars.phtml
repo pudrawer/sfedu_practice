@@ -1,0 +1,88 @@
+<?php
+/**
+ * @var App\Blocks\UserCarsBlock $this
+ * @var App\Models\AbstractCarModel[] $data
+ */
+$data = $this->getChildModelsList();
+?>
+<div class="cars block">
+    <section
+        class="cars__content"
+    >
+        <h1 class="cars__title">
+            <?= $this->getHeader() ?>
+        </h1>
+
+        <ul class="cars__list">
+            <?php foreach ($data as $item): ?>
+            <li class="cars__item">
+                <h5 class="cars__car-title">
+                    <?= implode('&nbsp;', [$item['brand']->getName(), $item['line']->getName(), $item['model']->getName()]) ?>
+                </h5>
+
+                <div class="cars__down-line">
+
+                </div>
+
+                <div class="cars__car-info">
+                    <div class="cars__row">
+                        <a class="cars__info-title">
+                            num
+                        </a>
+
+                        <a class="cars__info-value">
+                            <?= $item['car']->getNum() ?>
+                        </a>
+                    </div>
+
+                    <div class="cars__row">
+                        <a class="cars__info-title">
+                            vrc
+                        </a>
+
+                        <a class="cars__info-value">
+                            <?= $item['car']->getVrc() ?>
+                        </a>
+                    </div>
+                </div>
+
+                <a class="cars__button" href="/specificCar?brand=<?= $item['brand']->getId() ?>&line=<?= $item['line']->getId() ?>&model=<?= $item['model']->getId() ?>&car=<?= $item['car']->getId() ?>">
+                    go to >
+                </a>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+
+    <div class="cars__img">
+        <nav
+            class="profile-nav profile-nav_margined"
+        >
+            <div class="profile-nav__item">
+                <div class="profile-nav__link-line">
+
+                </div>
+
+                <a
+                    class="profile-nav__link"
+                    href="/profileInfo"
+                >
+                    my info
+                </a>
+            </div>
+
+            <div class="profile-nav__item">
+                <div class="profile-nav__link-line profile-nav__link-line_active">
+
+                </div>
+
+                <a
+                    class="profile-nav__link profile-nav__link_active"
+                    href="/userCars"
+                >
+                    my cars
+                </a>
+            </div>
+        </nav>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<?php
+/**
+ * @var App\Blocks\RegistrationBlock $this
+ */
+$session = \App\Models\Session\Session::getInstance();
+?>
+<div class="registration block">
+    <section class="registration__content">
+        <h1 class="registration__title">
+            <?= $this->getHeader() ?>
+        </h1>
+
+        <form
+            class="registration__form"
+            action="/login"
+            method="post"
+        >
+            <div class="registration__column registration__column_margined">
+                <input
+                    class="registration__input"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                >
+                <input
+                    class="registration__input registration__button"
+                    type="submit"
+                    value="SUBMIT"
+                >
+            </div>
+
+            <div class="registration__column">
+                <input
+                    class="registration__input"
+                    type="password"
+                    name="pass"
+                    placeholder="Pass"
+                >
+            </div>
+        </form>
+    </section>
+
+    <div class="registration__img">
+        <?= $session->getError() ?>
+    </div>
+</div>

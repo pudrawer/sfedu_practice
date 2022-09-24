@@ -5,11 +5,14 @@ namespace App\Router;
 use App\Controllers\ControllerInterface;
 use App\Controllers\HomepageController;
 use App\Controllers\NotFoundController;
+use App\Models\Session\Session;
 
 class Router
 {
     public function chooseController(string $webPath): ?ControllerInterface
     {
+        Session::getInstance()->start();
+
         if ($queryPos = strpos($webPath, '?')) {
             $webPath = substr($webPath, 0, $queryPos);
         }

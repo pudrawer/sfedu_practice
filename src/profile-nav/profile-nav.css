@@ -1,0 +1,48 @@
+.profile-nav {
+    display: flex;
+    flex-direction: column;
+
+    padding: 22px 0;
+    width: 140px;
+
+    background: #B7B0FF;
+}
+
+.profile-nav_margined {
+    margin: auto 0 auto auto;
+}
+
+.profile-nav__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 22px;
+}
+
+.profile-nav__item:last-of-type {
+    margin-bottom: 0;
+}
+
+.profile-nav__link-line {
+    width: 21%;
+    height: 2px;
+
+    background: #A65A5A;
+}
+
+.profile-nav__link-line_active {
+    background: white;
+}
+
+.profile-nav__link {
+    margin: auto;
+
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.115em;
+}
+
+.profile-nav__link_active {
+    color: #A65A5A;
+}

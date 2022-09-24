@@ -1,0 +1,146 @@
+<?php
+/**
+ * @var App\Blocks\ProfileInfoBlock $this
+ * @var App\Models\User $userModel
+ */
+$userModel = $this->getChildModels()['User'];
+?>
+<div class="profile block">
+    <section class="profile__content">
+        <h1 class="profile__title">
+            <?= $this->getHeader() ?>
+        </h1>
+
+        <form
+            class="profile__form"
+            action="/profileInfo"
+            method="post"
+        >
+            <div class="profile__row">
+                <div class="profile__item">
+                    <label
+                        for="email"
+                        class="profile__label"
+                    >
+                        Email
+                    </label>
+                    <input
+                        type="email"
+                        value="<?= $userModel->getEmail() ?>"
+                        name="email"
+                        id="email"
+                        class="profile__input"
+                    >
+                </div>
+
+                <div class="profile__item">
+                    <label
+                        for="pass"
+                        class="profile__label"
+                    >
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        name="pass"
+                        id="pass"
+                        class="profile__input"
+                    >
+                </div>
+            </div>
+
+            <div class="profile__row">
+                <div class="profile__item">
+                    <label
+                        for="name"
+                        class="profile__label"
+                    >
+                        Name
+                    </label>
+                    <input
+                        type="text"
+                        value="<?= $userModel->getName() ?>"
+                        name="name"
+                        id="name"
+                        class="profile__input"
+                    >
+                </div>
+
+                <div class="profile__item">
+                    <label
+                        for="surname"
+                        class="profile__label"
+                    >
+                        Surname
+                    </label>
+                    <input
+                        type="text"
+                        value="<?= $userModel->getSurname() ?>"
+                        name="surname"
+                        id="surname"
+                        class="profile__input"
+                    >
+                </div>
+            </div>
+
+            <div class="profile__row">
+                <div class="profile__item">
+                    <label
+                        for="phone"
+                        class="profile__label"
+                    >
+                        Phone number
+                    </label>
+                    <input
+                        type="tel"
+                        value="<?= $userModel->getPhone() ?>"
+                        name="phone"
+                        id="phone"
+                        class="profile__input"
+                    >
+                </div>
+
+                <div class="profile__item">
+                    <input
+                        type="submit"
+                        value="SUBMIT"
+                        class="profile__button"
+                    >
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <div class="profile__img">
+        <nav
+            class="profile-nav profile-nav_margined"
+        >
+            <div class="profile-nav__item">
+                <div class="profile-nav__link-line profile-nav__link-line_active">
+
+                </div>
+
+                <a
+                    class="profile-nav__link profile-nav__link_active"
+                    href="/profileInfo"
+                >
+                    my info
+                </a>
+            </div>
+
+            <div class="profile-nav__item">
+                <div class="profile-nav__link-line">
+
+                </div>
+
+                <a
+                    class="profile-nav__link"
+                    href="/userCars"
+                >
+                    my cars
+                </a>
+            </div>
+        </nav>
+    </div>
+</div>
