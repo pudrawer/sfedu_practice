@@ -24,11 +24,11 @@ class UserCarsController extends AbstractController
 
         $modelList = $carResource->getUserCarList($user);
         foreach ($modelList as $model) {
-            $block->setChildModelsList($model);
+            $block->setChildCar($model);
         }
 
         return $block
-            ->setHeader(['page' => 'MY CARS'])
-            ->render($block->getActiveLink());
+            ->setHeader(['MY CARS'])
+            ->render('specificCar');
     }
 }

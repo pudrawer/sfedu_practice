@@ -23,7 +23,7 @@ class User
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ?? null;
     }
 
     public function setEmail(string $email): self

@@ -3,7 +3,7 @@
  * @var App\Blocks\UserCarsBlock $this
  * @var App\Models\AbstractCarModel[] $data
  */
-$data = $this->getChildModelsList();
+$data = $this->getChildCars();
 ?>
 <div class="cars block">
     <section
@@ -17,7 +17,7 @@ $data = $this->getChildModelsList();
             <?php foreach ($data as $item): ?>
             <li class="cars__item">
                 <h5 class="cars__car-title">
-                    <?= implode('&nbsp;', [$item['brand']->getName(), $item['line']->getName(), $item['model']->getName()]) ?>
+                    <?= $item->getName() ?>
                 </h5>
 
                 <div class="cars__down-line">
@@ -31,7 +31,7 @@ $data = $this->getChildModelsList();
                         </a>
 
                         <a class="cars__info-value">
-                            <?= $item['car']->getNum() ?>
+                            <?= $item->getNum() ?>
                         </a>
                     </div>
 
@@ -41,12 +41,12 @@ $data = $this->getChildModelsList();
                         </a>
 
                         <a class="cars__info-value">
-                            <?= $item['car']->getVrc() ?>
+                            <?= $item->getVrc() ?>
                         </a>
                     </div>
                 </div>
 
-                <a class="cars__button" href="/specificCar?brand=<?= $item['brand']->getId() ?>&line=<?= $item['line']->getId() ?>&model=<?= $item['model']->getId() ?>&car=<?= $item['car']->getId() ?>">
+                <a class="cars__button" href="/specificCar?car=<?= $item->getId() ?>">
                     go to >
                 </a>
             </li>

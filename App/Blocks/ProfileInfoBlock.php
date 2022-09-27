@@ -7,17 +7,16 @@ use App\Models\User;
 class ProfileInfoBlock extends AbstractBlock
 {
     protected $fileRender = 'profile';
-    protected $activeLink = 'main';
     protected $childStylesheetList = [
-        'profile/profile.css',
-        'profile-nav/profile-nav.css',
+        'profile.css',
+        'profile-nav.css',
     ];
 
     protected $childModels = [];
 
     public function setChildModels(User $userModel): self
     {
-        $this->childModels["$userModel"] = $userModel;
+        $this->childModels[(string) $userModel] = $userModel;
 
         return $this;
     }

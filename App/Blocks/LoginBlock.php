@@ -4,9 +4,8 @@ namespace App\Blocks;
 
 class LoginBlock extends AbstractBlock
 {
-    protected $activeLink = 'main';
     protected $childStylesheetList = [
-        'registration/registration.css'
+        'registration.css'
     ];
     protected $fileRender = 'login';
 }

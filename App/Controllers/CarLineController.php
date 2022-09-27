@@ -31,7 +31,7 @@ class CarLineController extends AbstractController
                     $data['brandModel']->getName(),
                     $block->getData()->getName()
                 ])
-                ->render($block->getActiveLink());
+                ->render('carInfo');
 
             return $block;
         }

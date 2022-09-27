@@ -12,7 +12,7 @@ class WrongController extends AbstractController
         $block = new WrongBlock();
 
         return $block
-            ->setHeader(['page' => '500'])
-            ->render($block->getActiveLink());
+            ->setHeader(['500'])
+            ->render('main');
     }
 }

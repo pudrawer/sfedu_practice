@@ -3,6 +3,7 @@
  * @var App\Blocks\RegistrationBlock $this
  */
 $session = \App\Models\Session\Session::getInstance();
+$errMsg = $session->getError()
 ?>
 <div class="registration block">
     <section class="registration__content">
@@ -41,6 +42,10 @@ $session = \App\Models\Session\Session::getInstance();
     </section>
 
     <div class="registration__img">
-        <?= $session->getError() ?>
+        <?php if ($errMsg) : ?>
+        <div class="error">
+            <?= $errMsg ?>
+        </div>
+        <?php endif; ?>
     </div>
 </div>

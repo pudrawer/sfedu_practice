@@ -8,17 +8,16 @@ abstract class AbstractBlock implements BlockInterface
     protected $fileRender;
     protected $header = [];
     protected $commonStylesheetList = [
-        'button/button.css',
-        'common/reset.css',
-        'common/common.css',
-        'nav/nav.css',
-        'logo/logo.css',
-        'header-footer-section/header-footer-section.css',
-        'form/form.css',
-        'delete/delete.css',
+        'button.css',
+        'reset.css',
+        'common.css',
+        'nav.css',
+        'logo.css',
+        'header-footer-section.css',
+        'form.css',
+        'delete.css',
     ];
     protected $childStylesheetList = [];
-    protected $activeLink;
 
     protected $viewsPath = APP_ROOT . '/App/Views';
     protected $srcPath = APP_ROOT . '/src';
@@ -75,9 +74,8 @@ abstract class AbstractBlock implements BlockInterface
         ];
     }
 
-    public function render(
-        string $activeLink
-    ): self {
+    public function render(string $activeLink): self
+    {
         $headerBlock = new HeaderBlock();
         $footerBlock = new FooterBlock();
 
@@ -95,10 +93,5 @@ abstract class AbstractBlock implements BlockInterface
         require "$this->viewsPath/Components/layout.phtml";
 
         return $this;
-    }
-
-    public function getActiveLink(): string
-    {
-        return $this->activeLink;
     }
 }

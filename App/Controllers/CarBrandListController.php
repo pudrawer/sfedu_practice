@@ -13,9 +13,9 @@ class CarBrandListController extends AbstractController
         $block = new BrandListBlock();
         $model = new BrandRecourse();
         $block
-            ->setHeader(['page' => 'BRAND LIST'])
+            ->setHeader(['BRAND LIST'])
             ->setData($model->getBrandList())
-            ->render($block->getActiveLink());
+            ->render('carInfo');
 
         return $block;
     }

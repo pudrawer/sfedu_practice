@@ -3,34 +3,34 @@
 namespace App\Blocks;
 
 use App\Models\AbstractCarModel;
+use App\Models\Car;
 
 class UserCarsBlock extends AbstractBlock
 {
     protected $fileRender = 'user-cars';
-    protected $activeLink = 'specificCar';
     protected $childStylesheetList = [
-        'cars/cars.css',
-        'profile-nav/profile-nav.css',
+        'cars.css',
+        'profile-nav.css',
     ];
 
-    protected $childModels = [];
+    protected $childCars = [];
 
     /**
-     * @param  AbstractCarModel[] $modelList
+     * @param  Car $carList
      * @return $this
      */
-    public function setChildModelsList(array $modelList): self
+    public function setChildCar(Car $carList): self
     {
-        $this->childModels[] = $modelList;
+        $this->childCars[] = $carList;
 
         return $this;
     }
 
     /**
-     * @return AbstractCarModel[]
+     * @return Car[]
      */
-    public function getChildModelsList(): array
+    public function getChildCars(): array
     {
-        return $this->childModels;
+        return $this->childCars;
     }
 }

@@ -5,9 +5,9 @@ namespace App\Blocks;
 class HeaderBlock extends AbstractBlock
 {
     protected $childStylesheetList = [
-        'header/header.css',
-        'nav/nav.css',
-        'wish-list/wish-list.css',
+        'header.css',
+        'nav.css',
+        'wish-list.css',
     ];
 
     private $linkStatus = [

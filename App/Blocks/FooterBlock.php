@@ -5,7 +5,7 @@ namespace App\Blocks;
 class FooterBlock extends AbstractBlock
 {
     protected $childStylesheetList = [
-        'footer/footer.css',
+        'footer.css',
     ];
 
     protected $data = [

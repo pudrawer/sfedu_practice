@@ -117,23 +117,31 @@ abstract class AbstractRecourse
         string $tableName,
         string $tableRow
     ): bool {
-        $connection = Database::getInstance();
-
+        $valueStr = '';
+        $valueAlias = [];
         foreach ($modelList as $model) {
-            $stmt = $connection->prepare("
-            DELETE FROM
-                $tableName
-            WHERE 
-                $tableRow = :table_value
-            ");
+            $valueNum = count($valueAlias);
+            $value = ":row_value_$valueNum";
 
-            $stmt = $this->bindParamByMap($stmt, [
-                ':table_value' => $model->getId(),
-            ]);
-
-            if (!$stmt->execute()) {
-                throw new Exception();
+            if ($valueNum == 0) {
+                $valueStr .= $value;
+            } else {
+                $valueStr .= ", $value";
             }
+
+            $valueAlias[$value] = $model->getId();
+        }
+
+        $stmt = Database::getInstance()->prepare("
+        DELETE FROM
+            $tableName
+        WHERE 
+            $tableRow IN ($valueStr);
+        ");
+        $stmt = $this->bindParamByMap($stmt, $valueAlias);
+
+        if (!$stmt->execute()) {
+            throw new Exception();
         }
 
         return true;

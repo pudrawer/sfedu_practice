@@ -40,50 +40,38 @@ class UserRecourse extends AbstractRecourse
 
     public function updateInfo(User $userModel): bool
     {
-        $stmt = Database::getInstance()->prepare('
+        $passStr = '';
+        $passAlias = [];
+        if ($userModel->getPassword()) {
+            $passStr = '`password` = :user_password,';
+            $passAlias = [
+                ':user_password' => password_hash(
+                    $userModel->getPassword(),
+                    PASSWORD_DEFAULT
+                ),
+            ];
+        }
+
+        $stmt = Database::getInstance()->prepare("
         UPDATE
             `user`
         SET
             `email`    = :user_email,
             `name`     = :user_name,
             `surname`  = :user_surname,
-            `phone`    = :user_phone,
-            `password` = :user_password
+            $passStr
+            `phone`    = :user_phone
         WHERE `id` = :user_id LIMIT 1;
-        ');
+        ");
 
-        $stmt = $this->bindParamByMap($stmt, [
+        $paramAlias = [
             ':user_email'    => $userModel->getEmail(),
             ':user_name'     => $userModel->getName(),
             ':user_surname'  => $userModel->getSurname(),
             ':user_phone'    => $userModel->getPhone(),
-            ':user_password' => $userModel->getPassword(),
             ':user_id'       => $userModel->getId(),
-        ]);
-
-        return $stmt->execute();
-    }
-
-    public function updateInfoWithoutPass(User $userModel): bool
-    {
-        $stmt = Database::getInstance()->prepare('
-        UPDATE
-            `user`
-        SET
-            `email`    = :user_email,
-            `name`     = :user_name,
-            `surname`  = :user_surname,
-            `phone`    = :user_phone
-        WHERE `id` = :user_id LIMIT 1;
-        ');
-
-        $stmt = $this->bindParamByMap($stmt, [
-            ':user_email'   => $userModel->getEmail(),
-            ':user_name'    => $userModel->getName(),
-            ':user_surname' => $userModel->getSurname(),
-            ':user_phone'   => $userModel->getPhone(),
-            ':user_id'      => $userModel->getId(),
-        ]);
+        ];
+        $stmt = $this->bindParamByMap($stmt, array_merge($paramAlias, $passAlias));
 
         return $stmt->execute();
     }

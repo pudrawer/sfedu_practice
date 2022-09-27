@@ -10,14 +10,14 @@ class CarBrandDeleteController extends AbstractController
 {
     public function execute(): BlockInterface
     {
-        $idParam = htmlspecialchars($this->getParams['id'] ?? '');
+        $idParam = $this->getId();
 
         if (!$idParam) {
             throw new Exception();
         }
 
         $brandResource = new BrandRecourse();
-        $brandResource->deleteNote($idParam);
+        $brandResource->delete($idParam);
 
         $this->redirectTo('carBrandList');
     }

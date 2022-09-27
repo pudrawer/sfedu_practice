@@ -7,19 +7,18 @@ use App\Models\AbstractCarModel;
 class LineBlock extends AbstractBlock
 {
     protected $childStylesheetList = [
-        'car-info/car-info.css',
-        'common-info/common-info.css',
-        'info/info.css',
-        'info-stat/info-stat.css',
+        'car-info.css',
+        'common-info.css',
+        'info.css',
+        'info-stat.css',
     ];
     protected $fileRender = 'car-line';
-    protected $activeLink = 'carInfo';
 
     protected $childModels = [];
 
     public function setChildModels(AbstractCarModel $model): self
     {
-        $this->childModels["$model"] = $model;
+        $this->childModels[(string) $model] = $model;
 
         return $this;
     }

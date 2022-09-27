@@ -16,8 +16,8 @@ class RegistrationController extends AbstractController
             $block = new RegistrationBlock();
 
             return $block
-                ->setHeader(['page' => 'USER REGISTRATION'])
-                ->render($block->getActiveLink());
+                ->setHeader(['USER REGISTRATION'])
+                ->render('main');
         }
 
         $this

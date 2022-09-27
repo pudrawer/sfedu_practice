@@ -18,7 +18,8 @@ abstract class AbstractController implements ControllerInterface
     {
         $webUri = Environment::getInstance();
 
-        header("Location: " . $webUri->getHost() . "/$webPath");
+        $host = $webUri->getHost();
+        header("Location: $host/$webPath");
         exit;
     }
 
@@ -61,5 +62,10 @@ abstract class AbstractController implements ControllerInterface
         $modificator = '\App\Models\Recourse\\' . ucfirst($neededModel) . 'Recourse';
         $modificator = new $modificator();
         return $modificator->modifyProperties($model);
+    }
+
+    public function getId(): ?string
+    {
+        return htmlspecialchars($this->getParams['id'] ?? '');
     }
 }

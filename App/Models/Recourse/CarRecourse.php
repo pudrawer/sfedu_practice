@@ -18,11 +18,7 @@ class CarRecourse extends AbstractRecourse
     public function getUserCarList(User $userModel): ?array
     {
         $stmt = Database::getInstance()->prepare('
-        SELECT
-            cm.`id`   as model_id,
-            cl.`id`   as line_id,
-            cb.`id`   as brand_id,
-        
+        SELECT       
             cm.`name` as model_name,
             cl.`name` as line_name,
             cb.`name` as brand_name,
@@ -59,38 +55,23 @@ class CarRecourse extends AbstractRecourse
             $item = $this->prepareKeyMap($item);
         }
 
-        return array_map([$this, 'split'], $result);
+        return array_map([$this, 'carSetter'], $result);
     }
 
-    private function split(array $data): array
+    private function carSetter(array $data): Car
     {
-        $brandModel = new Brand();
-        $brandModel
-            ->setId($data['brandId'])
-            ->setName($data['brandName']);
-
-        $lineModel = new Line();
-        $lineModel
-            ->setId($data['lineId'])
-            ->setName($data['lineName']);
-
-        $model = new Model();
-        $model
-            ->setId($data['modelId'])
-            ->setName($data['modelName']);
-
         $car = new Car();
         $car
+            ->setName(implode(' ', [
+                $data['brandName'],
+                $data['lineName'],
+                $data['modelName'],
+            ]))
             ->setId($data['id'])
             ->setYear($data['year'])
             ->setNum($data['num'])
             ->setVrc($data['vrc']);
 
-        return [
-            'brand' => $brandModel,
-            'line'  => $lineModel,
-            'model' => $model,
-            'car'   => $car,
-        ];
+        return $car;
     }
 }

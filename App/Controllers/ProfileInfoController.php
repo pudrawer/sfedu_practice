@@ -25,9 +25,9 @@ class ProfileInfoController extends AbstractController
             $userRecourse = new UserRecourse();
 
             return $block
-                ->setHeader(['page' => 'PROFILE'])
+                ->setHeader(['PROFILE'])
                 ->setChildModels($userRecourse->getInfo($userModel))
-                ->render($block->getActiveLink());
+                ->render('main');
         }
 
         if (!$this->updateInfo($userModel)) {
@@ -56,7 +56,7 @@ class ProfileInfoController extends AbstractController
 
         $userRecourse = new UserRecourse();
         if (!$passParam) {
-            return $userRecourse->updateInfoWithoutPass($userModel);
+            return $userRecourse->updateInfo($userModel);
         }
 
         return $userRecourse->updateInfo($userModel->setPassword($passParam));

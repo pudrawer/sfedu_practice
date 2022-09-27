@@ -15,8 +15,8 @@ class LoginController extends AbstractController
             $session = Session::getInstance()->start();
             $loginBlock = new LoginBlock();
             $loginBlock
-                ->setHeader(['page' => 'LOGIN'])
-                ->render($loginBlock->getActiveLink());
+                ->setHeader(['LOGIN'])
+                ->render('main');
         }
 
         if ($this->login()) {
@@ -33,20 +33,20 @@ class LoginController extends AbstractController
         $session = Session::getInstance()->start();
 
         if (!$emailParam || !$passParam) {
-            $session->setError('Invalid email or pass value');
+            $session->addError('Invalid email or pass value');
 
             return false;
         }
 
         $loginRecourse = new LoginRecourse();
-        $userId = $loginRecourse->checkLogin($emailParam, $passParam);
-        if (!$userId) {
-            $session->setError('Bad email or pass');
+        $userInfo = $loginRecourse->checkLogin($emailParam);
+        if (!password_verify($passParam, $userInfo['password'])) {
+            $session->addError('Bad email or pass');
 
             return false;
         }
 
-        $session->setUserId($userId);
+        $session->setUserId($userInfo['id']);
         return true;
     }
 }

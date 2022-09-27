@@ -18,11 +18,12 @@ class Environment
     {
         $data = parse_ini_file($envPath, true);
 
-        $this->dbHost = $data['DB']['HOST'];
-        $this->dbName = $data['DB']['DATABASE'];
-        $this->dbUser = $data['DB']['USER'];
-        $this->dbPass = $data['DB']['PASS'];
-        $this->dbChar = $data['DB']['CHARSET'];
+        $dbInfo = $data['DB'];
+        $this->dbHost = $dbInfo['HOST'];
+        $this->dbName = $dbInfo['DATABASE'];
+        $this->dbUser = $dbInfo['USER'];
+        $this->dbPass = $dbInfo['PASS'];
+        $this->dbChar = $dbInfo['CHARSET'];
 
         $this->host = $data['HOST']['ADDRESS'];
     }

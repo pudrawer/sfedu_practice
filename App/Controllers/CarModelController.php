@@ -33,7 +33,7 @@ class CarModelController extends AbstractController
                 ->setChildModels($data['brandModel'])
                 ->setChildModels($data['lineModel'])
                 ->setData($data['data'])
-                ->render($block->getActiveLink());
+                ->render('carInfo');
 
             return $block;
         }

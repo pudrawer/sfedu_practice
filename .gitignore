@@ -2,3 +2,5 @@
 .idea
 /vendor/
 .env
+/var/sessions/
+

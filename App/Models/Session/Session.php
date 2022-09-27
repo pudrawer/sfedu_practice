@@ -36,31 +36,43 @@ class Session
         return $this;
     }
 
-    public function getUserId(): int
+    public function getUserId(): ?int
     {
-        return $_SESSION['userId'];
+        return $_SESSION['userId'] ?? null;
     }
 
-    public function setError(string $errStr): self
+    public function addError(string $errStr): self
     {
-        $_SESSION['error'] = $errStr;
+        $_SESSION['error'][] = $errStr;
 
         return $this;
     }
 
-    public function getError(): string
+    public function getError(): ?array
     {
-        return $this->unsetError() ?? '';
+        return $this->unset('error') ?? null;
     }
 
-    private function unsetError(): ?string
+    public function addMessage(string $messageStr): self
     {
-        $error = '';
-        if (isset($_SESSION['error'])) {
-            $error = $_SESSION['error'];
-            session_destroy();
+        $_SESSION['message'][] = $messageStr;
+
+        return $this;
+    }
+
+    public function getMessages(): ?array
+    {
+        return $this->unset('message') ?? null;
+    }
+
+    private function unset(string $sessionKey): ?array
+    {
+        $str = [];
+        if (isset($_SESSION[$sessionKey])) {
+            $str = $_SESSION[$sessionKey];
+            unset($_SESSION[$sessionKey]);
         }
 
-        return $error ?? null;
+        return $str ?? null;
     }
 }

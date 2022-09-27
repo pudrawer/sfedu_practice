@@ -11,7 +11,7 @@ class HomepageController extends AbstractController
     {
         $block = new HomepageBlock();
         return $block
-            ->setHeader(['page' => 'MAIN'])
-            ->render($block->getActiveLink());
+            ->setHeader(['MAIN'])
+            ->render('main');
     }
 }

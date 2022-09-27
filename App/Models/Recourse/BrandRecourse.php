@@ -102,7 +102,7 @@ class BrandRecourse extends AbstractRecourse
         return true;
     }
 
-    public function deleteNote(int $id): bool
+    public function delete(int $id): bool
     {
         $brandModel = new Brand();
         $brandModel->setId($id);

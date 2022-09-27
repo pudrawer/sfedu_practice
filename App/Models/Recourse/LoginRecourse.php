@@ -7,9 +7,8 @@ use App\Database\Database;
 class LoginRecourse extends AbstractRecourse
 {
     public function checkLogin(
-        string $email,
-        string $pass
-    ): ?int {
+        string $email
+    ): ?array {
         $connection = Database::getInstance();
         $stmt = $connection->prepare('
         SELECT 
@@ -24,12 +23,7 @@ class LoginRecourse extends AbstractRecourse
             ':email' => $email,
         ]);
         $stmt->execute();
-        $result = $stmt->fetch();
 
-        if (password_verify($pass, $result['password'])) {
-            return $result['id'];
-        }
-
-        return null;
+        return $stmt->fetch() ?: null;
     }
 }

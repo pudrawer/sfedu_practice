@@ -25,7 +25,7 @@ class CarBrandController extends AbstractController
             return $block
                 ->setData($brand)
                 ->setHeader([$brand->getName()])
-                ->render($block->getActiveLink());
+                ->render('carInfo');
         }
 
         $this->changeProperties([

@@ -107,7 +107,7 @@ class LineRecourse extends AbstractRecourse
         return true;
     }
 
-    public function deleteNote(int $id): bool
+    public function delete(int $id): bool
     {
         $lineModel = new Line();
         $lineModel->setId($id);

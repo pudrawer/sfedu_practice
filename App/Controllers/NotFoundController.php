@@ -12,8 +12,8 @@ class NotFoundController extends AbstractController
     {
         $block = new NotFoundBlock();
         $block
-            ->setHeader(['page' => '404'])
-            ->render($block->getActiveLink());
+            ->setHeader(['404'])
+            ->render('main');
 
         return $block;
     }
