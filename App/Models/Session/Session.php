@@ -48,9 +48,12 @@ class Session
         return $this;
     }
 
-    public function getError(): ?array
+    public function getError(): array
     {
-        return $this->unset('error') ?? null;
+        $errors = $_SESSION['message'] ?: [];
+        $this->unset('error');
+
+        return $errors;
     }
 
     public function addMessage(string $messageStr): self
@@ -60,19 +63,20 @@ class Session
         return $this;
     }
 
-    public function getMessages(): ?array
+    public function getMessages(): array
     {
-        return $this->unset('message') ?? null;
+        $messages = $_SESSION['message'] ?: [];
+        $this->unset('message');
+
+        return $messages;
     }
 
-    private function unset(string $sessionKey): ?array
+    private function unset(string $sessionKey): self
     {
-        $str = [];
         if (isset($_SESSION[$sessionKey])) {
-            $str = $_SESSION[$sessionKey];
             unset($_SESSION[$sessionKey]);
         }
 
-        return $str ?? null;
+        return $this;
     }
 }

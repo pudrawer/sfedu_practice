@@ -42,10 +42,10 @@ $errMsg = $session->getError()
     </section>
 
     <div class="registration__img">
-        <?php if ($errMsg) : ?>
-        <div class="error">
-            <?= $errMsg ?>
-        </div>
-        <?php endif; ?>
+        <?php if ($errMsg) : foreach ($errMsg as $error) : ?>
+            <div class="error">
+                <?= $error ?>
+            </div>
+        <?php endforeach; endif; ?>
     </div>
 </div>
