@@ -50,7 +50,7 @@ class Session
 
     public function getError(): array
     {
-        $errors = $_SESSION['message'] ?: [];
+        $errors = $_SESSION['error'] ?: [];
         $this->unset('error');
 
         return $errors;
