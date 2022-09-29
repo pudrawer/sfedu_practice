@@ -42,10 +42,16 @@
                 <input
                     class="form__input"
                     type="text"
-                    value="<?= $data->getName() ?>"
+                    value="<?= strip_tags($data->getName()) ?>"
                     name="name"
                 >
             </div>
+            <input
+                type="text"
+                name="csrfToken"
+                hidden
+                value="<?= $this->getCsrfToken() ?>"
+            >
             <input type="submit" value="SUBMIT">
         </form>
     </section>
@@ -68,7 +74,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= $brandModel->getCountryName() ?>
+                            <?= strip_tags($brandModel->getCountryName()) ?>
                         </div>
                     </div>
                 </div>
@@ -99,7 +105,7 @@
                                 href='/carModel?brand=<?= $brandModel->getId() ?>&line=<?= $data->getId() ?>&model=<?= $item->getId() ?>'
                                 class='common-info__link'
                             >
-                                <?= $item->getName() ?>
+                                <?= strip_tags($item->getName()) ?>
                             </a>
                         </li>
                     <?php endforeach; ?>

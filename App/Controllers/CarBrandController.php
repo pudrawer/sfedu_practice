@@ -6,6 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Exception\Exception;
 use App\Models\Recourse\BrandRecourse;
+use App\Models\Session\Session;
 
 class CarBrandController extends AbstractController
 {
@@ -28,11 +29,13 @@ class CarBrandController extends AbstractController
                 ->render('carInfo');
         }
 
+        $this->checkName($this->getPostParam('name'));
+
         $this->changeProperties([
             'id',
             'name',
-            'countryId'
-        ], 'brand');
+            'countryId',
+        ], 'brand', Session::getInstance()->getCsrfToken());
         $this->redirectTo('carBrandList');
     }
 }

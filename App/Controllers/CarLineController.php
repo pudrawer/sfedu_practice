@@ -7,6 +7,7 @@ use App\Blocks\LineBlock;
 use App\Models\Line;
 use App\Models\Recourse\LineRecourse;
 use App\Exception\Exception;
+use App\Models\Session\Session;
 
 class CarLineController extends AbstractController
 {
@@ -36,10 +37,12 @@ class CarLineController extends AbstractController
             return $block;
         }
 
+        $this->checkName($this->getPostParam('name'));
+
         $this->changeProperties([
             'id',
             'name',
-        ], 'line');
+        ], 'line', Session::getInstance()->getCsrfToken());
         $this->redirectTo('carBrandList');
     }
 }

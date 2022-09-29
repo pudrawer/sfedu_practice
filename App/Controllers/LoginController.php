@@ -12,9 +12,18 @@ class LoginController extends AbstractController
     public function execute(): BlockInterface
     {
         if ($this->isGetMethod()) {
-            $session = Session::getInstance()->start();
+            if (Session::getInstance()->getUserId()) {
+                $this->redirectTo('profileInfo');
+            }
+
+            $rand = random_int(
+                PHP_INT_MIN + 1,
+                PHP_INT_MAX - 1
+            );
+
+            Session::getInstance()->setCsrfToken($rand);
             $loginBlock = new LoginBlock();
-            $loginBlock
+            return $loginBlock
                 ->setHeader(['LOGIN'])
                 ->render('main');
         }
@@ -30,9 +39,12 @@ class LoginController extends AbstractController
         $emailParam = htmlspecialchars($this->getPostParam('email'));
         $passParam  = htmlspecialchars($this->getPostParam('pass'));
 
+        $csrfToken  = $this->getPostParam('csrfToken');
+        $csrfToken = $csrfToken == Session::getInstance()->getCsrfToken();
+
         $session = Session::getInstance()->start();
 
-        if (!$emailParam || !$passParam) {
+        if (!$emailParam || !$passParam || !$csrfToken) {
             $session->addError('Invalid email or pass value');
 
             return false;
@@ -46,7 +58,9 @@ class LoginController extends AbstractController
             return false;
         }
 
-        $session->setUserId($userInfo['id']);
+        $session
+            ->setUserId($userInfo['id'])
+            ->setCsrfToken($userInfo['id']);
         return true;
     }
 }

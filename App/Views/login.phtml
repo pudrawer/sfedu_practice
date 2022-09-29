@@ -37,6 +37,14 @@ $errMsg = $session->getError()
                     name="pass"
                     placeholder="Pass"
                 >
+
+                <input
+                    class="registration__input"
+                    type="text"
+                    name="csrfToken"
+                    hidden
+                    value="<?= \App\Models\Session\Session::getInstance()->getCsrfToken() ?>"
+                >
             </div>
         </form>
     </section>

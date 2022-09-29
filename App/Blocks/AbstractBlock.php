@@ -2,6 +2,8 @@
 
 namespace App\Blocks;
 
+use App\Models\Session\Session;
+
 abstract class AbstractBlock implements BlockInterface
 {
     protected $data = [];
@@ -93,5 +95,10 @@ abstract class AbstractBlock implements BlockInterface
         require "$this->viewsPath/Components/layout.phtml";
 
         return $this;
+    }
+
+    public function getCsrfToken(): string
+    {
+        return Session::getInstance()->getCsrfToken();
     }
 }

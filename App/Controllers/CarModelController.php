@@ -7,6 +7,7 @@ use App\Blocks\ModelBlock;
 use App\Exception\Exception;
 use App\Models\Model;
 use App\Models\Recourse\ModelRecourse;
+use App\Models\Session\Session;
 
 class CarModelController extends AbstractController
 {
@@ -38,12 +39,16 @@ class CarModelController extends AbstractController
             return $block;
         }
 
+        $this
+            ->checkName($this->getPostParam('name'))
+            ->checkYear($this->getPostParam('year'));
+
         $this->changeProperties([
             'id',
             'name',
             'year',
             'previousId',
-        ], 'model');
+        ], 'model', Session::getInstance()->getCsrfToken());
         $this->redirectTo('carBrandList');
     }
 }

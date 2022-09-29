@@ -22,6 +22,8 @@ class PageHandler
             $controller = new WrongController();
             $controller->execute();
 
+            echo $errstr . '<br>' . $errfile;
+
             return true;
         }, E_ALL);
 

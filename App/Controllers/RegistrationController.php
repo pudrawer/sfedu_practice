@@ -7,12 +7,23 @@ use App\Blocks\RegistrationBlock;
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\Recourse\RegistrationRecourse;
+use App\Models\Session\Session;
 
 class RegistrationController extends AbstractController
 {
     public function execute(): BlockInterface
     {
         if ($this->isGetMethod()) {
+            if (Session::getInstance()->getUserId()) {
+                $this->redirectTo('profileInfo');
+            }
+
+            $rand = random_int(
+                PHP_INT_MIN + 1,
+                PHP_INT_MAX - 1
+            );
+
+            Session::getInstance()->setCsrfToken($rand);
             $block = new RegistrationBlock();
 
             return $block
@@ -51,10 +62,13 @@ class RegistrationController extends AbstractController
         $inputPass   = htmlspecialchars($this->getPostParam('pass'));
         $inputRepass = htmlspecialchars($this->getPostParam('repass'));
 
+        $csrf = $this->getPostParam('csrfToken');
+        $csrf = $csrf == Session::getInstance()->getCsrfToken();
+
         $hasRequiredData   = $inputEmail && $inputPass && $inputRepass;
         $hasEqualPasswords = $inputPass === $inputRepass;
 
-        if (!$hasRequiredData || !$hasEqualPasswords) {
+        if (!$hasRequiredData || !$hasEqualPasswords || !$csrf) {
             throw new Exception();
         }
 

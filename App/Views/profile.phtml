@@ -26,7 +26,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="email"
-                        value="<?= $userModel->getEmail() ?>"
+                        value="<?= strip_tags($userModel->getEmail()) ?>"
                         name="email"
                         id="email"
                         class="profile__input"
@@ -60,7 +60,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="text"
-                        value="<?= $userModel->getName() ?>"
+                        value="<?= strip_tags($userModel->getName()) ?>"
                         name="name"
                         id="name"
                         class="profile__input"
@@ -76,7 +76,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="text"
-                        value="<?= $userModel->getSurname() ?>"
+                        value="<?= strip_tags($userModel->getSurname()) ?>"
                         name="surname"
                         id="surname"
                         class="profile__input"
@@ -94,7 +94,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="tel"
-                        value="<?= $userModel->getPhone() ?>"
+                        value="<?= strip_tags($userModel->getPhone()) ?>"
                         name="phone"
                         id="phone"
                         class="profile__input"
@@ -102,6 +102,13 @@ $userModel = $this->getChildModels()['User'];
                 </div>
 
                 <div class="profile__item">
+                    <input
+                        type="text"
+                        name="csrfToken"
+                        hidden
+                        value="<?= $this->getCsrfToken() ?>"
+                    >
+
                     <input
                         type="submit"
                         value="SUBMIT"
