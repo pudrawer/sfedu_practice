@@ -8,6 +8,7 @@ use App\Models\Line;
 use App\Models\Recourse\LineRecourse;
 use App\Exception\Exception;
 use App\Models\Session\Session;
+use App\Models\Validator\Validator;
 
 class CarLineController extends AbstractController
 {
@@ -37,7 +38,8 @@ class CarLineController extends AbstractController
             return $block;
         }
 
-        $this->checkName($this->getPostParam('name'));
+        $validator = new Validator();
+        $validator->checkName($this->getPostParam('name'));
 
         $this->changeProperties([
             'id',

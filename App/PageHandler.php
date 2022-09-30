@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\Controllers\ForbiddenController;
 use App\Controllers\NotFoundController;
 use App\Controllers\WrongController;
+use App\Exception\ForbiddenException;
 use App\Exception\Exception;
 use App\Exception\SelectionException;
 use App\Router\Router;
@@ -23,7 +25,6 @@ class PageHandler
             $controller->execute();
 
             echo $errstr . '<br>' . $errfile;
-
             return true;
         }, E_ALL);
 
@@ -37,6 +38,9 @@ class PageHandler
             $controller->execute();
         } catch (SelectionException $e) {
             $controller = new NotFoundController();
+            $controller->execute();
+        } catch (ForbiddenException $e) {
+            $controller = new ForbiddenController();
             $controller->execute();
         } catch (\Exception $e) {
             $controller = new WrongController();

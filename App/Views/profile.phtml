@@ -26,7 +26,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="email"
-                        value="<?= strip_tags($userModel->getEmail()) ?>"
+                        value="<?= $this->normalizeData($userModel->getEmail()) ?>"
                         name="email"
                         id="email"
                         class="profile__input"
@@ -60,7 +60,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="text"
-                        value="<?= strip_tags($userModel->getName()) ?>"
+                        value="<?= $this->normalizeData($userModel->getName()) ?>"
                         name="name"
                         id="name"
                         class="profile__input"
@@ -76,7 +76,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="text"
-                        value="<?= strip_tags($userModel->getSurname()) ?>"
+                        value="<?= $this->normalizeData($userModel->getSurname()) ?>"
                         name="surname"
                         id="surname"
                         class="profile__input"
@@ -94,7 +94,7 @@ $userModel = $this->getChildModels()['User'];
                     </label>
                     <input
                         type="tel"
-                        value="<?= strip_tags($userModel->getPhone()) ?>"
+                        value="<?= $this->normalizeData($userModel->getPhone()) ?>"
                         name="phone"
                         id="phone"
                         class="profile__input"

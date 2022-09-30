@@ -43,7 +43,7 @@
                 <input
                     class="form__input"
                     type="text"
-                    value="<?= strip_tags($data->getName()) ?>"
+                    value="<?= $this->normalizeData($data->getName()) ?>"
                     name="name"
                 >
             </div>
@@ -68,14 +68,9 @@
                     value="<?= $data->getPreviousId() ?>"
                     name="previousId"
                 >
+                <?php $this->renderCsrfToken() ?>
             </div>
             <input type="submit" value="SUBMIT">
-            <input
-                type="text"
-                name="csrfToken"
-                hidden
-                value="<?= $this->getCsrfToken() ?>"
-            >
         </form>
     </section>
 
@@ -97,7 +92,7 @@
                         </div>
 
                         <div class="info-stat__column">
-                            <?= strip_tags($brandModel->getCountryName()) ?>
+                            <?= $this->normalizeData($brandModel->getCountryName()) ?>
                         </div>
                     </div>
 
@@ -120,7 +115,7 @@
                             href="/carModel?brand=<?= $brandModel->getId() ?>&line=<?= $lineModel->getId() ?>&model=<?= $data->getPreviousId() ?>"
                             class="info-stat__column"
                         >
-                            <?= strip_tags($data->getPreviousName()) ?>
+                            <?= $this->normalizeData($data->getPreviousName()) ?>
                         </a>
                     </div>
                 </div>

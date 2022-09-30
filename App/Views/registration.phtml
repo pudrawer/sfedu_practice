@@ -42,13 +42,7 @@
                     name="repass"
                     placeholder="Re-pass"
                 >
-                <input
-                    class="registration__input"
-                    type="text"
-                    name="csrfToken"
-                    value="<?= $this->getCsrfToken() ?>"
-                    hidden
-                >
+                <?php $this->renderCsrfToken() ?>
             </div>
         </form>
     </section>

@@ -8,6 +8,7 @@ use App\Exception\Exception;
 use App\Models\Model;
 use App\Models\Recourse\ModelRecourse;
 use App\Models\Session\Session;
+use App\Models\Validator\Validator;
 
 class CarModelController extends AbstractController
 {
@@ -39,7 +40,8 @@ class CarModelController extends AbstractController
             return $block;
         }
 
-        $this
+        $validator = new Validator();
+        $validator
             ->checkName($this->getPostParam('name'))
             ->checkYear($this->getPostParam('year'));
 

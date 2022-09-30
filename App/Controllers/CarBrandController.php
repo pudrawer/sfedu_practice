@@ -7,6 +7,7 @@ use App\Blocks\BrandBlock;
 use App\Exception\Exception;
 use App\Models\Recourse\BrandRecourse;
 use App\Models\Session\Session;
+use App\Models\Validator\Validator;
 
 class CarBrandController extends AbstractController
 {
@@ -29,7 +30,8 @@ class CarBrandController extends AbstractController
                 ->render('carInfo');
         }
 
-        $this->checkName($this->getPostParam('name'));
+        $validator = new Validator();
+        $validator->checkName($this->getPostParam('name'));
 
         $this->changeProperties([
             'id',

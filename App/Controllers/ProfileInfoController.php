@@ -8,6 +8,7 @@ use App\Exception\Exception;
 use App\Models\Recourse\UserRecourse;
 use App\Models\Session\Session;
 use App\Models\User;
+use App\Models\Validator\Validator;
 
 class ProfileInfoController extends AbstractController
 {
@@ -43,21 +44,15 @@ class ProfileInfoController extends AbstractController
         $nameParam    = htmlspecialchars($this->getPostParam('name'));
         $surnameParam = htmlspecialchars($this->getPostParam('surname'));
         $phoneParam   = htmlspecialchars($this->getPostParam('phone'));
-        $csrfToken    = htmlspecialchars($this->getPostParam('csrfToken'));
 
-        $csrfToken = $csrfToken == Session::getInstance()->getCsrfToken();
+        $this->checkCsrfToken($this->getPostParam('csrfToken'));
 
-        if (
-            !$emailParam
-            || !$nameParam
-            || !$surnameParam
-            || !$phoneParam
-            || !$csrfToken
-        ) {
+        if (!$emailParam || !$nameParam || !$surnameParam || !$phoneParam) {
             throw new Exception();
         }
 
-        $this
+        $validator = new Validator();
+        $validator
             ->checkEmail($emailParam)
             ->checkPhoneNumber($phoneParam)
             ->checkName($nameParam)

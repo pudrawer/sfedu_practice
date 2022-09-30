@@ -41,10 +41,10 @@ class Session
         return $_SESSION['userId'] ?? null;
     }
 
-    public function setCsrfToken(int $param): self
+    public function setCsrfToken(string $tokenValue): self
     {
         if (!$_SESSION['csrfToken']) {
-            $_SESSION['csrfToken'] = hash('sha256', $param);
+            $_SESSION['csrfToken'] = $tokenValue;
         }
 
         return $this;
@@ -64,7 +64,7 @@ class Session
 
     public function getError(): array
     {
-        $errors = isset($_SESSION['error']) ? $_SESSION['error'] : [];
+        $errors = $_SESSION['error'] ?? [];
         $this->unset('error');
 
         return $errors;

@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\LoginBlock;
+use App\Exception\Exception;
+use App\Models\Randomizer\Randomizer;
 use App\Models\Recourse\LoginRecourse;
 use App\Models\Session\Session;
 
@@ -11,17 +13,14 @@ class LoginController extends AbstractController
 {
     public function execute(): BlockInterface
     {
+        if (Session::getInstance()->getUserId()) {
+            $this->redirectTo('profileInfo');
+        }
+
         if ($this->isGetMethod()) {
-            if (Session::getInstance()->getUserId()) {
-                $this->redirectTo('profileInfo');
-            }
+            $randomizer = new Randomizer();
+            Session::getInstance()->setCsrfToken($randomizer->generateCsrfToken());
 
-            $rand = random_int(
-                PHP_INT_MIN + 1,
-                PHP_INT_MAX - 1
-            );
-
-            Session::getInstance()->setCsrfToken($rand);
             $loginBlock = new LoginBlock();
             return $loginBlock
                 ->setHeader(['LOGIN'])
@@ -39,12 +38,11 @@ class LoginController extends AbstractController
         $emailParam = htmlspecialchars($this->getPostParam('email'));
         $passParam  = htmlspecialchars($this->getPostParam('pass'));
 
-        $csrfToken  = $this->getPostParam('csrfToken');
-        $csrfToken = $csrfToken == Session::getInstance()->getCsrfToken();
+        $this->checkCsrfToken($this->getPostParam('csrfToken'));
 
         $session = Session::getInstance()->start();
 
-        if (!$emailParam || !$passParam || !$csrfToken) {
+        if (!$emailParam || !$passParam) {
             $session->addError('Invalid email or pass value');
 
             return false;

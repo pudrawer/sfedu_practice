@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Exception\ForbiddenException;
 use App\Exception\Exception;
 use App\Models\Environment\Environment;
 use App\Models\Session\Session;
@@ -39,9 +40,7 @@ abstract class AbstractController implements ControllerInterface
         string $neededModel,
         string $csrfToken
     ): bool {
-        if ($csrfToken != Session::getInstance()->getCsrfToken()) {
-            throw new Exception();
-        }
+        $this->checkCsrfToken($csrfToken);
 
         $hasRequiredData = true;
         $paramsValue = [];
@@ -75,44 +74,12 @@ abstract class AbstractController implements ControllerInterface
         return htmlspecialchars($this->getParams['id'] ?? '');
     }
 
-    public function checkName(string $param): self
+    public function checkCsrfToken(string $tokenValue): bool
     {
-        if (!preg_match('/^[a-zа-я]+$/ui', $param)) {
-            throw new Exception('Bad name');
+        if ($tokenValue != Session::getInstance()->getCsrfToken()) {
+            throw new ForbiddenException();
         }
 
-        return $this;
-    }
-
-    public function checkYear(string $param): self
-    {
-        if (!preg_match('/[1-2][0-9]{3}/ui', $param)) {
-            throw new Exception('Bad year');
-        }
-
-        return $this;
-    }
-
-    public function checkEmail(string $param): self
-    {
-        if (!preg_match('/^[\w\d_.+-]+@[\w\d-]+.[\w]+$/ui', $param)) {
-            throw new Exception('Bad email');
-        }
-
-        return $this;
-    }
-
-    public function checkPhoneNumber(string $param): self
-    {
-        if (
-            !preg_match(
-                '/((8|\+7)-?)?\(?\d{3,5}\)?-?\d{1}-?\d{1}-?\d{1}-?\d{1}-?\d{1}((-?\d{1})?-?\d{1})?/',
-                $param
-            )
-        ) {
-            throw new Exception();
-        }
-
-        return $this;
+        return true;
     }
 }

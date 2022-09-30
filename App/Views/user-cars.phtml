@@ -17,7 +17,7 @@ $data = $this->getChildCars();
             <?php foreach ($data as $item): ?>
             <li class="cars__item">
                 <h5 class="cars__car-title">
-                    <?= $item->getName() ?>
+                    <?= $this->normalizeData($item->getName()) ?>
                 </h5>
 
                 <div class="cars__down-line">

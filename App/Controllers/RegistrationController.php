@@ -6,6 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\RegistrationBlock;
 use App\Database\Database;
 use App\Exception\Exception;
+use App\Models\Randomizer\Randomizer;
 use App\Models\Recourse\RegistrationRecourse;
 use App\Models\Session\Session;
 
@@ -13,17 +14,14 @@ class RegistrationController extends AbstractController
 {
     public function execute(): BlockInterface
     {
+        if (Session::getInstance()->getUserId()) {
+            $this->redirectTo('profileInfo');
+        }
+
         if ($this->isGetMethod()) {
-            if (Session::getInstance()->getUserId()) {
-                $this->redirectTo('profileInfo');
-            }
+            $randomizer = new Randomizer();
+            Session::getInstance()->setCsrfToken($randomizer->generateCsrfToken());
 
-            $rand = random_int(
-                PHP_INT_MIN + 1,
-                PHP_INT_MAX - 1
-            );
-
-            Session::getInstance()->setCsrfToken($rand);
             $block = new RegistrationBlock();
 
             return $block
@@ -62,13 +60,12 @@ class RegistrationController extends AbstractController
         $inputPass   = htmlspecialchars($this->getPostParam('pass'));
         $inputRepass = htmlspecialchars($this->getPostParam('repass'));
 
-        $csrf = $this->getPostParam('csrfToken');
-        $csrf = $csrf == Session::getInstance()->getCsrfToken();
+        $this->checkCsrfToken($this->getPostParam('csrfToken'));
 
         $hasRequiredData   = $inputEmail && $inputPass && $inputRepass;
         $hasEqualPasswords = $inputPass === $inputRepass;
 
-        if (!$hasRequiredData || !$hasEqualPasswords || !$csrf) {
+        if (!$hasRequiredData || !$hasEqualPasswords) {
             throw new Exception();
         }
 

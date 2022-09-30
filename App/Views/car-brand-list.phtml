@@ -22,7 +22,7 @@
                 <?php foreach ($data as $brand): ?>
                 <li class="brand-list__item">
                     <a href="carBrand?brand=<?= $brand->getId() ?>" class="brand-list__link">
-                        <?= $brand->getName() ?>
+                        <?= $this->normalizeData($brand->getName()) ?>
                     </a>
                 </li>
                 <?php endforeach; ?>

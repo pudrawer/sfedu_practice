@@ -101,4 +101,14 @@ abstract class AbstractBlock implements BlockInterface
     {
         return Session::getInstance()->getCsrfToken();
     }
+
+    public function renderCsrfToken(): void
+    {
+        require_once APP_ROOT . '/App/Views/csrf-token-input.phtml';
+    }
+
+    public function normalizeData(string $data): string
+    {
+        return strip_tags($data);
+    }
 }
