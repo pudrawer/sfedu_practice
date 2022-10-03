@@ -60,7 +60,7 @@ class RegistrationController extends AbstractController
         $inputPass   = htmlspecialchars($this->getPostParam('pass'));
         $inputRepass = htmlspecialchars($this->getPostParam('repass'));
 
-        $this->checkCsrfToken($this->getPostParam('csrfToken'));
+        $this->checkCsrfToken();
 
         $hasRequiredData   = $inputEmail && $inputPass && $inputRepass;
         $hasEqualPasswords = $inputPass === $inputRepass;

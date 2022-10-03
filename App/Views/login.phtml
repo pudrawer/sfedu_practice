@@ -38,7 +38,7 @@ $errMsg = $session->getError()
                     placeholder="Pass"
                 >
 
-                <?php $this->renderCsrfToken() ?>
+                <?php $this->renderChildBlock('csrf-token-input'); ?>
             </div>
         </form>
     </section>

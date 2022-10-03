@@ -45,7 +45,7 @@ class ProfileInfoController extends AbstractController
         $surnameParam = htmlspecialchars($this->getPostParam('surname'));
         $phoneParam   = htmlspecialchars($this->getPostParam('phone'));
 
-        $this->checkCsrfToken($this->getPostParam('csrfToken'));
+        $this->checkCsrfToken();
 
         if (!$emailParam || !$nameParam || !$surnameParam || !$phoneParam) {
             throw new Exception();

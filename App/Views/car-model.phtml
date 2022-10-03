@@ -68,7 +68,7 @@
                     value="<?= $data->getPreviousId() ?>"
                     name="previousId"
                 >
-                <?php $this->renderCsrfToken() ?>
+                <?php $this->renderChildBlock('csrf-token-input'); ?>
             </div>
             <input type="submit" value="SUBMIT">
         </form>

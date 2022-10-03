@@ -37,7 +37,7 @@ class CarBrandController extends AbstractController
             'id',
             'name',
             'countryId',
-        ], 'brand', Session::getInstance()->getCsrfToken());
+        ], 'brand');
         $this->redirectTo('carBrandList');
     }
 }

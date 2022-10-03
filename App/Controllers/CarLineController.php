@@ -44,7 +44,7 @@ class CarLineController extends AbstractController
         $this->changeProperties([
             'id',
             'name',
-        ], 'line', Session::getInstance()->getCsrfToken());
+        ], 'line');
         $this->redirectTo('carBrandList');
     }
 }

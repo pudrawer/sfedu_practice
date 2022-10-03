@@ -46,7 +46,7 @@
                     name="name"
                 >
             </div>
-            <?php $this->renderCsrfToken() ?>
+            <?php $this->renderChildBlock('csrf-token-input'); ?>
             <input type="submit" value="SUBMIT">
         </form>
     </section>

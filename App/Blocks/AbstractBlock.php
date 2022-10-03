@@ -53,9 +53,15 @@ abstract class AbstractBlock implements BlockInterface
         return $this;
     }
 
-    public function renderChildBlock()
+    public function renderChildBlock(string $fileRender = null): void
     {
-        require "$this->viewsPath/$this->fileRender.phtml";
+        if (!$fileRender) {
+            require "$this->viewsPath/$this->fileRender.phtml";
+            return;
+        }
+
+        require "$this->viewsPath/$fileRender.phtml";
+        return;
     }
 
     public function footerSetData(): array
@@ -100,11 +106,6 @@ abstract class AbstractBlock implements BlockInterface
     public function getCsrfToken(): string
     {
         return Session::getInstance()->getCsrfToken();
-    }
-
-    public function renderCsrfToken(): void
-    {
-        require_once APP_ROOT . '/App/Views/csrf-token-input.phtml';
     }
 
     public function normalizeData(string $data): string

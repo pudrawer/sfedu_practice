@@ -36,11 +36,10 @@ abstract class AbstractController implements ControllerInterface
     }
 
     public function changeProperties(
-        array $params,
-        string $neededModel,
-        string $csrfToken
+        array  $params,
+        string $neededModel
     ): bool {
-        $this->checkCsrfToken($csrfToken);
+        $this->checkCsrfToken();
 
         $hasRequiredData = true;
         $paramsValue = [];
@@ -74,9 +73,12 @@ abstract class AbstractController implements ControllerInterface
         return htmlspecialchars($this->getParams['id'] ?? '');
     }
 
-    public function checkCsrfToken(string $tokenValue): bool
+    public function checkCsrfToken(): bool
     {
-        if ($tokenValue != Session::getInstance()->getCsrfToken()) {
+        if (
+            $this->getPostParam('csrfToken')
+            != Session::getInstance()->getCsrfToken()
+        ) {
             throw new ForbiddenException();
         }
 

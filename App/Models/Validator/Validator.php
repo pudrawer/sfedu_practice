@@ -8,7 +8,8 @@ class Validator
 {
     public function checkName(string $param): self
     {
-        if (!preg_match('/^[a-zа-я]+$/ui', $param)) {
+        $pregPattern = '/^[a-zа-я]+$/ui';
+        if (!preg_match($pregPattern, $param)) {
             throw new Exception('Bad name');
         }
 
@@ -17,7 +18,8 @@ class Validator
 
     public function checkYear(string $param): self
     {
-        if (!preg_match('/[1-2][0-9]{3}/ui', $param)) {
+        $pregPattern = '/[1-2][0-9]{3}/ui';
+        if (!preg_match($pregPattern, $param)) {
             throw new Exception('Bad year');
         }
 
@@ -26,7 +28,8 @@ class Validator
 
     public function checkEmail(string $param): self
     {
-        if (!preg_match('/^[\w\d_.+-]+@[\w\d-]+.[\w]+$/ui', $param)) {
+        $pregPattern = '/^[\w\d_.+-]+@[\w\d-]+.[\w]+$/ui';
+        if (!preg_match($pregPattern, $param)) {
             throw new Exception('Bad email');
         }
 
@@ -35,12 +38,8 @@ class Validator
 
     public function checkPhoneNumber(string $param): self
     {
-        if (
-            !preg_match(
-                '/((8|\+7)-?)?\(?\d{3,5}\)?-?\d{1}-?\d{1}-?\d{1}-?\d{1}-?\d{1}((-?\d{1})?-?\d{1})?/',
-                $param
-            )
-        ) {
+        $pregPattern = '/((8|\+7)-?)?\(?\d{3,5}\)?-?\d{1}-?\d{1}-?\d{1}-?\d{1}-?\d{1}((-?\d{1})?-?\d{1})?/';
+        if (!preg_match($pregPattern, $param)) {
             throw new Exception();
         }
 

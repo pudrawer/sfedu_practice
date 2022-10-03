@@ -11,7 +11,7 @@ class ForbiddenController extends AbstractController
     {
         $block = new ForbiddenBlock();
         return $block
-            ->setHeader(['502'])
+            ->setHeader(['403'])
             ->render('main');
     }
 }

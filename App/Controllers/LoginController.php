@@ -38,7 +38,7 @@ class LoginController extends AbstractController
         $emailParam = htmlspecialchars($this->getPostParam('email'));
         $passParam  = htmlspecialchars($this->getPostParam('pass'));
 
-        $this->checkCsrfToken($this->getPostParam('csrfToken'));
+        $this->checkCsrfToken();
 
         $session = Session::getInstance()->start();
 
@@ -56,9 +56,10 @@ class LoginController extends AbstractController
             return false;
         }
 
+        $randomizer = new Randomizer();
         $session
             ->setUserId($userInfo['id'])
-            ->setCsrfToken($userInfo['id']);
+            ->setCsrfToken($randomizer->generateCsrfToken($userInfo['id']));
         return true;
     }
 }

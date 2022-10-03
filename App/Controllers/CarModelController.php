@@ -50,7 +50,7 @@ class CarModelController extends AbstractController
             'name',
             'year',
             'previousId',
-        ], 'model', Session::getInstance()->getCsrfToken());
+        ], 'model');
         $this->redirectTo('carBrandList');
     }
 }
