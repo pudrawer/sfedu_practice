@@ -53,15 +53,12 @@ abstract class AbstractBlock implements BlockInterface
         return $this;
     }
 
-    public function renderChildBlock(string $fileRender = null): void
+    public function renderChildBlock(string $fileRender = null): self
     {
-        if (!$fileRender) {
-            require "$this->viewsPath/$this->fileRender.phtml";
-            return;
-        }
-
+        $fileRender = $fileRender ?: $this->fileRender;
         require "$this->viewsPath/$fileRender.phtml";
-        return;
+        
+        return $this;
     }
 
     public function footerSetData(): array
