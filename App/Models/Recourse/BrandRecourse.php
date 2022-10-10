@@ -3,13 +3,33 @@
 namespace App\Models\Recourse;
 
 use App\Database\Database;
-use App\Exception\Exception;
+use App\Exception\RecourseException;
 use App\Models\AbstractCarModel;
 use App\Models\Brand;
 use App\Models\Line;
 
 class BrandRecourse extends AbstractRecourse
 {
+    /**
+     * @param Brand $model
+     * @return bool
+     */
+    public function createNewEntity(AbstractCarModel $model): bool
+    {
+        $stmt = Database::getInstance()->prepare('
+        INSERT INTO
+            car_brand (`name`, `country_id`)
+        VALUES 
+            (:brand_name, :country_id);
+        ');
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_name' => $model->getName(),
+            ':country_id' => $model->getCountryId(),
+        ]);
+
+        return $stmt->execute();
+    }
+
     /**
      * @return Brand[]
      */
@@ -25,6 +45,7 @@ class BrandRecourse extends AbstractRecourse
     /**
      * @param int $brandId
      * @return Brand
+     * @throws RecourseException
      */
     public function getBrandInfo(int $brandId): AbstractCarModel
     {
@@ -45,7 +66,7 @@ class BrandRecourse extends AbstractRecourse
         $stmt->execute();
         $brandInfo = $stmt->fetch();
         if (!$brandInfo) {
-            throw new Exception('Data not found' . PHP_EOL);
+            throw new RecourseException('Data not found' . PHP_EOL);
         }
 
         return $this->prepareValueSimpleMap(
@@ -75,7 +96,7 @@ class BrandRecourse extends AbstractRecourse
     /**
      * @param Brand $model
      * @return bool
-     * @throws Exception
+     * @throws RecourseException
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
@@ -96,10 +117,33 @@ class BrandRecourse extends AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new Exception('Query error' . PHP_EOL);
+            throw new RecourseException('Query error' . PHP_EOL);
         }
 
         return true;
+    }
+
+    public function modifyPropertiesByHttp(
+        AbstractCarModel $model
+    ): bool {
+        $stmt = Database::getInstance()->prepare('
+        UPDATE
+            `car_brand`
+        SET
+            `id` = :modified_id,
+            `name` = :modified_name,
+            `country_id` = :modified_country
+        WHERE
+            `id` = :brand_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':modified_id'      => $model->getModifiedId(),
+            ':modified_name'    => $model->getName(),
+            ':modified_country' => $model->getCountryId(),
+            ':brand_id'         => $model->getId(),
+        ]);
+        return $stmt->execute();
     }
 
     public function delete(int $id): bool

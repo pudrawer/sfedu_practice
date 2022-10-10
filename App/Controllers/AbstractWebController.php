@@ -7,7 +7,7 @@ use App\Exception\Exception;
 use App\Models\Environment\Environment;
 use App\Models\Session\Session;
 
-abstract class AbstractController implements ControllerInterface
+abstract class AbstractWebController implements ControllerInterface
 {
     protected $getParams = [];
 
@@ -36,7 +36,7 @@ abstract class AbstractController implements ControllerInterface
     }
 
     public function changeProperties(
-        array  $params,
+        array $params,
         string $neededModel
     ): bool {
         $this->checkCsrfToken();

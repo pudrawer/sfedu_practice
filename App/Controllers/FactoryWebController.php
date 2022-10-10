@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\HeaderBlock;
 
-class FactoryController extends AbstractController
+class FactoryWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

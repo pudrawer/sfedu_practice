@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\WrongBlock;
 
-class WrongController extends AbstractController
+class WrongWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

@@ -3,11 +3,8 @@
 namespace App\Models\Recourse;
 
 use App\Database\Database;
-use App\Exception\Exception;
+use App\Exception\RecourseException;
 use App\Models\AbstractCarModel;
-use App\Models\Brand;
-use App\Models\Line;
-use App\Models\Model;
 
 abstract class AbstractRecourse
 {
@@ -99,7 +96,7 @@ abstract class AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new Exception();
+            throw new RecourseException();
         }
 
         return true;
@@ -110,13 +107,17 @@ abstract class AbstractRecourse
      * @param string $tableName
      * @param string $tableRow
      * @return bool
-     * @throws Exception
+     * @throws RecourseException
      */
     protected function deleteEntityList(
         array $modelList,
         string $tableName,
         string $tableRow
     ): bool {
+        if (count($modelList) == 0) {
+            return true;
+        }
+
         $valueStr = '';
         $valueAlias = [];
         foreach ($modelList as $model) {
@@ -141,7 +142,7 @@ abstract class AbstractRecourse
         $stmt = $this->bindParamByMap($stmt, $valueAlias);
 
         if (!$stmt->execute()) {
-            throw new Exception();
+            throw new RecourseException();
         }
 
         return true;

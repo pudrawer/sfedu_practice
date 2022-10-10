@@ -9,7 +9,7 @@ use App\Models\Randomizer\Randomizer;
 use App\Models\Recourse\LoginRecourse;
 use App\Models\Session\Session;
 
-class LoginController extends AbstractController
+class LoginWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CarController extends AbstractController
+class CarWebController extends AbstractWebController
 {
     public function execute(): void
     {

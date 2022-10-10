@@ -3,7 +3,7 @@
 namespace App\Models\Recourse;
 
 use App\Database\Database;
-use App\Exception\Exception;
+use App\Exception\RecourseException;
 use App\Models\AbstractCarModel;
 use App\Models\Model;
 use App\Models\Selection\LineSelection;
@@ -55,7 +55,7 @@ class ModelRecourse extends AbstractRecourse
         $stmt->execute();
         $modelInfo = $stmt->fetch();
         if (!$modelInfo) {
-            throw new Exception('Data not found' . PHP_EOL);
+            throw new RecourseException('Data not found' . PHP_EOL);
         }
 
         return $this->splitByModel($modelInfo);
@@ -83,7 +83,7 @@ class ModelRecourse extends AbstractRecourse
     /**
      * @param Model $model
      * @return bool
-     * @throws Exception
+     * @throws RecourseException
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
@@ -106,7 +106,7 @@ class ModelRecourse extends AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new Exception('Query error' . PHP_EOL);
+            throw new RecourseException('Query error' . PHP_EOL);
         }
 
         return true;
@@ -118,5 +118,105 @@ class ModelRecourse extends AbstractRecourse
         $model->setId($id);
 
         return $this->deleteEntity($model, 'car_model', 'id');
+    }
+
+    public function getOnlyModelsInformation(): array
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT
+            *
+        FROM 
+            `car_model`;
+        ');
+        $stmt->execute();
+
+        $result = $stmt->fetchAll();
+        if (is_array($result)) {
+            return array_map([$this, 'prepareKeyMap'], $result);
+        }
+
+        throw new RecourseException();
+    }
+
+    public function getOnlyModelInfo(int $id): Model
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT
+            *
+        FROM
+            `car_model`
+        WHERE `id` = :model_id;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':model_id' => $id,
+        ]);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        if (!$result) {
+            throw new RecourseException();
+        }
+
+        $model = new Model();
+        return $model
+            ->setId($id)
+            ->setName($result['name'])
+            ->setYear($result['year'])
+            ->setPreviousId($result['previous_line_model'])
+            ->setLineId($result['car_line_id']);
+    }
+
+    public function modifyAllInfo(Model $model): Model
+    {
+        $stmt = Database::getInstance()->prepare('
+        UPDATE
+            `car_model`
+        SET
+            `id` = :modified_id,
+            `name` = :modified_name,
+            `car_line_id` = :modified_car_line_id,
+            `previous_line_model` = :modified_previous_model,
+            `year` = :modified_year
+        WHERE `id` = :model_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':modified_id'             => $model->getModifiedId(),
+            ':modified_name'           => $model->getName(),
+            ':modified_car_line_id'    => $model->getLineId(),
+            ':modified_previous_model' => $model->getPreviousId(),
+            ':modified_year'           => $model->getYear(),
+            ':model_id'                => $model->getId(),
+        ]);
+
+        if ($stmt->execute()) {
+            return $model;
+        }
+
+        throw new RecourseException();
+    }
+
+    public function createEntity(Model $model): Model
+    {
+        $stmt = Database::getInstance()->prepare('
+        INSERT INTO
+            `car_model` (`name`, `previous_line_model`, `year`, `car_line_id`)
+        VALUES 
+            (:model_name, :previous_line, :model_year, :car_line_id);
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':model_name'    => $model->getName(),
+            ':previous_line' => $model->getPreviousId(),
+            ':model_year'    => $model->getYear(),
+            ':car_line_id'   => $model->getLineId(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new RecourseException();
+        }
+
+        return $model;
     }
 }

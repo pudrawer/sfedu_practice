@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\BrandListBlock;
 use App\Models\Recourse\BrandRecourse;
 
-class CarBrandListController extends AbstractController
+class CarBrandListWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

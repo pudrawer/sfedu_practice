@@ -5,6 +5,7 @@ namespace App\Models;
 class Line extends AbstractCarModel
 {
     private $modelList = [];
+    private $brandId = null;
 
     /**
      * @param Model[] $modelList
@@ -32,5 +33,17 @@ class Line extends AbstractCarModel
     public function __toString()
     {
         return 'LineModel';
+    }
+
+    public function setBrandId(int $brandId): self
+    {
+        $this->brandId = $brandId;
+
+        return $this;
+    }
+
+    public function getBrandId(): ?int
+    {
+        return $this->brandId;
     }
 }

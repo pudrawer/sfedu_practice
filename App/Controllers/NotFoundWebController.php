@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Blocks\NotFoundBlock;
 
-class NotFoundController extends AbstractController
+class NotFoundWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

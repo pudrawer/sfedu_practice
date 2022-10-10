@@ -56,8 +56,8 @@ abstract class AbstractBlock implements BlockInterface
     public function renderChildBlock(string $fileRender = null): self
     {
         $fileRender = $fileRender ?: $this->fileRender;
+
         require "$this->viewsPath/$fileRender.phtml";
-        
         return $this;
     }
 

@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Exception\Exception;
 use App\Models\Recourse\ModelRecourse;
 
-class CarModelDeleteController extends AbstractController
+class CarModelDeleteWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

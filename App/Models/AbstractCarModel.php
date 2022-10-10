@@ -8,6 +8,7 @@ abstract class AbstractCarModel
     protected $name;
     protected $countryName;
     protected $countryId;
+    protected $modifiedId;
 
     public function setCountryId(int $countryId): self
     {
@@ -55,5 +56,17 @@ abstract class AbstractCarModel
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setModifiedId(int $modifiedId): self
+    {
+        $this->modifiedId = $modifiedId;
+
+        return $this;
+    }
+
+    public function getModifiedId(): int
+    {
+        return $this->modifiedId;
     }
 }

@@ -10,7 +10,7 @@ use App\Models\Randomizer\Randomizer;
 use App\Models\Recourse\RegistrationRecourse;
 use App\Models\Session\Session;
 
-class RegistrationController extends AbstractController
+class RegistrationWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

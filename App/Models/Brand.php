@@ -20,6 +20,9 @@ class Brand extends AbstractCarModel
         return $this;
     }
 
+    /**
+     * @return Line[]
+     */
     public function getLineList(): array
     {
         return $this->lineList;

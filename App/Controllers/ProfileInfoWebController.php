@@ -10,7 +10,7 @@ use App\Models\Session\Session;
 use App\Models\User;
 use App\Models\Validator\Validator;
 
-class ProfileInfoController extends AbstractController
+class ProfileInfoWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

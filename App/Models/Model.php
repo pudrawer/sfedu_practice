@@ -7,6 +7,7 @@ class Model extends AbstractCarModel
     private $year;
     private $previousId;
     private $previousName;
+    private $lineId;
 
     public function setYear(int $year): self
     {
@@ -47,5 +48,17 @@ class Model extends AbstractCarModel
     public function __toString()
     {
         return 'Model';
+    }
+
+    public function setLineId(int $lineId): self
+    {
+        $this->lineId = $lineId;
+
+        return $this;
+    }
+
+    public function getLineId(): int
+    {
+        return $this->lineId;
     }
 }

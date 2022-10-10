@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CountryController extends AbstractController
+class CountryWebController extends AbstractWebController
 {
     public function execute(): void
     {

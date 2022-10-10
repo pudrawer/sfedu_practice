@@ -10,7 +10,7 @@ use App\Models\Recourse\ModelRecourse;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
-class CarModelController extends AbstractController
+class CarModelWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

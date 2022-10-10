@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
+use App\Blocks\ForbiddenBlock;
 use App\Blocks\BlockInterface;
-use App\Blocks\HomepageBlock;
 
-class HomepageController extends AbstractController
+class ForbiddenWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {
-        $block = new HomepageBlock();
+        $block = new ForbiddenBlock();
         return $block
-            ->setHeader(['MAIN'])
+            ->setHeader(['403'])
             ->render('main');
     }
 }

@@ -8,7 +8,7 @@ use App\Models\Recourse\CarRecourse;
 use App\Models\Session\Session;
 use App\Models\User;
 
-class UserCarsController extends AbstractController
+class UserCarsWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

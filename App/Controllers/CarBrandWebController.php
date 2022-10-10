@@ -9,7 +9,7 @@ use App\Models\Recourse\BrandRecourse;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
-class CarBrandController extends AbstractController
+class CarBrandWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

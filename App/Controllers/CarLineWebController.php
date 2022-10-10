@@ -10,7 +10,7 @@ use App\Exception\Exception;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
-class CarLineController extends AbstractController
+class CarLineWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {

@@ -4,9 +4,9 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Exception\Exception;
-use App\Models\Recourse\BrandRecourse;
+use App\Models\Recourse\LineRecourse;
 
-class CarBrandDeleteController extends AbstractController
+class CarLineDeleteWebController extends AbstractWebController
 {
     public function execute(): BlockInterface
     {
@@ -16,9 +16,8 @@ class CarBrandDeleteController extends AbstractController
             throw new Exception();
         }
 
-        $brandResource = new BrandRecourse();
-        $brandResource->delete($idParam);
-
+        $lineResource = new LineRecourse();
+        $lineResource->delete($idParam);
         $this->redirectTo('carBrandList');
     }
 }

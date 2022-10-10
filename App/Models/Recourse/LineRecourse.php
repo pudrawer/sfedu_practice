@@ -2,13 +2,11 @@
 
 namespace App\Models\Recourse;
 
-use App\Exception\Exception;
+use App\Exception\RecourseException;
 use App\Models\AbstractCarModel;
 use App\Database\Database;
-use App\Models\Brand;
 use App\Models\Line;
 use App\Models\Selection\BrandSelection;
-use App\Models\Selection\SelectionInterface;
 
 class LineRecourse extends AbstractRecourse
 {
@@ -41,7 +39,7 @@ class LineRecourse extends AbstractRecourse
 
         $lineInfo = $stmt->fetch();
         if (!$lineInfo) {
-            throw new Exception('Data not found' . PHP_EOL);
+            throw new RecourseException('Data not found' . PHP_EOL);
         }
 
         $brandSelection = new BrandSelection();
@@ -82,7 +80,7 @@ class LineRecourse extends AbstractRecourse
     /**
      * @param Line $model
      * @return bool
-     * @throws Exception
+     * @throws RecourseException
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
@@ -97,11 +95,11 @@ class LineRecourse extends AbstractRecourse
 
         $stmt = $this->bindParamByMap($stmt, [
             ':line_name' => $model->getName(),
-            ':line_id'   => $model->getId(),
+            ':line_id' => $model->getId(),
         ]);
 
         if (!$stmt->execute()) {
-            throw new Exception('Query error' . PHP_EOL);
+            throw new RecourseException('Query error' . PHP_EOL);
         }
 
         return true;
@@ -114,5 +112,93 @@ class LineRecourse extends AbstractRecourse
 
         $this->deleteEntity($lineModel, 'car_model', 'car_line_id');
         return $this->deleteEntity($lineModel, 'car_line', 'id');
+    }
+
+    public function getLinesByHttp(): array
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT
+            `id`,
+            `name`,
+            `car_brand_id`
+        FROM 
+            `car_line`
+        ');
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public function getLineByHttp(Line $model): Line
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT
+            *
+        FROM
+            `car_line`
+        WHERE `id` = :line_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':line_id' => $model->getId(),
+        ]);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        if (!$result) {
+            throw new RecourseException();
+        }
+
+        return $model
+            ->setName($result['name'])
+            ->setBrandId($result['car_brand_id']);
+    }
+
+    public function createEntity(Line $model): Line
+    {
+        $stmt = Database::getInstance()->prepare('
+        INSERT INTO 
+            `car_line` (`name`, `car_brand_id`)
+        VALUES 
+            (:line_name, :brand_id)
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':line_name' => $model->getName(),
+            ':brand_id'  => $model->getBrandId(),
+        ]);
+
+        if ($stmt->execute()) {
+            return $model;
+        }
+
+        throw new RecourseException();
+    }
+
+    public function modifyPropertiesByHttp(Line $model): Line
+    {
+        $stmt = Database::getInstance()->prepare('
+        UPDATE
+            `car_line`
+        SET
+            `id` = :modified_id,
+            `name` = :modified_name,
+            `car_brand_id` = :modified_brand_id
+        WHERE `id` = :line_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':modified_id'       => $model->getModifiedId(),
+            ':modified_name'     => $model->getName(),
+            ':modified_brand_id' => $model->getBrandId(),
+            ':line_id'           => $model->getId(),
+        ]);
+
+        if ($stmt->execute()) {
+            return $model;
+        }
+
+        throw new RecourseException();
     }
 }

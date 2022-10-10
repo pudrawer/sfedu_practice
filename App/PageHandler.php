@@ -2,13 +2,18 @@
 
 namespace App;
 
-use App\Controllers\ForbiddenController;
-use App\Controllers\NotFoundController;
-use App\Controllers\WrongController;
+use App\Api\Controllers\ForbiddenApiController;
+use App\Api\Controllers\NotFoundApiController;
+use App\Controllers\ForbiddenWebController;
+use App\Controllers\NotFoundWebController;
+use App\Controllers\WrongWebController;
+use App\Exception\ApiException;
 use App\Exception\ForbiddenException;
 use App\Exception\Exception;
 use App\Exception\SelectionException;
-use App\Router\Router;
+use App\Exception\UserApiException;
+use App\Router\AbstractRouter;
+use App\Router\WebRouter;
 
 class PageHandler
 {
@@ -16,34 +21,27 @@ class PageHandler
 
     public function handlePage()
     {
-        set_error_handler(function (
-            int $errno,
-            string $errstr,
-            string $errfile
-        ) {
-            $controller = new WrongController();
-            $controller->execute();
-
-            echo $errstr . '<br>' . $errfile;
-            return true;
-        }, E_ALL);
-
         try {
-            $router = new Router();
-            $controller = $router->chooseController($_SERVER['REQUEST_URI'] ?? '');
+            $controller = AbstractRouter::chooseRouter($_SERVER['REQUEST_URI'] ?? '');
 
             $controller->execute();
         } catch (Exception $e) {
-            $controller = new NotFoundController();
+            $controller = new NotFoundWebController();
             $controller->execute();
         } catch (SelectionException $e) {
-            $controller = new NotFoundController();
+            $controller = new NotFoundWebController();
             $controller->execute();
         } catch (ForbiddenException $e) {
-            $controller = new ForbiddenController();
+            $controller = new ForbiddenWebController();
+            $controller->execute();
+        } catch (ApiException $e) {
+            $controller = new NotFoundApiController();
+            $controller->execute();
+        } catch (UserApiException $e) {
+            $controller = new ForbiddenApiController();
             $controller->execute();
         } catch (\Exception $e) {
-            $controller = new WrongController();
+            $controller = new WrongWebController();
             $controller->execute();
         }
     }
