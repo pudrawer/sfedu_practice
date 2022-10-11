@@ -9,7 +9,7 @@ use App\Models\Line;
 use App\Models\Model;
 use App\Models\User;
 
-class CarRecourse extends AbstractRecourse
+class CarResource extends AbstractResource
 {
     /**
      * @param User $userModel

@@ -6,7 +6,7 @@ use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\User;
 
-class UserRecourse extends AbstractRecourse
+class UserResource extends AbstractResource
 {
     public function getInfo(User $userModel): User
     {

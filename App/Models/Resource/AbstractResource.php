@@ -6,7 +6,7 @@ use App\Database\Database;
 use App\Exception\ResourceException;
 use App\Models\AbstractCarModel;
 
-abstract class AbstractRecourse
+abstract class AbstractResource
 {
     protected function prepareValueSimpleMap(
         array $data,

@@ -5,14 +5,14 @@ namespace App\Api\Controllers;
 use App\Exception\ApiException;
 use App\Exception\ResourceException;
 use App\Models\Brand;
-use App\Models\Resource\BrandRecourse;
+use App\Models\Resource\BrandResource;
 
 class BrandsApiController extends AbstractApiController
 {
     protected function getData()
     {
         $result = [];
-        $recourse = new BrandRecourse();
+        $recourse = new BrandResource();
         if ($this->getEntityIdParam()) {
             try {
                 $brandInfo = $recourse->getBrandInfo($this->getEntityIdParam());
@@ -36,7 +36,7 @@ class BrandsApiController extends AbstractApiController
             return;
         }
 
-        $brandList = $recourse->getAllInformation('car_brand');
+        $brandList = $recourse->getInformation();
         $temp = [];
 
         foreach ($brandList as $brand) {
@@ -61,7 +61,7 @@ class BrandsApiController extends AbstractApiController
             ->setName($data['name'])
             ->setCountryId($data['country_id']);
 
-        $recourse = new BrandRecourse();
+        $recourse = new BrandResource();
         if (!$recourse->createNewEntity($brandModel)) {
             throw new ApiException('Something was wrong' . PHP_EOL);
         }
@@ -88,7 +88,7 @@ class BrandsApiController extends AbstractApiController
             ->setCountryId($data['country_id'])
             ->setModifiedId($data['id']);
 
-        $brandRecourse = new BrandRecourse();
+        $brandRecourse = new BrandResource();
         if ($brandRecourse->modifyAllProperties($brandModel)) {
             $this->renderJson([
                 'id'        => $brandModel->getModifiedId(),
@@ -105,7 +105,7 @@ class BrandsApiController extends AbstractApiController
     {
         $this->checkEntityIdParam();
 
-        $brandRecourse = new BrandRecourse();
+        $brandRecourse = new BrandResource();
         $brandRecourse->delete($this->getEntityIdParam());
     }
 }

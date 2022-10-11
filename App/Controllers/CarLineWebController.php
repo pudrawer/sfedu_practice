@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\LineBlock;
 use App\Models\Line;
-use App\Models\Resource\LineRecourse;
+use App\Models\Resource\LineResource;
 use App\Exception\Exception;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
@@ -23,7 +23,7 @@ class CarLineWebController extends AbstractWebController
             }
 
             $block = new LineBlock();
-            $lineResource = new LineRecourse();
+            $lineResource = new LineResource();
 
             $data = $lineResource->getLineInfo($brandParam, $lineParam);
             $block

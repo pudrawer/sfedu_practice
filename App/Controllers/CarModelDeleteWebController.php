@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Exception\Exception;
-use App\Models\Resource\ModelRecourse;
+use App\Models\Resource\ModelResource;
 
 class CarModelDeleteWebController extends AbstractWebController
 {
@@ -16,7 +16,7 @@ class CarModelDeleteWebController extends AbstractWebController
             throw new Exception();
         }
 
-        $modelResource = new ModelRecourse();
+        $modelResource = new ModelResource();
         $modelResource->delete($idParam);
         $this->redirectTo('carBrandList');
     }

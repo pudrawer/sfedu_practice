@@ -6,13 +6,13 @@ use App\Exception\ApiException;
 use App\Exception\Exception;
 use App\Exception\ResourceException;
 use App\Models\Model;
-use App\Models\Resource\ModelRecourse;
+use App\Models\Resource\ModelResource;
 
 class ModelsApiController extends AbstractApiController
 {
     protected function getData()
     {
-        $modelRecourse = new ModelRecourse();
+        $modelRecourse = new ModelResource();
 
         if ($this->getEntityIdParam()) {
             try {
@@ -32,7 +32,7 @@ class ModelsApiController extends AbstractApiController
         }
 
         try {
-            $this->renderJson($modelRecourse->getAllInformation('car_model'));
+            $this->renderJson($modelRecourse->getInformation());
         } catch (ResourceException $e) {
             throw new ApiException();
         }
@@ -48,7 +48,7 @@ class ModelsApiController extends AbstractApiController
         ]);
 
         $model = new Model();
-        $modelRecourse = new ModelRecourse();
+        $modelRecourse = new ModelResource();
 
         try {
             $modelRecourse->createEntity(
@@ -77,7 +77,7 @@ class ModelsApiController extends AbstractApiController
         ]);
 
         $model = new Model();
-        $modelRecourse = new ModelRecourse();
+        $modelRecourse = new ModelResource();
         try {
             $modelRecourse->modifyAllProperties(
                 $model
@@ -104,7 +104,7 @@ class ModelsApiController extends AbstractApiController
     protected function deleteData()
     {
         $this->checkEntityIdParam();
-        $modelRecourse = new ModelRecourse();
+        $modelRecourse = new ModelResource();
         if (!$modelRecourse->delete($this->getEntityIdParam())) {
             throw new ApiException();
         }

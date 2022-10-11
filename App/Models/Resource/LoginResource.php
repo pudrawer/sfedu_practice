@@ -4,7 +4,7 @@ namespace App\Models\Resource;
 
 use App\Database\Database;
 
-class LoginRecourse extends AbstractRecourse
+class LoginResource extends AbstractResource
 {
     public function checkLogin(
         string $email

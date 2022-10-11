@@ -8,7 +8,7 @@ use App\Database\Database;
 use App\Models\Line;
 use App\Models\Selection\BrandSelection;
 
-class LineRecourse extends AbstractRecourse
+class LineResource extends AbstractResource
 {
     public function getLineInfo(
         int $brandId,
@@ -77,6 +77,26 @@ class LineRecourse extends AbstractRecourse
         return $stmt->fetchAll();
     }
 
+    public function getByBrandId(int $brandId): ?array
+    {
+        $connection = Database::getInstance();
+        $stmt = $connection->prepare('
+        SELECT 
+            `id`, 
+            `name` 
+        FROM 
+            `car_line` 
+        WHERE `car_brand_id` = :brand_id;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_id' => $brandId,
+        ]);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     /**
      * @param Line $model
      * @return bool
@@ -114,7 +134,7 @@ class LineRecourse extends AbstractRecourse
         return $this->deleteEntity($lineModel, 'car_line', 'id');
     }
 
-    public function getLineByHttp(Line $model): Line
+    public function getById(int $id): Line
     {
         $stmt = Database::getInstance()->prepare('
         SELECT
@@ -125,7 +145,7 @@ class LineRecourse extends AbstractRecourse
         ');
 
         $stmt = $this->bindParamByMap($stmt, [
-            ':line_id' => $model->getId(),
+            ':line_id' => $id,
         ]);
         $stmt->execute();
 
@@ -134,6 +154,7 @@ class LineRecourse extends AbstractRecourse
             throw new ResourceException();
         }
 
+        $model = new Line();
         return $model
             ->setName($result['name'])
             ->setBrandId($result['car_brand_id']);
@@ -184,5 +205,10 @@ class LineRecourse extends AbstractRecourse
         }
 
         throw new ResourceException();
+    }
+
+    public function getInformation(): array
+    {
+        return parent::getAllInformation('car_line');
     }
 }

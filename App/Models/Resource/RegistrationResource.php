@@ -5,7 +5,7 @@ namespace App\Models\Resource;
 use App\Database\Database;
 use App\Exception\Exception;
 
-class RegistrationRecourse extends AbstractRecourse
+class RegistrationResource extends AbstractResource
 {
     public function registerUser(
         string $email,

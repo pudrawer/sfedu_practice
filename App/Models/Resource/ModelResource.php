@@ -9,7 +9,7 @@ use App\Models\Model;
 use App\Models\Selection\LineSelection;
 use App\Models\Selection\BrandSelection;
 
-class ModelRecourse extends AbstractRecourse
+class ModelResource extends AbstractResource
 {
     public function getModelInfo(
         int $brandId,
@@ -200,5 +200,10 @@ class ModelRecourse extends AbstractRecourse
         }
 
         return $model;
+    }
+
+    public function getInformation(): array
+    {
+        return parent::getAllInformation('car_model');
     }
 }

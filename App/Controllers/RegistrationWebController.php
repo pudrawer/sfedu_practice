@@ -7,7 +7,7 @@ use App\Blocks\RegistrationBlock;
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
-use App\Models\Resource\RegistrationRecourse;
+use App\Models\Resource\RegistrationResource;
 use App\Models\Session\Session;
 
 class RegistrationWebController extends AbstractWebController
@@ -37,7 +37,7 @@ class RegistrationWebController extends AbstractWebController
         throw new Exception('Already registered' . PHP_EOL);
     }
 
-    private function alreadyRegister(): RegistrationRecourse
+    private function alreadyRegister(): RegistrationResource
     {
         $inputEmail = htmlspecialchars($this->getPostParam('email'));
 
@@ -45,7 +45,7 @@ class RegistrationWebController extends AbstractWebController
             throw new Exception();
         }
 
-        $model = new RegistrationRecourse();
+        $model = new RegistrationResource();
 
         if ($model->checkRegistration($inputEmail)) {
             throw new Exception();
@@ -54,7 +54,7 @@ class RegistrationWebController extends AbstractWebController
         return $model;
     }
 
-    private function registerUser(RegistrationRecourse $model): self
+    private function registerUser(RegistrationResource $model): self
     {
         $inputEmail  = htmlspecialchars($this->getPostParam('email'));
         $inputPass   = htmlspecialchars($this->getPostParam('pass'));

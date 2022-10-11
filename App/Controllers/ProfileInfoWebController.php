@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\ProfileInfoBlock;
 use App\Exception\Exception;
-use App\Models\Resource\UserRecourse;
+use App\Models\Resource\UserResource;
 use App\Models\Session\Session;
 use App\Models\User;
 use App\Models\Validator\Validator;
@@ -23,7 +23,7 @@ class ProfileInfoWebController extends AbstractWebController
         if ($this->isGetMethod()) {
             $block = new ProfileInfoBlock();
 
-            $userRecourse = new UserRecourse();
+            $userRecourse = new UserResource();
 
             return $block
                 ->setHeader(['PROFILE'])
@@ -64,7 +64,7 @@ class ProfileInfoWebController extends AbstractWebController
             ->setSurname($surnameParam)
             ->setPhone($phoneParam);
 
-        $userRecourse = new UserRecourse();
+        $userRecourse = new UserResource();
         if (!$passParam) {
             return $userRecourse->updateInfo($userModel);
         }

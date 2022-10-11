@@ -8,7 +8,7 @@ use App\Models\AbstractCarModel;
 use App\Models\Brand;
 use App\Models\Line;
 
-class BrandRecourse extends AbstractRecourse
+class BrandResource extends AbstractResource
 {
     /**
      * @param Brand $model
@@ -69,28 +69,14 @@ class BrandRecourse extends AbstractRecourse
             throw new ResourceException('Data not found' . PHP_EOL);
         }
 
+        $lineResource = new LineResource();
         return $this->prepareValueSimpleMap(
             array_merge(
                 $this->prepareKeyMap($brandInfo),
-                ['lineList' => $this->getLineList($brandId)]
+                ['lineList' => $lineResource->getByBrandId($brandId)]
             ),
             'brand'
         );
-    }
-
-    private function getLineList(int $brandId): ?array
-    {
-        $connection = Database::getInstance();
-
-        $stmt = $connection->prepare('
-        SELECT id, name FROM car_line WHERE car_brand_id = :brand_id;
-        ');
-        $stmt = $this->bindParamByMap($stmt, [
-            ':brand_id' => $brandId,
-        ]);
-        $stmt->execute();
-
-        return $stmt->fetchAll();
     }
 
     /**
@@ -176,5 +162,10 @@ class BrandRecourse extends AbstractRecourse
         $this->deleteEntityList($lineList, 'car_model', 'car_line_id');
         $this->deleteEntity($brandModel, 'car_line', 'car_brand_id');
         return $this->deleteEntity($brandModel, 'car_brand', 'id');
+    }
+
+    public function getInformation(): array
+    {
+        return parent::getAllInformation('car_brand');
     }
 }

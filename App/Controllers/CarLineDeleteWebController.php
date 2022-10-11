@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Exception\Exception;
-use App\Models\Resource\LineRecourse;
+use App\Models\Resource\LineResource;
 
 class CarLineDeleteWebController extends AbstractWebController
 {
@@ -16,7 +16,7 @@ class CarLineDeleteWebController extends AbstractWebController
             throw new Exception();
         }
 
-        $lineResource = new LineRecourse();
+        $lineResource = new LineResource();
         $lineResource->delete($idParam);
         $this->redirectTo('carBrandList');
     }

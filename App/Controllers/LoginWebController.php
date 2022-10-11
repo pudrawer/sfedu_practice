@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\LoginBlock;
 use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
-use App\Models\Resource\LoginRecourse;
+use App\Models\Resource\LoginResource;
 use App\Models\Session\Session;
 
 class LoginWebController extends AbstractWebController
@@ -48,7 +48,7 @@ class LoginWebController extends AbstractWebController
             return false;
         }
 
-        $loginRecourse = new LoginRecourse();
+        $loginRecourse = new LoginResource();
         $userInfo = $loginRecourse->checkLogin($emailParam);
         if (!password_verify($passParam, $userInfo['password'])) {
             $session->addError('Bad email or pass');

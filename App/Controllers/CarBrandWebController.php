@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Exception\Exception;
-use App\Models\Resource\BrandRecourse;
+use App\Models\Resource\BrandResource;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
@@ -21,7 +21,7 @@ class CarBrandWebController extends AbstractWebController
             }
 
             $block = new BrandBlock();
-            $brandResource = new BrandRecourse();
+            $brandResource = new BrandResource();
 
             $brand = $brandResource->getBrandInfo($brandParam);
             return $block

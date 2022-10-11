@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\ModelBlock;
 use App\Exception\Exception;
 use App\Models\Model;
-use App\Models\Resource\ModelRecourse;
+use App\Models\Resource\ModelResource;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
@@ -24,7 +24,7 @@ class CarModelWebController extends AbstractWebController
             }
 
             $block = new ModelBlock();
-            $modelResource = new ModelRecourse();
+            $modelResource = new ModelResource();
             $data = $modelResource->getModelInfo($brandParam, $lineParam, $modelParam);
             $block
                 ->setHeader([
