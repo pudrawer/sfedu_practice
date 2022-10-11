@@ -10,14 +10,18 @@ use App\Models\Session\Session;
 class ApiRouter extends AbstractRouter
 {
     private const CONTROLLER_NAME = 0;
-    private const PARAM = 1;
 
     public function chooseController(string $path): ?ControllerInterface
     {
         $path = trim($path, '/');
-        $paramList = explode('/', $path);
 
-        $controller = ucfirst($paramList[self::CONTROLLER_NAME]);
+        $paramPos = strpos($path, '/');
+        $paramList = [];
+        if ($paramPos) {
+            $paramList = explode('/', substr($path, $paramPos + 1));
+        }
+
+        $controller = ucfirst(explode('/', $path)[self::CONTROLLER_NAME]);
         $controller = "App\Api\Controllers\\{$controller}ApiController";
         if (class_exists($controller)) {
             set_error_handler(function (
@@ -31,7 +35,7 @@ class ApiRouter extends AbstractRouter
                 return true;
             }, E_ALL);
 
-            return new $controller($paramList[self::PARAM] ?? null);
+            return new $controller($paramList ?? []);
         }
 
         return null;

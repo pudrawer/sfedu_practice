@@ -11,7 +11,7 @@ abstract class AbstractApiController implements ControllerInterface
 {
     protected $param;
 
-    public function __construct($param)
+    public function __construct(array $param)
     {
         $this->param = $param;
     }
@@ -26,8 +26,6 @@ abstract class AbstractApiController implements ControllerInterface
 
     public function execute()
     {
-        header('Content-Type: application/json');
-
         $method = $this->getRequestMethod() . 'Data';
 
         if (method_exists($this, $method)) {
@@ -39,7 +37,7 @@ abstract class AbstractApiController implements ControllerInterface
 
     public function getRequestMethod(): string
     {
-        return strtolower($_SERVER['REQUEST_METHOD']) ?? 'get';
+        return strtolower($_SERVER['REQUEST_METHOD'] ?? 'get');
     }
 
     protected function getDataFromHttp(): array
@@ -47,7 +45,7 @@ abstract class AbstractApiController implements ControllerInterface
         return json_decode(file_get_contents('php://input'), true) ?? [];
     }
 
-    protected function checkNeededData(
+    protected function validateRequiredData(
         array $data,
         array $neededParams
     ): array {
@@ -60,10 +58,22 @@ abstract class AbstractApiController implements ControllerInterface
         return $data;
     }
 
-    protected function checkParam()
+    protected function checkEntityIdParam()
     {
-        if (!$this->param) {
+        if (!$this->getEntityIdParam()) {
             throw new UserApiException('Bad request param' . PHP_EOL);
         }
+    }
+
+    protected function renderJson(array $data)
+    {
+        header('Content-Type: application/json');
+
+        echo json_encode($data);
+    }
+
+    protected function getEntityIdParam(): ?int
+    {
+        return $this->param[0] ?? null;
     }
 }

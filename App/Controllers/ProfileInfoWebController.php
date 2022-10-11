@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\ProfileInfoBlock;
 use App\Exception\Exception;
-use App\Models\Recourse\UserRecourse;
+use App\Models\Resource\UserRecourse;
 use App\Models\Session\Session;
 use App\Models\User;
 use App\Models\Validator\Validator;

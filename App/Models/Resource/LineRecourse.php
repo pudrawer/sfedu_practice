@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Recourse;
+namespace App\Models\Resource;
 
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\AbstractCarModel;
 use App\Database\Database;
 use App\Models\Line;
@@ -39,7 +39,7 @@ class LineRecourse extends AbstractRecourse
 
         $lineInfo = $stmt->fetch();
         if (!$lineInfo) {
-            throw new RecourseException('Data not found' . PHP_EOL);
+            throw new ResourceException('Data not found' . PHP_EOL);
         }
 
         $brandSelection = new BrandSelection();
@@ -80,7 +80,7 @@ class LineRecourse extends AbstractRecourse
     /**
      * @param Line $model
      * @return bool
-     * @throws RecourseException
+     * @throws ResourceException
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
@@ -99,7 +99,7 @@ class LineRecourse extends AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new RecourseException('Query error' . PHP_EOL);
+            throw new ResourceException('Query error' . PHP_EOL);
         }
 
         return true;
@@ -112,22 +112,6 @@ class LineRecourse extends AbstractRecourse
 
         $this->deleteEntity($lineModel, 'car_model', 'car_line_id');
         return $this->deleteEntity($lineModel, 'car_line', 'id');
-    }
-
-    public function getLinesByHttp(): array
-    {
-        $stmt = Database::getInstance()->prepare('
-        SELECT
-            `id`,
-            `name`,
-            `car_brand_id`
-        FROM 
-            `car_line`
-        ');
-
-        $stmt->execute();
-
-        return $stmt->fetchAll();
     }
 
     public function getLineByHttp(Line $model): Line
@@ -147,7 +131,7 @@ class LineRecourse extends AbstractRecourse
 
         $result = $stmt->fetch();
         if (!$result) {
-            throw new RecourseException();
+            throw new ResourceException();
         }
 
         return $model
@@ -173,10 +157,10 @@ class LineRecourse extends AbstractRecourse
             return $model;
         }
 
-        throw new RecourseException();
+        throw new ResourceException();
     }
 
-    public function modifyPropertiesByHttp(Line $model): Line
+    public function modifyAllProperties(Line $model): Line
     {
         $stmt = Database::getInstance()->prepare('
         UPDATE
@@ -199,6 +183,6 @@ class LineRecourse extends AbstractRecourse
             return $model;
         }
 
-        throw new RecourseException();
+        throw new ResourceException();
     }
 }

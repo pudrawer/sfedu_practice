@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Exception\Exception;
-use App\Models\Recourse\ModelRecourse;
+use App\Models\Resource\ModelRecourse;
 
 class CarModelDeleteWebController extends AbstractWebController
 {

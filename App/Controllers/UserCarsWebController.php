@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\UserCarsBlock;
-use App\Models\Recourse\CarRecourse;
+use App\Models\Resource\CarRecourse;
 use App\Models\Session\Session;
 use App\Models\User;
 

@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\LoginBlock;
 use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
-use App\Models\Recourse\LoginRecourse;
+use App\Models\Resource\LoginRecourse;
 use App\Models\Session\Session;
 
 class LoginWebController extends AbstractWebController

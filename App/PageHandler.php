@@ -2,8 +2,7 @@
 
 namespace App;
 
-use App\Api\Controllers\ForbiddenApiController;
-use App\Api\Controllers\NotFoundApiController;
+use App\Api\Controllers\WrongApiController;
 use App\Controllers\ForbiddenWebController;
 use App\Controllers\NotFoundWebController;
 use App\Controllers\WrongWebController;
@@ -13,7 +12,6 @@ use App\Exception\Exception;
 use App\Exception\SelectionException;
 use App\Exception\UserApiException;
 use App\Router\AbstractRouter;
-use App\Router\WebRouter;
 
 class PageHandler
 {
@@ -35,11 +33,11 @@ class PageHandler
             $controller = new ForbiddenWebController();
             $controller->execute();
         } catch (ApiException $e) {
-            $controller = new NotFoundApiController();
+            $controller = new WrongApiController();
             $controller->execute();
         } catch (UserApiException $e) {
-            $controller = new ForbiddenApiController();
-            $controller->execute();
+            $controller = new WrongApiController();
+            $controller->execute(403);
         } catch (\Exception $e) {
             $controller = new WrongWebController();
             $controller->execute();

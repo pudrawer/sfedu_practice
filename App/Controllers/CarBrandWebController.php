@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Exception\Exception;
-use App\Models\Recourse\BrandRecourse;
+use App\Models\Resource\BrandRecourse;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 

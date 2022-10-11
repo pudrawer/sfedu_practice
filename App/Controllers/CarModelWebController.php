@@ -6,7 +6,7 @@ use App\Blocks\BlockInterface;
 use App\Blocks\ModelBlock;
 use App\Exception\Exception;
 use App\Models\Model;
-use App\Models\Recourse\ModelRecourse;
+use App\Models\Resource\ModelRecourse;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 

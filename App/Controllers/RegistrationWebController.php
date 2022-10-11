@@ -7,7 +7,7 @@ use App\Blocks\RegistrationBlock;
 use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
-use App\Models\Recourse\RegistrationRecourse;
+use App\Models\Resource\RegistrationRecourse;
 use App\Models\Session\Session;
 
 class RegistrationWebController extends AbstractWebController

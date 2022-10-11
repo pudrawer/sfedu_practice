@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Blocks\BlockInterface;
 use App\Blocks\LineBlock;
 use App\Models\Line;
-use App\Models\Recourse\LineRecourse;
+use App\Models\Resource\LineRecourse;
 use App\Exception\Exception;
 use App\Models\Session\Session;
 use App\Models\Validator\Validator;

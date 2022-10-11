@@ -3,9 +3,9 @@
 namespace App\Api\Controllers;
 
 use App\Exception\ApiException;
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\Brand;
-use App\Models\Recourse\BrandRecourse;
+use App\Models\Resource\BrandRecourse;
 
 class BrandsApiController extends AbstractApiController
 {
@@ -13,30 +13,30 @@ class BrandsApiController extends AbstractApiController
     {
         $result = [];
         $recourse = new BrandRecourse();
-        if ($this->param) {
+        if ($this->getEntityIdParam()) {
             try {
-                $brandInfo = $recourse->getBrandInfo($this->param);
-            } catch (RecourseException $e) {
+                $brandInfo = $recourse->getBrandInfo($this->getEntityIdParam());
+            } catch (ResourceException $e) {
                 throw new ApiException();
             }
 
             $result['name'] = $brandInfo->getName();
-            $result['countryName'] = $brandInfo->getCountryName();
-            $result['countryId'] = $brandInfo->getCountryId();
-            $result['lineList'] = [];
+            $result['country_name'] = $brandInfo->getCountryName();
+            $result['country_id'] = $brandInfo->getCountryId();
+            $result['line_list'] = [];
 
             foreach ($brandInfo->getLineList() as $line) {
                 $temp['id'] = $line->getId();
                 $temp['name'] = $line->getName();
 
-                $result['lineList'][] = $temp;
+                $result['line_list'][] = $temp;
             }
 
-            echo json_encode($result);
+            $this->renderJson($result);
             return;
         }
 
-        $brandList = $recourse->getBrandList();
+        $brandList = $recourse->getAllInformation('car_brand');
         $temp = [];
 
         foreach ($brandList as $brand) {
@@ -46,65 +46,66 @@ class BrandsApiController extends AbstractApiController
             $result[] = $temp;
         }
 
-        echo json_encode($result);
+        $this->renderJson($result);
     }
 
     protected function postData()
     {
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
             'name',
-            'countyId',
+            'county_id',
         ]);
 
         $brandModel = new Brand();
         $brandModel
             ->setName($data['name'])
-            ->setCountryId($data['countryId']);
+            ->setCountryId($data['country_id']);
 
         $recourse = new BrandRecourse();
         if (!$recourse->createNewEntity($brandModel)) {
             throw new ApiException('Something was wrong' . PHP_EOL);
         }
 
-        echo json_encode([
+        $this->renderJson([
             'name'      => $brandModel->getName(),
-            'countryId' => $brandModel->getCountryId(),
+            'country_id' => $brandModel->getCountryId(),
         ]);
     }
 
     protected function putData()
     {
-        $this->checkParam();
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
+        $this->checkEntityIdParam();
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
             'id',
             'name',
-            'countryId',
+            'country_id',
         ]);
 
         $brandModel = new Brand();
         $brandModel
-            ->setId($this->param)
+            ->setId($this->getEntityIdParam())
             ->setName($data['name'])
-            ->setCountryId($data['countryId'])
+            ->setCountryId($data['country_id'])
             ->setModifiedId($data['id']);
 
         $brandRecourse = new BrandRecourse();
-        if ($brandRecourse->modifyPropertiesByHttp($brandModel)) {
-            echo json_encode([
+        if ($brandRecourse->modifyAllProperties($brandModel)) {
+            $this->renderJson([
                 'id'        => $brandModel->getModifiedId(),
                 'name'      => $brandModel->getName(),
-                'countryId' => $brandModel->getCountryId(),
+                'country_id' => $brandModel->getCountryId(),
             ]);
-        } else {
-            throw new ApiException('Something was wrong' . PHP_EOL);
+            return;
         }
+
+        throw new ApiException('Something was wrong' . PHP_EOL);
     }
 
     protected function deleteData()
     {
-        $this->checkParam();
+        $this->checkEntityIdParam();
 
         $brandRecourse = new BrandRecourse();
-        $brandRecourse->delete($this->param);
+        $brandRecourse->delete($this->getEntityIdParam());
     }
 }

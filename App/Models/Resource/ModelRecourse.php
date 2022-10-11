@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Recourse;
+namespace App\Models\Resource;
 
 use App\Database\Database;
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\AbstractCarModel;
 use App\Models\Model;
 use App\Models\Selection\LineSelection;
@@ -55,7 +55,7 @@ class ModelRecourse extends AbstractRecourse
         $stmt->execute();
         $modelInfo = $stmt->fetch();
         if (!$modelInfo) {
-            throw new RecourseException('Data not found' . PHP_EOL);
+            throw new ResourceException('Data not found' . PHP_EOL);
         }
 
         return $this->splitByModel($modelInfo);
@@ -83,7 +83,7 @@ class ModelRecourse extends AbstractRecourse
     /**
      * @param Model $model
      * @return bool
-     * @throws RecourseException
+     * @throws ResourceException
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
@@ -106,7 +106,7 @@ class ModelRecourse extends AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new RecourseException('Query error' . PHP_EOL);
+            throw new ResourceException('Query error' . PHP_EOL);
         }
 
         return true;
@@ -118,24 +118,6 @@ class ModelRecourse extends AbstractRecourse
         $model->setId($id);
 
         return $this->deleteEntity($model, 'car_model', 'id');
-    }
-
-    public function getOnlyModelsInformation(): array
-    {
-        $stmt = Database::getInstance()->prepare('
-        SELECT
-            *
-        FROM 
-            `car_model`;
-        ');
-        $stmt->execute();
-
-        $result = $stmt->fetchAll();
-        if (is_array($result)) {
-            return array_map([$this, 'prepareKeyMap'], $result);
-        }
-
-        throw new RecourseException();
     }
 
     public function getOnlyModelInfo(int $id): Model
@@ -155,7 +137,7 @@ class ModelRecourse extends AbstractRecourse
 
         $result = $stmt->fetch();
         if (!$result) {
-            throw new RecourseException();
+            throw new ResourceException();
         }
 
         $model = new Model();
@@ -167,7 +149,7 @@ class ModelRecourse extends AbstractRecourse
             ->setLineId($result['car_line_id']);
     }
 
-    public function modifyAllInfo(Model $model): Model
+    public function modifyAllProperties(Model $model): Model
     {
         $stmt = Database::getInstance()->prepare('
         UPDATE
@@ -194,7 +176,7 @@ class ModelRecourse extends AbstractRecourse
             return $model;
         }
 
-        throw new RecourseException();
+        throw new ResourceException();
     }
 
     public function createEntity(Model $model): Model
@@ -214,7 +196,7 @@ class ModelRecourse extends AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new RecourseException();
+            throw new ResourceException();
         }
 
         return $model;

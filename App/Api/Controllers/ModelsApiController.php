@@ -4,9 +4,9 @@ namespace App\Api\Controllers;
 
 use App\Exception\ApiException;
 use App\Exception\Exception;
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\Model;
-use App\Models\Recourse\ModelRecourse;
+use App\Models\Resource\ModelRecourse;
 
 class ModelsApiController extends AbstractApiController
 {
@@ -14,17 +14,17 @@ class ModelsApiController extends AbstractApiController
     {
         $modelRecourse = new ModelRecourse();
 
-        if ($this->param) {
+        if ($this->getEntityIdParam()) {
             try {
-                $model = $modelRecourse->getOnlyModelInfo($this->param);
-                echo json_encode([
+                $model = $modelRecourse->getOnlyModelInfo($this->getEntityIdParam());
+                $this->renderJson([
                     'id'         => $model->getId(),
                     'name'       => $model->getName(),
-                    'lineId'     => $model->getLineId(),
+                    'line_id'     => $model->getLineId(),
                     'year'       => $model->getYear(),
-                    'previousId' => $model->getPreviousId(),
+                    'previous_id' => $model->getPreviousId(),
                 ]);
-            } catch (RecourseException $e) {
+            } catch (ResourceException $e) {
                 throw new ApiException();
             }
 
@@ -32,19 +32,19 @@ class ModelsApiController extends AbstractApiController
         }
 
         try {
-            echo json_encode($modelRecourse->getOnlyModelsInformation());
-        } catch (RecourseException $e) {
+            $this->renderJson($modelRecourse->getAllInformation('car_model'));
+        } catch (ResourceException $e) {
             throw new ApiException();
         }
     }
 
     protected function postData()
     {
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
             'name',
-            'carLineId',
+            'car_line_id',
             'year',
-            'previousModelId',
+            'previous_model_id',
         ]);
 
         $model = new Model();
@@ -54,58 +54,58 @@ class ModelsApiController extends AbstractApiController
             $modelRecourse->createEntity(
                 $model
                     ->setName($data['name'])
-                    ->setLineId($data['carLineId'])
+                    ->setLineId($data['car_line_id'])
                     ->setYear($data['year'])
-                    ->setPreviousId($data['previousModelId'])
+                    ->setPreviousId($data['previous_model_id'])
             );
 
-            echo json_encode($data);
-        } catch (RecourseException $e) {
+            $this->renderJson($data);
+        } catch (ResourceException $e) {
             throw new ApiException();
         }
     }
 
     protected function putData()
     {
-        $this->checkParam();
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
-            'modifiedId',
+        $this->checkEntityIdParam();
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
+            'modified_id',
             'name',
-            'previousId',
+            'car_line_id',
             'year',
-            'carLineId',
+            'previous_model_id',
         ]);
 
         $model = new Model();
         $modelRecourse = new ModelRecourse();
         try {
-            $modelRecourse->modifyAllInfo(
+            $modelRecourse->modifyAllProperties(
                 $model
-                    ->setId($this->param)
-                    ->setModifiedId($data['modifiedId'])
+                    ->setId($this->getEntityIdParam())
+                    ->setModifiedId($data['modified_id'])
                     ->setName($data['name'])
-                    ->setPreviousId($data['previousId'])
+                    ->setPreviousId($data['previous_model_id'])
                     ->setYear($data['year'])
-                    ->setLineId($data['carLineId'])
+                    ->setLineId($data['car_line_id'])
             );
-        } catch (RecourseException $e) {
+        } catch (ResourceException $e) {
             throw new ApiException();
         }
 
-        echo json_encode([
-            'id'         => $model->getModifiedId(),
-            'name'       => $model->getName(),
-            'previousId' => $model->getPreviousId(),
-            'year'       => $model->getYear(),
-            'carLineId'  => $model->getLineId(),
+        $this->renderJson([
+            'id'                => $model->getModifiedId(),
+            'name'              => $model->getName(),
+            'previous_model_id' => $model->getPreviousId(),
+            'year'              => $model->getYear(),
+            'car_line_id'       => $model->getLineId(),
         ]);
     }
 
     protected function deleteData()
     {
-        $this->checkParam();
+        $this->checkEntityIdParam();
         $modelRecourse = new ModelRecourse();
-        if (!$modelRecourse->delete($this->param)) {
+        if (!$modelRecourse->delete($this->getEntityIdParam())) {
             throw new ApiException();
         }
     }

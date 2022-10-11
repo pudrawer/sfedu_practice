@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Recourse;
+namespace App\Models\Resource;
 
 use App\Database\Database;
 use App\Exception\Exception;

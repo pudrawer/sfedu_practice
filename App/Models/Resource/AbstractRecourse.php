@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Models\Recourse;
+namespace App\Models\Resource;
 
 use App\Database\Database;
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\AbstractCarModel;
 
 abstract class AbstractRecourse
@@ -96,7 +96,7 @@ abstract class AbstractRecourse
         ]);
 
         if (!$stmt->execute()) {
-            throw new RecourseException();
+            throw new ResourceException();
         }
 
         return true;
@@ -107,14 +107,14 @@ abstract class AbstractRecourse
      * @param string $tableName
      * @param string $tableRow
      * @return bool
-     * @throws RecourseException
+     * @throws ResourceException
      */
     protected function deleteEntityList(
         array $modelList,
         string $tableName,
         string $tableRow
     ): bool {
-        if (count($modelList) == 0) {
+        if (!$modelList) {
             return true;
         }
 
@@ -142,9 +142,27 @@ abstract class AbstractRecourse
         $stmt = $this->bindParamByMap($stmt, $valueAlias);
 
         if (!$stmt->execute()) {
-            throw new RecourseException();
+            throw new ResourceException();
         }
 
         return true;
+    }
+
+    public function getAllInformation(string $tableName): array
+    {
+        $stmt = Database::getInstance()->prepare("
+        SELECT
+            *
+        FROM 
+            $tableName;
+        ");
+        $stmt->execute();
+
+        $result = $stmt->fetchAll();
+        if (is_array($result)) {
+            return $result;
+        }
+
+        throw new RecourseException();
     }
 }

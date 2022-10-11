@@ -7,6 +7,8 @@ use App\Controllers\NotFoundWebController;
 
 abstract class AbstractRouter
 {
+    abstract public function chooseController(string $path): ?ControllerInterface;
+
     /**
      * @return NotFoundWebController|ControllerInterface
      */
@@ -27,6 +29,4 @@ abstract class AbstractRouter
 
         return new NotFoundWebController();
     }
-
-    abstract public function chooseController(string $path): ?ControllerInterface;
 }

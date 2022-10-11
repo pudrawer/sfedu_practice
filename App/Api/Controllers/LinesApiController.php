@@ -3,9 +3,9 @@
 namespace App\Api\Controllers;
 
 use App\Exception\ApiException;
-use App\Exception\RecourseException;
+use App\Exception\ResourceException;
 use App\Models\Line;
-use App\Models\Recourse\LineRecourse;
+use App\Models\Resource\LineRecourse;
 
 class LinesApiController extends AbstractApiController
 {
@@ -13,92 +13,90 @@ class LinesApiController extends AbstractApiController
     {
         $lineRecourse = new LineRecourse();
 
-        if ($this->param) {
+        if ($this->getEntityIdParam()) {
             $line = new Line();
-            $line->setId($this->param);
+            $line->setId($this->getEntityIdParam());
 
             try {
                 $result = $lineRecourse->getLineByHttp($line);
-                echo json_encode([
+                $this->renderJson([
                     'id'      => $result->getId(),
                     'name'    => $result->getName(),
-                    'brandId' => $result->getBrandId(),
+                    'brand_id' => $result->getBrandId(),
                 ]);
-            } catch (RecourseException $e) {
+            } catch (ResourceException $e) {
                 throw new ApiException();
             }
 
             return;
         }
 
-        echo json_encode($lineRecourse->getLinesByHttp());
+        $this->renderJson($lineRecourse->getAllInformation('car_line'));
     }
 
     protected function postData()
     {
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
             'name',
-            'brandId',
+            'brand_id',
         ]);
 
         $line = new Line();
         $line
             ->setName($data['name'])
-            ->setBrandId($data['brandId']);
+            ->setBrandId($data['brand_id']);
 
         $lineRecourse = new LineRecourse();
 
         try {
             $line = $lineRecourse->createEntity($line);
 
-            echo json_encode([
+            $this->renderJson([
                 'name'    => $line->getName(),
-                'brandId' => $line->getBrandId(),
+                'brand_id' => $line->getBrandId(),
             ]);
-        } catch (RecourseException $e) {
+        } catch (ResourceException $e) {
             throw new ApiException();
         }
     }
 
     protected function putData()
     {
-        $this->checkParam();
-        $data = $this->checkNeededData($this->getDataFromHttp(), [
-            'modifiedId',
+        $this->checkEntityIdParam();
+        $data = $this->validateRequiredData($this->getDataFromHttp(), [
+            'modified_id',
             'name',
-            'brandId',
+            'brand_id',
         ]);
 
         $line = new Line();
         $line
-            ->setId($this->param)
+            ->setId($this->getEntityIdParam())
             ->setName($data['name'])
-            ->setBrandId($data['brandId'])
-            ->setModifiedId($data['modifiedId']);
+            ->setBrandId($data['brand_id'])
+            ->setModifiedId($data['modified_id']);
 
         $lineRecourse = new LineRecourse();
 
         try {
-            $lineRecourse->modifyPropertiesByHttp($line);
-            echo json_encode([
-                'id'      => $data['modifiedId'],
+            $lineRecourse->modifyAllProperties($line);
+            $this->renderJson([
+                'id'      => $data['modified_id'],
                 'name'    => $data['name'],
-                'brandId' => $data['brandId'],
+                'brand_id' => $data['brand_id'],
             ]);
-        } catch (RecourseException $e) {
+        } catch (ResourceException $e) {
             throw new ApiException();
         }
     }
 
     protected function deleteData()
     {
-        $this->checkParam();
+        $this->checkEntityIdParam();
         $lineRecourse = new LineRecourse();
 
-        if ($lineRecourse->delete($this->param)) {
-            return;
+        if (!$lineRecourse->delete($this->getEntityIdParam())) {
+            throw new ApiException();
         }
-
-        throw new ApiException();
     }
 }

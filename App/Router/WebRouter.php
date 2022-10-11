@@ -18,7 +18,7 @@ class WebRouter extends AbstractRouter
 
         $getParam = $_GET;
 
-        if ($path == "") {
+        if ($path == '') {
             return new HomepageWebController($getParam);
         }
 
