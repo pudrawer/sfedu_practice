@@ -2,6 +2,7 @@
 
 namespace App\Router;
 
+use App\Api\Controllers\WrongApiController;
 use App\Controllers\ControllerInterface;
 use App\Controllers\HomepageWebController;
 use App\Controllers\WrongWebController;
@@ -29,10 +30,8 @@ class ApiRouter extends AbstractRouter
                 string $errstr,
                 string $errfile
             ) {
-                $controller = new WrongWebController();
+                $controller = new WrongApiController();
                 $controller->execute();
-
-                return true;
             }, E_ALL);
 
             return new $controller($paramList ?? []);

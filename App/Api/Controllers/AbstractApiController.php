@@ -5,7 +5,11 @@ namespace App\Api\Controllers;
 use App\Controllers\ControllerInterface;
 use App\Exception\ApiException;
 use App\Exception\UserApiException;
-use App\Models\AbstractCarModel;
+use App\Models\Cache\Cache;
+use App\Models\Cache\CacheStrategy;
+use App\Models\Resource\AbstractResource;
+use App\Models\Service\AbstractService;
+use Predis\Client;
 
 abstract class AbstractApiController implements ControllerInterface
 {
@@ -75,5 +79,32 @@ abstract class AbstractApiController implements ControllerInterface
     protected function getEntityIdParam(): ?int
     {
         return $this->param[0] ?? null;
+    }
+
+    /**
+     * @param int $entityId
+     * @param string $cacheKey
+     * @return array|false
+     */
+    protected function getEntityFromCache(
+        int $entityId,
+        string $cacheKey
+    ): array {
+        $cache = new Cache();
+        $data = json_decode($cache->get($cacheKey), true);
+
+        return $data[$entityId] ?? false;
+    }
+
+    protected function updateCache(
+        string $cacheKey,
+        AbstractService $service
+    ): bool {
+        $cache = CacheStrategy::chooseCache();
+
+        $cache->del($cacheKey);
+        $cache->set($cacheKey, json_encode($service->getList()));
+
+        return true;
     }
 }

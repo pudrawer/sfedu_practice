@@ -14,6 +14,8 @@ class Environment
 
     private $host;
 
+    private $cacheMode;
+
     public function __construct(string $envPath)
     {
         $data = parse_ini_file($envPath, true);
@@ -26,6 +28,8 @@ class Environment
         $this->dbChar = $dbInfo['CHARSET'];
 
         $this->host = $data['HOST']['ADDRESS'];
+
+        $this->cacheMode = $data['CACHE']['CACHE_MODE'];
     }
 
     public static function getInstance(): self
@@ -65,5 +69,10 @@ class Environment
     public function getHost(): string
     {
         return $this->host ?? '';
+    }
+
+    public function getCacheMode(): string
+    {
+        return $this->cacheMode ?? '';
     }
 }

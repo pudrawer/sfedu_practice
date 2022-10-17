@@ -3,57 +3,59 @@
 namespace App\Api\Controllers;
 
 use App\Exception\ApiException;
-use App\Exception\ResourceException;
+use App\Exception\ServiceException;
 use App\Models\Brand;
+use App\Models\Cache\Cache;
+use App\Models\Cache\CacheStrategy;
 use App\Models\Resource\BrandResource;
+use App\Models\Service\BrandService;
 
 class BrandsApiController extends AbstractApiController
 {
+    protected const CACHE_KEY = 'brand_info';
     protected function getData()
     {
-        $result = [];
-        $recourse = new BrandResource();
-        if ($this->getEntityIdParam()) {
-            try {
-                $brandInfo = $recourse->getBrandInfo($this->getEntityIdParam());
-            } catch (ResourceException $e) {
-                throw new ApiException();
+        $cache = CacheStrategy::chooseCache();
+
+        if ($id = $this->getEntityIdParam()) {
+            $data = $this->getEntityFromCache($id, self::CACHE_KEY);
+
+            if ($data) {
+                $this->renderJson($data);
+
+                return $data;
             }
+        } else {
+            if ($data = json_decode($cache->get(self::CACHE_KEY), true)) {
+                $this->renderJson($data);
 
-            $result['name'] = $brandInfo->getName();
-            $result['country_name'] = $brandInfo->getCountryName();
-            $result['country_id'] = $brandInfo->getCountryId();
-            $result['line_list'] = [];
-
-            foreach ($brandInfo->getLineList() as $line) {
-                $temp['id'] = $line->getId();
-                $temp['name'] = $line->getName();
-
-                $result['line_list'][] = $temp;
+                return $data;
             }
-
-            $this->renderJson($result);
-            return;
         }
 
-        $brandList = $recourse->getInformation();
-        $temp = [];
-
-        foreach ($brandList as $brand) {
-            $temp['id'] = $brand->getId();
-            $temp['name'] = $brand->getName();
-
-            $result[] = $temp;
+        $result = [];
+        $brandService = new BrandService();
+        if ($id = $this->getEntityIdParam()) {
+            try {
+                $result = $brandService->getInfo($id);
+            } catch (ServiceException $e) {
+                throw new ApiException();
+            }
+        } else {
+            $result = $brandService->getList();
         }
 
         $this->renderJson($result);
+        $this->updateCache(self::CACHE_KEY, $brandService);
+
+        return $result;
     }
 
     protected function postData()
     {
         $data = $this->validateRequiredData($this->getDataFromHttp(), [
             'name',
-            'county_id',
+            'country_id',
         ]);
 
         $brandModel = new Brand();
@@ -66,10 +68,15 @@ class BrandsApiController extends AbstractApiController
             throw new ApiException('Something was wrong' . PHP_EOL);
         }
 
-        $this->renderJson([
+        $data = [
             'name'      => $brandModel->getName(),
             'country_id' => $brandModel->getCountryId(),
-        ]);
+        ];
+        $this->renderJson($data);
+
+        $this->updateCache(self::CACHE_KEY, new BrandService());
+
+        return $data;
     }
 
     protected function putData()
@@ -91,11 +98,14 @@ class BrandsApiController extends AbstractApiController
         $brandRecourse = new BrandResource();
         if ($brandRecourse->modifyAllProperties($brandModel)) {
             $this->renderJson([
-                'id'        => $brandModel->getModifiedId(),
-                'name'      => $brandModel->getName(),
+                'id'         => $brandModel->getModifiedId(),
+                'name'       => $brandModel->getName(),
                 'country_id' => $brandModel->getCountryId(),
             ]);
-            return;
+
+            $this->updateCache(self::CACHE_KEY, new BrandService());
+
+            return $data;
         }
 
         throw new ApiException('Something was wrong' . PHP_EOL);
@@ -106,6 +116,10 @@ class BrandsApiController extends AbstractApiController
         $this->checkEntityIdParam();
 
         $brandRecourse = new BrandResource();
-        $brandRecourse->delete($this->getEntityIdParam());
+        if ($brandRecourse->delete($this->getEntityIdParam())) {
+            return $this->updateCache(self::CACHE_KEY, new BrandService());
+        }
+
+        throw new ApiException();
     }
 }
