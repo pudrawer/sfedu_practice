@@ -120,7 +120,7 @@ class ModelResource extends AbstractResource
         return $this->deleteEntity($model, 'car_model', 'id');
     }
 
-    public function getOnlyModelInfo(int $id): Model
+    public function getInfoById(int $id): Model
     {
         $stmt = Database::getInstance()->prepare('
         SELECT

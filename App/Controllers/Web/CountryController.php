@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
-class CountryWebController extends AbstractWebController
+class CountryController extends AbstractController
 {
     public function execute(): void
     {

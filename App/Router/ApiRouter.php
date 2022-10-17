@@ -2,11 +2,8 @@
 
 namespace App\Router;
 
-use App\Api\Controllers\WrongApiController;
+use App\Controllers\Api\WrongApiController;
 use App\Controllers\ControllerInterface;
-use App\Controllers\HomepageWebController;
-use App\Controllers\WrongWebController;
-use App\Models\Session\Session;
 
 class ApiRouter extends AbstractRouter
 {
@@ -23,7 +20,7 @@ class ApiRouter extends AbstractRouter
         }
 
         $controller = ucfirst(explode('/', $path)[self::CONTROLLER_NAME]);
-        $controller = "App\Api\Controllers\\{$controller}ApiController";
+        $controller = "App\Controllers\Api\\{$controller}Controller";
         if (class_exists($controller)) {
             set_error_handler(function (
                 int $errno,

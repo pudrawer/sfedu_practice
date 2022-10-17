@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
-use App\Blocks\BrandBlock;
 use App\Blocks\NotFoundBlock;
 
-class NotFoundWebController extends AbstractWebController
+class NotFoundController extends AbstractController
 {
     public function execute(): BlockInterface
     {

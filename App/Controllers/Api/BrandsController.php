@@ -1,36 +1,26 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\Controllers\Api;
 
 use App\Exception\ApiException;
 use App\Exception\ServiceException;
 use App\Models\Brand;
-use App\Models\Cache\Cache;
-use App\Models\Cache\CacheStrategy;
+use App\Models\Cache\CacheFactory;
 use App\Models\Resource\BrandResource;
 use App\Models\Service\BrandService;
 
-class BrandsApiController extends AbstractApiController
+class BrandsController extends AbstractController
 {
-    protected const CACHE_KEY = 'brand_info';
+    protected static $cacheKey = 'brand_info';
+
     protected function getData()
     {
-        $cache = CacheStrategy::chooseCache();
+        $cache = CacheFactory::chooseCache();
 
-        if ($id = $this->getEntityIdParam()) {
-            $data = $this->getEntityFromCache($id, self::CACHE_KEY);
+        if ($data = $this->checkCachedData()) {
+            $this->renderJson($data);
 
-            if ($data) {
-                $this->renderJson($data);
-
-                return $data;
-            }
-        } else {
-            if ($data = json_decode($cache->get(self::CACHE_KEY), true)) {
-                $this->renderJson($data);
-
-                return $data;
-            }
+            return $data;
         }
 
         $result = [];
@@ -46,7 +36,7 @@ class BrandsApiController extends AbstractApiController
         }
 
         $this->renderJson($result);
-        $this->updateCache(self::CACHE_KEY, $brandService);
+        $this->restoreCache($brandService);
 
         return $result;
     }
@@ -74,7 +64,7 @@ class BrandsApiController extends AbstractApiController
         ];
         $this->renderJson($data);
 
-        $this->updateCache(self::CACHE_KEY, new BrandService());
+        $this->restoreCache(new BrandService());
 
         return $data;
     }
@@ -103,7 +93,7 @@ class BrandsApiController extends AbstractApiController
                 'country_id' => $brandModel->getCountryId(),
             ]);
 
-            $this->updateCache(self::CACHE_KEY, new BrandService());
+            $this->restoreCache(new BrandService());
 
             return $data;
         }
@@ -117,7 +107,7 @@ class BrandsApiController extends AbstractApiController
 
         $brandRecourse = new BrandResource();
         if ($brandRecourse->delete($this->getEntityIdParam())) {
-            return $this->updateCache(self::CACHE_KEY, new BrandService());
+            return $this->restoreCache(new BrandService());
         }
 
         throw new ApiException();

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\HeaderBlock;
 
-class FactoryWebController extends AbstractWebController
+class FactoryController extends AbstractController
 {
     public function execute(): BlockInterface
     {

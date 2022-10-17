@@ -3,17 +3,35 @@
 namespace App\Models\Cache;
 
 use App\Exception\CacheException;
-use App\Models\Cache\Cache;
 use App\Models\Environment\Environment;
 use Predis\Client;
 
-class CacheStrategy
+class CacheFactory
 {
+    protected static $instance = null;
+
+    protected function __construct()
+    {
+    }
+
+    /**
+     * @return Cache|Client|null
+     * @throws CacheException
+     */
+    public static function getInstance()
+    {
+        if (self::$instance) {
+            return self::$instance;
+        }
+
+        return self::$instance = self::getCache();
+    }
+
     /**
      * @return Cache|Client
      * @throws CacheException
      */
-    public static function chooseCache()
+    protected static function getCache()
     {
         $env = Environment::getInstance();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\UserCarsBlock;
@@ -8,7 +8,7 @@ use App\Models\Resource\CarResource;
 use App\Models\Session\Session;
 use App\Models\User;
 
-class UserCarsWebController extends AbstractWebController
+class UserCarsController extends AbstractController
 {
     public function execute(): BlockInterface
     {

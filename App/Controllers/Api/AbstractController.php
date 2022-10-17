@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\Controllers\Api;
 
 use App\Controllers\ControllerInterface;
 use App\Exception\ApiException;
 use App\Exception\UserApiException;
 use App\Models\Cache\Cache;
-use App\Models\Cache\CacheStrategy;
-use App\Models\Resource\AbstractResource;
+use App\Models\Cache\CacheFactory;
 use App\Models\Service\AbstractService;
-use Predis\Client;
 
-abstract class AbstractApiController implements ControllerInterface
+abstract class AbstractController implements ControllerInterface
 {
     protected $param;
 
@@ -83,28 +81,47 @@ abstract class AbstractApiController implements ControllerInterface
 
     /**
      * @param int $entityId
-     * @param string $cacheKey
      * @return array|false
      */
-    protected function getEntityFromCache(
-        int $entityId,
-        string $cacheKey
-    ): array {
+    protected function getEntityFromCache(int $entityId): array
+    {
         $cache = new Cache();
-        $data = json_decode($cache->get($cacheKey), true);
+        $data = json_decode($cache->get(static::$cacheKey), true);
 
         return $data[$entityId] ?? false;
     }
 
-    protected function updateCache(
-        string $cacheKey,
-        AbstractService $service
-    ): bool {
-        $cache = CacheStrategy::chooseCache();
+    protected function restoreCache(AbstractService $service): bool
+    {
+        $cache = CacheFactory::chooseCache();
 
-        $cache->del($cacheKey);
-        $cache->set($cacheKey, json_encode($service->getList()));
+        $cache->del(static::$cacheKey);
+        $cache->set(static::$cacheKey, json_encode($service->getList()));
 
         return true;
+    }
+
+    protected function getDecodedData(): ?array
+    {
+        $cache = CacheFactory::chooseCache();
+
+        return json_decode($cache->get(static::$cacheKey) ?? [], true);
+    }
+
+    protected function checkCachedData()
+    {
+        if ($id = $this->getEntityIdParam()) {
+            $data = $this->getEntityFromCache($id);
+
+            if ($data) {
+                return $data;
+            }
+        } else {
+            if ($data = $this->getDecodedData()) {
+                return $data;
+            }
+        }
+
+        return null;
     }
 }

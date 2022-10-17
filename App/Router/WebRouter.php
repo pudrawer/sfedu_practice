@@ -3,8 +3,8 @@
 namespace App\Router;
 
 use App\Controllers\ControllerInterface;
-use App\Controllers\HomepageWebController;
-use App\Controllers\WrongWebController;
+use App\Controllers\Web\HomepageController;
+use App\Controllers\Web\WrongController;
 use App\Models\Session\Session;
 
 class WebRouter extends AbstractRouter
@@ -19,11 +19,11 @@ class WebRouter extends AbstractRouter
         $getParam = $_GET;
 
         if ($path == '') {
-            return new HomepageWebController($getParam);
+            return new HomepageController($getParam);
         }
 
-        $path = ucfirst($path) . 'WebController';
-        $controller = 'App\Controllers\\' . $path;
+        $path = ucfirst($path) . 'Controller';
+        $controller = 'App\Controllers\Web\\' . $path;
 
         if (class_exists($controller)) {
             Session::getInstance()->start();
@@ -33,7 +33,7 @@ class WebRouter extends AbstractRouter
                 string $errstr,
                 string $errfile
             ) {
-                $controller = new WrongWebController();
+                $controller = new WrongController();
                 $controller->execute();
 
                 return true;

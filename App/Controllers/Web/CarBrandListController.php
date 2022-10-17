@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandListBlock;
 use App\Models\Resource\BrandResource;
 
-class CarBrandListWebController extends AbstractWebController
+class CarBrandListController extends AbstractController
 {
     public function execute(): BlockInterface
     {

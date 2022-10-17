@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\LineBlock;
-use App\Models\Line;
-use App\Models\Resource\LineResource;
 use App\Exception\Exception;
-use App\Models\Session\Session;
+use App\Models\Resource\LineResource;
 use App\Models\Validator\Validator;
 
-class CarLineWebController extends AbstractWebController
+class CarLineController extends AbstractController
 {
     public function execute(): BlockInterface
     {

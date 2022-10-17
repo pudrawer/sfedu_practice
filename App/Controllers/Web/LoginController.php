@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\LoginBlock;
-use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
 use App\Models\Resource\LoginResource;
 use App\Models\Session\Session;
 
-class LoginWebController extends AbstractWebController
+class LoginController extends AbstractController
 {
     public function execute(): BlockInterface
     {

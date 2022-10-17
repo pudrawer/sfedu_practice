@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\Controllers\Api;
 
 use App\Exception\ApiException;
-use App\Exception\Exception;
 use App\Exception\ResourceException;
 use App\Models\Model;
 use App\Models\Resource\ModelResource;
 
-class ModelsApiController extends AbstractApiController
+class ModelsController extends AbstractController
 {
     protected function getData()
     {
@@ -16,7 +15,7 @@ class ModelsApiController extends AbstractApiController
 
         if ($this->getEntityIdParam()) {
             try {
-                $model = $modelRecourse->getOnlyModelInfo($this->getEntityIdParam());
+                $model = $modelRecourse->getInfoById($this->getEntityIdParam());
                 $this->renderJson([
                     'id'         => $model->getId(),
                     'name'       => $model->getName(),

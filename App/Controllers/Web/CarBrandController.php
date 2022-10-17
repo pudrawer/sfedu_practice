@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\BrandBlock;
 use App\Exception\Exception;
 use App\Models\Resource\BrandResource;
-use App\Models\Session\Session;
 use App\Models\Validator\Validator;
 
-class CarBrandWebController extends AbstractWebController
+class CarBrandController extends AbstractController
 {
     public function execute(): BlockInterface
     {

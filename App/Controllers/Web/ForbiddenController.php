@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
-use App\Blocks\ForbiddenBlock;
 use App\Blocks\BlockInterface;
+use App\Blocks\ForbiddenBlock;
 
-class ForbiddenWebController extends AbstractWebController
+class ForbiddenController extends AbstractController
 {
     public function execute(): BlockInterface
     {

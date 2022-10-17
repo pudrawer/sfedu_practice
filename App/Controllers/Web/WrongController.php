@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\WrongBlock;
 
-class WrongWebController extends AbstractWebController
+class WrongController extends AbstractController
 {
     public function execute(): BlockInterface
     {

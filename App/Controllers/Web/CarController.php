@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
-class CarWebController extends AbstractWebController
+class CarController extends AbstractController
 {
     public function execute(): void
     {

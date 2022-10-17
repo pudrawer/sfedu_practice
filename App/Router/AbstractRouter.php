@@ -3,14 +3,14 @@
 namespace App\Router;
 
 use App\Controllers\ControllerInterface;
-use App\Controllers\NotFoundWebController;
+use App\Controllers\Web\NotFoundController;
 
 abstract class AbstractRouter
 {
     abstract public function chooseController(string $path): ?ControllerInterface;
 
     /**
-     * @return NotFoundWebController|ControllerInterface
+     * @return NotFoundController|ControllerInterface
      */
     public static function chooseRouter(string $path)
     {
@@ -27,6 +27,6 @@ abstract class AbstractRouter
             }
         }
 
-        return new NotFoundWebController();
+        return new NotFoundController();
     }
 }

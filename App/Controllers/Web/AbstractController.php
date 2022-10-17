@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
-use App\Exception\ForbiddenException;
+use App\Controllers\ControllerInterface;
 use App\Exception\Exception;
+use App\Exception\ForbiddenException;
 use App\Models\Environment\Environment;
 use App\Models\Session\Session;
 
-abstract class AbstractWebController implements ControllerInterface
+abstract class AbstractController implements ControllerInterface
 {
     protected $getParams = [];
 

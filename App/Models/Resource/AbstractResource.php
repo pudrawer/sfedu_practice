@@ -151,10 +151,7 @@ abstract class AbstractResource
     public function getAllInformation(string $tableName): array
     {
         $stmt = Database::getInstance()->prepare("
-        SELECT
-            *
-        FROM 
-            $tableName;
+        SELECT * FROM $tableName;
         ");
         $stmt->execute();
 

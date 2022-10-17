@@ -1,38 +1,27 @@
 <?php
 
-namespace App\Api\Controllers;
+namespace App\Controllers\Api;
 
 use App\Exception\ApiException;
 use App\Exception\ResourceException;
 use App\Exception\ServiceException;
-use App\Models\Cache\Cache;
-use App\Models\Cache\CacheStrategy;
+use App\Models\Cache\CacheFactory;
 use App\Models\Line;
 use App\Models\Resource\LineResource;
 use App\Models\Service\LineService;
 
-class LinesApiController extends AbstractApiController
+class LinesController extends AbstractController
 {
-    protected const CACHE_KEY = 'line_info';
+    protected static $cacheKey = 'line_info';
 
     protected function getData()
     {
-        $cache = CacheStrategy::chooseCache();
+        $cache = CacheFactory::chooseCache();
 
-        if ($id = $this->getEntityIdParam()) {
-            $data = $this->getEntityFromCache($id, self::CACHE_KEY);
+        if ($data = $this->checkCachedData()) {
+            $this->renderJson($data);
 
-            if ($data) {
-                $this->renderJson($data);
-
-                return $data;
-            }
-        } else {
-            if ($data = json_decode($cache->get(self::CACHE_KEY), true)) {
-                $this->renderJson($data);
-
-                return $data;
-            }
+            return $data;
         }
 
         $lineService = new LineService();
@@ -51,7 +40,7 @@ class LinesApiController extends AbstractApiController
         }
 
         $this->renderJson($result);
-        $this->updateCache(self::CACHE_KEY, $lineService);
+        $this->restoreCache($lineService);
 
         return $result;
     }
@@ -81,7 +70,7 @@ class LinesApiController extends AbstractApiController
             throw new ApiException();
         }
 
-        return $this->updateCache(self::CACHE_KEY, new LineService());
+        return $this->restoreCache(new LineService());
     }
 
     protected function putData()
@@ -113,7 +102,7 @@ class LinesApiController extends AbstractApiController
             throw new ApiException();
         }
 
-        return $this->updateCache(self::CACHE_KEY, new LineService());
+        return $this->restoreCache(new LineService());
     }
 
     protected function deleteData()
@@ -122,7 +111,7 @@ class LinesApiController extends AbstractApiController
         $lineRecourse = new LineResource();
 
         if ($lineRecourse->delete($this->getEntityIdParam())) {
-            return $this->updateCache(self::CACHE_KEY, new LineService());
+            return $this->restoreCache(new LineService());
         }
 
         throw new ApiException();

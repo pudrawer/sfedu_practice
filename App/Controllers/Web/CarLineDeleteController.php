@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Exception\Exception;
 use App\Models\Resource\LineResource;
 
-class CarLineDeleteWebController extends AbstractWebController
+class CarLineDeleteController extends AbstractController
 {
     public function execute(): BlockInterface
     {

@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\RegistrationBlock;
-use App\Database\Database;
 use App\Exception\Exception;
 use App\Models\Randomizer\Randomizer;
 use App\Models\Resource\RegistrationResource;
 use App\Models\Session\Session;
 
-class RegistrationWebController extends AbstractWebController
+class RegistrationController extends AbstractController
 {
     public function execute(): BlockInterface
     {

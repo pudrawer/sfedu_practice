@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\ProfileInfoBlock;
@@ -10,7 +10,7 @@ use App\Models\Session\Session;
 use App\Models\User;
 use App\Models\Validator\Validator;
 
-class ProfileInfoWebController extends AbstractWebController
+class ProfileInfoController extends AbstractController
 {
     public function execute(): BlockInterface
     {
