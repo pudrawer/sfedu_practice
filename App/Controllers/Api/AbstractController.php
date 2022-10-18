@@ -93,7 +93,7 @@ abstract class AbstractController implements ControllerInterface
 
     protected function restoreCache(AbstractService $service): bool
     {
-        $cache = CacheFactory::chooseCache();
+        $cache = CacheFactory::getInstance();
 
         $cache->del(static::$cacheKey);
         $cache->set(static::$cacheKey, json_encode($service->getList()));
@@ -103,7 +103,7 @@ abstract class AbstractController implements ControllerInterface
 
     protected function getDecodedData(): ?array
     {
-        $cache = CacheFactory::chooseCache();
+        $cache = CacheFactory::getInstance();
 
         return json_decode($cache->get(static::$cacheKey) ?? [], true);
     }

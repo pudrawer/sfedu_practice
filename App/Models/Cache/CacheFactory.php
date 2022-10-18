@@ -16,7 +16,6 @@ class CacheFactory
 
     /**
      * @return Cache|Client|null
-     * @throws CacheException
      */
     public static function getInstance()
     {
@@ -28,19 +27,28 @@ class CacheFactory
     }
 
     /**
-     * @return Cache|Client
-     * @throws CacheException
+     * @return Cache|Client|null
      */
     protected static function getCache()
     {
-        $env = Environment::getInstance();
+        $mode = Environment::getInstance()->getCacheMode();
 
-        if (($mode = $env->getCacheMode()) == 'predis') {
+        if ($mode == 'predis') {
             return new Client();
         } elseif ($mode == 'file') {
             return new Cache();
         }
 
-        throw new CacheException('Bad cache mode' . PHP_EOL);
+        return null;
+    }
+
+    public static function checkEnvCache(): ?string
+    {
+        $predis    = new Client();
+        $fileCache = new Cache();
+        $predisData = $predis->get('env');
+        $fileData   = $fileCache->get('env');
+
+        return $predisData ?? $fileData;
     }
 }

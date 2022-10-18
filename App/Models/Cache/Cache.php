@@ -10,16 +10,17 @@ class Cache
     {
         $isExists = file_exists(self::CACHE_FILE . "$key.json");
 
-        return $isExists ? file_get_contents(
+        $data = $isExists ? file_get_contents(
             self::CACHE_FILE . "$key.json"
         ) : null;
+        return $data ?? null;
     }
 
     public function set(string $key, string $value): self
     {
         file_put_contents(
             self::CACHE_FILE . "$key.json",
-            json_encode($value)
+            $value
         );
 
         return $this;

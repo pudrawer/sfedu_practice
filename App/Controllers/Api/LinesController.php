@@ -16,7 +16,7 @@ class LinesController extends AbstractController
 
     protected function getData()
     {
-        $cache = CacheFactory::chooseCache();
+        $cache = CacheFactory::getInstance();
 
         if ($data = $this->checkCachedData()) {
             $this->renderJson($data);
