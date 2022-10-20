@@ -3,4 +3,5 @@
 /vendor/
 .env
 /var/sessions/
+/var/cache/env.json
 
