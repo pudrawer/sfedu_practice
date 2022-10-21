@@ -168,4 +168,27 @@ class BrandResource extends AbstractResource
     {
         return parent::getAllInformation('car_brand');
     }
+
+    public function getById(int $id): array
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT
+            *
+        FROM
+            `car_brand`
+        WHERE `id` = :brand_id LIMIT 1;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':brand_id' => $id,
+        ]);
+        $stmt->execute();
+
+        $result = $stmt->fetch();
+        if (!$result) {
+            throw new ResourceException();
+        }
+
+        return $result;
+    }
 }
