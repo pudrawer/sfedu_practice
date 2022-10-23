@@ -8,30 +8,48 @@ use App\Models\Service\Writer\AbstractWriter;
 
 class ConsoleRouter
 {
-    protected const NEEDED_CONTROLLER = 0;
-    protected const WRITER_CONTROLLER = 1;
+    protected const CONTROLLER  = 0;
+    protected const FUNC_MODE   = 1;
 
-    public function chooseController(array $controllers): array
-    {
-        $controller = ucfirst($controllers[self::NEEDED_CONTROLLER]);
+    protected const FILE_NAME   = 0;
+    protected const STREAM_MODE = 1;
+
+    public function chooseController(
+        array $modeParams,
+        ?array $streamParams
+    ): array {
+        $controller = ucfirst($modeParams[self::CONTROLLER]);
+        $controllerMode = ucfirst($modeParams[self::FUNC_MODE]);
+
+        $controller .= $controllerMode;
         $controller = "App\Controllers\Console\\{$controller}Controller";
         if (!class_exists($controller)) {
-            throw new Exception('Bad param' . PHP_EOL);
+            throw new Exception('Bad mode param' . PHP_EOL);
         }
-
         $controller = new $controller();
 
-        $writer = ucfirst($controllers[self::WRITER_CONTROLLER]);
-        $writer = "App\Models\Service\Writer\\{$writer}Writer";
-        if (!class_exists($writer)) {
-            throw new Exception('Bad param' . PHP_EOL);
+        if (!isset($streamParams)) {
+            return ['controller' => $controller];
         }
 
-        $writer = new $writer($controller);
+        $streamMode = '';
+        if ($controllerMode == 'Export') {
+            $streamMode = 'Writer';
+        } elseif ($controllerMode == 'Import') {
+            $streamMode = 'Reader';
+        }
+
+        $streamName = ucfirst($streamParams[self::STREAM_MODE]);
+        $writer = "App\Models\Service\\$streamMode\\{$streamName}$streamMode";
+        if (!class_exists($writer)) {
+            throw new Exception('Bad stream param' . PHP_EOL);
+        }
+
+        $writer = new $writer($streamParams[self::FILE_NAME]);
 
         return [
             'controller' => $controller,
-            'writer'     => $writer,
+            'stream'     => $writer,
         ];
     }
 }

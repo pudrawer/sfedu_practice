@@ -11,7 +11,7 @@ class CsvWriter extends AbstractWriter
      */
     public function write(array $data, int $mode = 1)
     {
-        $output = fopen($this->filePath, 'w+');
+        $output = fopen("{$this->filePath}.csv", 'w+');
 
         if ($mode == 1) {
             fputcsv($output, $data);

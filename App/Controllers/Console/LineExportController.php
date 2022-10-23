@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Console;
 
-class LineController implements \App\Controllers\ControllerInterface
+class LineExportController implements \App\Controllers\ControllerInterface
 {
     public function execute(): array
     {
@@ -18,10 +18,5 @@ class LineController implements \App\Controllers\ControllerInterface
         }
 
         return $lineList;
-    }
-
-    public function __toString(): string
-    {
-        return 'line';
     }
 }
