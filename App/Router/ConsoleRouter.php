@@ -32,12 +32,11 @@ class ConsoleRouter
             return ['controller' => $controller];
         }
 
-        $streamMode = '';
-        if ($controllerMode == 'Export') {
-            $streamMode = 'Writer';
-        } elseif ($controllerMode == 'Import') {
-            $streamMode = 'Reader';
-        }
+        $streamMode = [
+            'Export' => 'Writer',
+            'Import' => 'Reader',
+        ];
+        $streamMode = $streamMode[$controllerMode] ?? '';
 
         $streamName = ucfirst($streamParams[self::STREAM_MODE]);
         $writer = "App\Models\Service\\$streamMode\\{$streamName}$streamMode";

@@ -21,6 +21,11 @@ Supporting **PHP version is _7.3_** and later
 2. Copy **.env.sample** to the **.env** file in the root of the project and change the key values to suit your needs
 3. Start localhost: <br>`php -S localhost:8080`
 
+#### 3. Console script examples:
+    ./console/index.php env:clean
+
+    ./console/index.php line:export line:csv
+
 ## Class description
 ### \App\PageHandler
 

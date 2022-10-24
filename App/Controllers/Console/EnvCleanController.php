@@ -12,16 +12,12 @@ class EnvCleanController implements ControllerInterface
     {
         $cachedEnv = \App\Models\Cache\CacheFactory::getInstance();
 
-        if ($cachedEnv) {
-            $cachedEnv->del(self::ENV_CACHE_KEY);
-
-            if ($cachedEnv->get(self::ENV_CACHE_KEY)) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
+        if (!$cachedEnv) {
             return false;
         }
+
+        $cachedEnv->del(self::ENV_CACHE_KEY);
+
+        return !$cachedEnv->get(self::ENV_CACHE_KEY);
     }
 }
