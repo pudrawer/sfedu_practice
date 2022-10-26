@@ -6,6 +6,8 @@ use App\Controllers\ControllerInterface;
 use App\Controllers\Web\HomepageController;
 use App\Controllers\Web\WrongController;
 use App\Models\Session\Session;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class WebRouter extends AbstractRouter
 {
@@ -35,6 +37,17 @@ class WebRouter extends AbstractRouter
             ) {
                 $controller = new WrongController();
                 $controller->execute();
+
+                $log = new Logger('name');
+                $log->pushHandler(new StreamHandler(
+                    APP_ROOT . '/var/log/warning.log',
+                    Logger::WARNING
+                ));
+                $log->pushHandler(new StreamHandler(
+                    APP_ROOT . '/var/log/errors.log',
+                    Logger::ERROR
+                ));
+                $log->error($errno . PHP_EOL . $errstr . PHP_EOL . $errfile . PHP_EOL);
 
                 return true;
             }, E_ALL);

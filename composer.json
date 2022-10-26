@@ -2,7 +2,9 @@
     "require": {
         "ext-pdo": "*",
       "ext-json": "*",
-        "predis/predis": "^2.0"
+        "predis/predis": "^2.0",
+        "monolog/monolog": "^2.5",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "autoload": {
         "psr-4": {

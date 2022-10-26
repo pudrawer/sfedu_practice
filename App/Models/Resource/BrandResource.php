@@ -11,6 +11,41 @@ use App\Models\Line;
 class BrandResource extends AbstractResource
 {
     /**
+     * @var array $data [array 'idData', array 'nameData']
+     */
+    public function createNewEntityByArray(array $data): bool
+    {
+        $idData = $data['idData'];
+        $nameData = $data['nameData'];
+
+        $preparedPlaceholder = [];
+        $nameKey = key($nameData);
+        foreach ($idData as $idKey => $idValue) {
+            $temp = "($idKey, $nameKey)";
+
+            next($nameData);
+            $nameKey = key($nameData);
+
+            $preparedPlaceholder[] = $temp;
+        }
+
+        $preparedPlaceholder = implode(',\n', $preparedPlaceholder);
+
+        $stmt = Database::getInstance()->prepare("
+        INSERT INTO
+            `car_brand` (`id`, `name`)
+        VALUES
+            $preparedPlaceholder;
+        ");
+
+        $stmt = $this->bindParamByMap(
+            $this->bindParamByMap($stmt, $idData),
+            $nameData
+        );
+
+        return $stmt->execute();
+    }
+    /**
      * @param Brand $model
      * @return bool
      */

@@ -12,6 +12,8 @@ use App\Exception\ForbiddenException;
 use App\Exception\SelectionException;
 use App\Exception\UserApiException;
 use App\Router\AbstractRouter;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class PageHandler
 {
@@ -19,6 +21,16 @@ class PageHandler
 
     public function handlePage()
     {
+        $log = new Logger('name');
+        $log->pushHandler(new StreamHandler(
+            APP_ROOT . '/var/log/warning.log',
+            Logger::WARNING
+        ));
+        $log->pushHandler(new StreamHandler(
+            APP_ROOT . '/var/log/errors.log',
+            Logger::ERROR
+        ));
+
         try {
             $controller = AbstractRouter::chooseRouter($_SERVER['REQUEST_URI'] ?? '');
 
@@ -26,21 +38,27 @@ class PageHandler
         } catch (Exception $e) {
             $controller = new NotFoundController();
             $controller->execute();
+            $log->warning($e->__toString());
         } catch (SelectionException $e) {
             $controller = new NotFoundController();
             $controller->execute();
+            $log->warning($e->__toString());
         } catch (ForbiddenException $e) {
             $controller = new ForbiddenController();
             $controller->execute();
+            $log->warning($e->__toString());
         } catch (ApiException $e) {
             $controller = new WrongApiController();
             $controller->execute();
+            $log->warning($e->__toString());
         } catch (UserApiException $e) {
             $controller = new WrongApiController();
             $controller->execute(403);
+            $log->warning($e->__toString());
         } catch (\Exception $e) {
             $controller = new WrongController();
             $controller->execute();
+            $log->warning($e->__toString());
         }
     }
 
