@@ -24,7 +24,7 @@ class VehicleParseController implements \App\Controllers\ControllerInterface
         $vehicleApiService = new VehicleApiService();
 
         $temp = array_map(
-            [$vehicleApiService, 'mappingApiResult'],
+            [$vehicleApiService, 'mapApiResult'],
             $vehicleApi->getResult()
         );
 
