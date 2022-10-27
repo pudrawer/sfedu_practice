@@ -4,6 +4,7 @@ namespace App\Router;
 
 use App\Controllers\Api\WrongApiController;
 use App\Controllers\ControllerInterface;
+use App\Models\Logger\Logger;
 
 class ApiRouter extends AbstractRouter
 {
@@ -29,6 +30,14 @@ class ApiRouter extends AbstractRouter
             ) {
                 $controller = new WrongApiController();
                 $controller->execute();
+
+                Logger::getInstance()->putError(implode(PHP_EOL, [
+                        $errno,
+                        $errstr,
+                        $errfile,
+                ]));
+
+                return true;
             }, E_ALL);
 
             return new $controller($paramList ?? []);

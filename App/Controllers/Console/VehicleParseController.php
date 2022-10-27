@@ -5,6 +5,7 @@ namespace App\Controllers\Console;
 use App\Exception\Exception;
 use App\Models\Resource\BrandResource;
 use App\Models\Service\VehicleApi\VehicleApiService;
+use App\Models\Validator\Validator;
 use GuzzleHttp;
 
 class VehicleParseController implements \App\Controllers\ControllerInterface
@@ -18,20 +19,16 @@ class VehicleParseController implements \App\Controllers\ControllerInterface
         ]);
 
         $response = $client->request('GET', 'getallmakes?format=json');
-        $response = $response->getBody();
 
-        $result = json_decode($response->getContents(), true);
-        if ($result['Count'] === 0) {
-            throw new Exception('Bad request data' . PHP_EOL);
-        }
-
-        $result = $result['Results'];
-
+        $validator = new Validator();
         $brandResource = new BrandResource();
         $vehicleApiService = new VehicleApiService();
 
-        $brandResource->createNewEntityByArray(
-            $vehicleApiService->prepareBrandArrayToCreate($result)
+        $temp = array_map(
+            [$vehicleApiService, 'mappingApiResult'],
+            $validator->validateApiResponse($response->getBody())
         );
+
+        $brandResource->createByData($temp);
     }
 }

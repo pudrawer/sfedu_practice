@@ -11,25 +11,12 @@ use App\Models\Line;
 class BrandResource extends AbstractResource
 {
     /**
-     * @var array $data [array 'idData', array 'nameData']
+     * @var Brand[] $data
      */
-    public function createNewEntityByArray(array $data): bool
+    public function createByData(array $data): bool
     {
-        $idData = $data['idData'];
-        $nameData = $data['nameData'];
-
-        $preparedPlaceholder = [];
-        $nameKey = key($nameData);
-        foreach ($idData as $idKey => $idValue) {
-            $temp = "($idKey, $nameKey)";
-
-            next($nameData);
-            $nameKey = key($nameData);
-
-            $preparedPlaceholder[] = $temp;
-        }
-
-        $preparedPlaceholder = implode(',\n', $preparedPlaceholder);
+        $preparedPlaceholder = array_fill(0, count($data), '(?, ?)');
+        $preparedPlaceholder = implode(',' . PHP_EOL, $preparedPlaceholder);
 
         $stmt = Database::getInstance()->prepare("
         INSERT INTO
@@ -38,10 +25,11 @@ class BrandResource extends AbstractResource
             $preparedPlaceholder;
         ");
 
-        $stmt = $this->bindParamByMap(
-            $this->bindParamByMap($stmt, $idData),
-            $nameData
-        );
+        $counter = 1;
+        foreach ($data as $value) {
+            $stmt->bindValue($counter++, $value->getId());
+            $stmt->bindValue($counter++, $value->getName());
+        }
 
         return $stmt->execute();
     }

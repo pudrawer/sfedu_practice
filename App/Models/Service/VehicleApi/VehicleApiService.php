@@ -2,27 +2,19 @@
 
 namespace App\Models\Service\VehicleApi;
 
+use App\Models\Brand;
+
 class VehicleApiService
 {
     protected const BRAND_ID_KEY   = 'Make_ID';
     protected const BRAND_NAME_KEY = 'Make_Name';
 
-    public function prepareBrandArrayToCreate(array $data): array
+    public function mappingApiResult(array $data): Brand
     {
-        $idData   = [];
-        $nameData = [];
+        $temp = new Brand();
 
-        $counter = 0;
-        foreach ($data as $item) {
-            $idData[":brand_id_$counter"] = $item[self::BRAND_ID_KEY];
-            $nameData[":brand_name_$counter"] = $item[self::BRAND_NAME_KEY];
-
-            $counter++;
-        }
-
-        return [
-            'idData'   => $idData,
-            'nameData' => $nameData,
-        ];
+        return $temp
+            ->setId($data[self::BRAND_ID_KEY])
+            ->setName($data[self::BRAND_NAME_KEY]);
     }
 }

@@ -45,4 +45,20 @@ class Validator
 
         return $this;
     }
+
+    /**
+     * @param string $response
+     * @return array
+     * @throws Exception
+     */
+    public function validateApiResponse(string $response)
+    {
+        $result = json_decode($response, true);
+
+        if ($result['Count'] !== 0) {
+            throw new Exception('Bad request data' . PHP_EOL);
+        }
+
+        return $result['Result'] ?? [];
+    }
 }
