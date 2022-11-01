@@ -16,7 +16,8 @@ class ConsoleRouter
 
     public function chooseController(
         array $modeParams,
-        ?array $streamParams
+        ?array $streamParams,
+        ?string $controllerArg
     ): array {
         $controller = ucfirst($modeParams[self::CONTROLLER]);
         $controllerMode = ucfirst($modeParams[self::FUNC_MODE]);
@@ -28,6 +29,13 @@ class ConsoleRouter
         }
         $controller = new $controller();
 
+        if ($controllerArg) {
+            method_exists(
+                $controller,
+                'setArgument'
+            ) ? $controller->setArgument($controllerArg) : null;
+        }
+        
         if (!isset($streamParams)) {
             return ['controller' => $controller];
         }

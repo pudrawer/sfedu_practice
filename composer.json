@@ -4,7 +4,8 @@
       "ext-json": "*",
         "predis/predis": "^2.0",
         "monolog/monolog": "^2.5",
-        "guzzlehttp/guzzle": "^7.0"
+        "guzzlehttp/guzzle": "^7.0",
+        "sendinblue/api-v3-sdk": "8.x.x"
     },
     "autoload": {
         "psr-4": {

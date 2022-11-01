@@ -14,10 +14,28 @@ class ConsoleHandler
         $router = new \App\Router\ConsoleRouter();
 
         $modeParams = explode(':', $argv[1]);
-        $streamParams = isset($argv[2]) ? explode(':', $argv[2]) : null;
+        $streamParams = $argv[2] ?? null;
+
+        $streamParams = strpos(
+            $streamParams,
+            ':'
+        ) ? explode(':', $streamParams) : null;
+
+        $controllerArg = null;
+        foreach ($argv as $arg) {
+            $needle = '--argument=';
+            $temp = strpos($arg, $needle);
+
+            if ($temp !== false) {
+                $controllerArg = substr($arg, strlen($needle));
+                break;
+            }
+        }
+
         $classList = $router->chooseController(
             is_array($modeParams) ? $modeParams : [],
-            $streamParams
+            $streamParams,
+            $controllerArg
         );
 
         $controller = $classList['controller'];

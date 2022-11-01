@@ -11,14 +11,15 @@ class User
     private $surname;
     private $phone;
 
-    public function __construct(int $id)
-    {
-        $this->id = $id;
-    }
-
     public function __toString(): string
     {
         return 'User';
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getId(): ?int

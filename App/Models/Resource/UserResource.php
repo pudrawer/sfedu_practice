@@ -3,7 +3,7 @@
 namespace App\Models\Resource;
 
 use App\Database\Database;
-use App\Exception\Exception;
+use App\Exception\ResourceException;
 use App\Models\User;
 
 class UserResource extends AbstractResource
@@ -28,7 +28,7 @@ class UserResource extends AbstractResource
         $userInfo = $stmt->fetch();
 
         if (!$userInfo) {
-            throw new Exception('Bad user id' . PHP_EOL);
+            throw new ResourceException('Bad user id' . PHP_EOL);
         }
 
         return $userModel
@@ -74,5 +74,33 @@ class UserResource extends AbstractResource
         $stmt = $this->bindParamByMap($stmt, array_merge($paramAlias, $passAlias));
 
         return $stmt->execute();
+    }
+
+    public function getUserList(): array
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT 
+            `id`, `name`, `surname`, `email`
+        FROM
+            `user`
+        ');
+
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        $modelList = [];
+
+        foreach ($result as $value) {
+            $temp = new User();
+            $temp
+                ->setId($value['id'])
+                ->setName($value['name'])
+                ->setSurname($value['surname'])
+                ->setEmail($value['email']);
+
+            $modelList[] = $temp;
+        }
+
+        return $modelList;
     }
 }

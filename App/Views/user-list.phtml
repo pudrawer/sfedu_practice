@@ -1,0 +1,27 @@
+<?php
+/**
+ * @var App\Blocks\UserListBlock $this
+ * @var App\Models\User[] $data
+ */
+?>
+
+<?php $data = $this->getData(); ?>
+
+<div class="block" style="display: flex; flex-direction: column">
+    <?php foreach ($data as $user): ?>
+        <div>
+            <h3>
+                <?= $user->getSurname() ?>
+                <?= $user->getName() ?>
+            </h3>
+
+            <h5>
+                <?= $user->getEmail() ?>
+            </h5>
+
+            <a class="button" href="/mail?id=<?= $user->getId() ?>">
+                Напомнить
+            </a>
+        </div>
+    <?php endforeach; ?>
+</div>

@@ -20,6 +20,10 @@ class Environment
 
     private $cacheMode;
 
+    private $sendinBlueApiKey;
+    private $sendinBlueSenderEmail;
+    private $sendinBlueSenderName;
+
     public function __construct(string $envPath)
     {
         if ($cache = CacheFactory::checkEnvCache()) {
@@ -83,6 +87,21 @@ class Environment
         return $this->cacheMode ?? '';
     }
 
+    public function getSendinBlueApiKey(): string
+    {
+        return $this->sendinBlueApiKey ?? '';
+    }
+
+    public function getSendinBlueSenderEmail(): string
+    {
+        return $this->sendinBlueSenderEmail ?? '';
+    }
+
+    public function getSendinBlueSenderName(): string
+    {
+        return $this->sendinBlueSenderName ?? '';
+    }
+
     protected function setter(array $data)
     {
         $dbInfo = $data['DB'];
@@ -95,5 +114,10 @@ class Environment
         $this->host = $data['HOST']['ADDRESS'];
 
         $this->cacheMode = $data['CACHE']['CACHE_MODE'];
+
+        $sendinBlueInfo = $data['SENDIN_BLUE'];
+        $this->sendinBlueApiKey      = $sendinBlueInfo['API_KEY'];
+        $this->sendinBlueSenderEmail = $sendinBlueInfo['SENDER_EMAIL'];
+        $this->sendinBlueSenderName  = $sendinBlueInfo['SENDER_NAME'];
     }
 }
