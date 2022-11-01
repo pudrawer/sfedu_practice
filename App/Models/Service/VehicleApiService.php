@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Service\VehicleApi;
+namespace App\Models\Service;
 
 use App\Exception\Exception;
 use App\Models\Brand;

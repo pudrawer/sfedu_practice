@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models\Environment;
+namespace App\Models;
 
 use App\Models\Cache\CacheFactory;
+use const App\Models\Environment\APP_ROOT;
 
 class Environment
 {
@@ -28,7 +29,7 @@ class Environment
     {
         if ($cache = CacheFactory::checkEnvCache()) {
             $cache = json_decode($cache, true);
-            $this->setter($cache);
+            $this->setProperties($cache);
 
             return;
         }
@@ -102,7 +103,7 @@ class Environment
         return $this->sendinBlueSenderName ?? '';
     }
 
-    protected function setter(array $data)
+    protected function setProperties(array $data)
     {
         $dbInfo = $data['DB'];
         $this->dbHost = $dbInfo['HOST'];

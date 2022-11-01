@@ -2,8 +2,7 @@
 
 namespace App\Models\Cache;
 
-use App\Exception\CacheException;
-use App\Models\Environment\Environment;
+use App\Models\Environment;
 use Predis\Client;
 
 class CacheFactory

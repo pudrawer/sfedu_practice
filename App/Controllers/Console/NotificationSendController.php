@@ -4,7 +4,8 @@ namespace App\Controllers\Console;
 
 use App\Blocks\MailBlock;
 use App\Controllers\ControllerInterface;
-use App\Models\Mailer\Mailer;
+use App\Models\Service\MailService;
+use App\Models\Resource\UserResource;
 use App\Models\User;
 
 class NotificationSendController implements ControllerInterface
@@ -14,18 +15,17 @@ class NotificationSendController implements ControllerInterface
 
     public function execute()
     {
-        $mailBlock = new MailBlock();
+        $userResource = new UserResource();
+
         $user = new User();
-        $user
-            ->setEmail($this->userEmail ?? null)
-            ->setName('User');
+        $user = $userResource->getByEmail(
+            $user->setEmail($this->userEmail ?? null)
+        );
 
-        $mailBlock->setChildModels($user);
-
-        Mailer::getInstance()
-            ->prepareMailProperties($user, self::MAIL_SUBJECT)
-            ->prepareMailBody($mailBlock->renderMail())
-            ->sendMail();
+        $mailService = new MailService();
+        $mailService
+            ->prepareMail($user)
+            ->checkSendMail();
     }
 
     public function setArgument(string $userEmail): self

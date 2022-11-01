@@ -4,7 +4,7 @@ namespace App\Router;
 
 use App\Controllers\Api\WrongApiController;
 use App\Controllers\ControllerInterface;
-use App\Models\Logger\Logger;
+use App\Models\Logger;
 
 class ApiRouter extends AbstractRouter
 {

@@ -5,7 +5,7 @@ namespace App\Controllers\Web;
 use App\Controllers\ControllerInterface;
 use App\Exception\Exception;
 use App\Exception\ForbiddenException;
-use App\Models\Environment\Environment;
+use App\Models\Environment;
 use App\Models\Session\Session;
 
 abstract class AbstractController implements ControllerInterface

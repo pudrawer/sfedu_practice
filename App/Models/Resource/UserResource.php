@@ -103,4 +103,21 @@ class UserResource extends AbstractResource
 
         return $modelList;
     }
+
+    public function getByEmail(User $user): User
+    {
+        $stmt = Database::getInstance()->prepare('
+        SELECT `name` FROM `user` WHERE `email` = :user_email;
+        ');
+
+        $stmt = $this->bindParamByMap($stmt, [
+            ':user_email' => $user->getEmail(),
+        ]);
+
+        if (!$stmt->execute()) {
+            throw new ResourceException('Bad user email' . PHP_EOL);
+        }
+
+        return $user->setName($stmt->fetch()['name']);
+    }
 }

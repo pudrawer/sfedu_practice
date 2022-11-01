@@ -2,7 +2,7 @@
 
 namespace App\Database;
 
-use App\Models\Environment\Environment;
+use App\Models\Environment;
 
 class Database
 {

@@ -5,8 +5,8 @@ namespace App\Router;
 use App\Controllers\ControllerInterface;
 use App\Controllers\Web\HomepageController;
 use App\Controllers\Web\WrongController;
+use App\Models\Logger;
 use App\Models\Session\Session;
-use App\Models\Logger\Logger;
 
 class WebRouter extends AbstractRouter
 {

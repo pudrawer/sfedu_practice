@@ -160,6 +160,13 @@ abstract class AbstractResource
             return $result;
         }
 
-        throw new RecourseException();
+        throw new ResourceException();
+    }
+
+    public function preparedValuesSql(array $data, string $sample = '(?)'): string
+    {
+        $preparedPlaceholder = array_fill(0, count($data), $sample);
+
+        return implode(',' . PHP_EOL, $preparedPlaceholder);
     }
 }

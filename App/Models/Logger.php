@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Models\Logger;
+namespace App\Models;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
+use const App\Models\Logger\APP_ROOT;
 
 class Logger
 {

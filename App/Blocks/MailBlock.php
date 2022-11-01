@@ -10,14 +10,14 @@ class MailBlock extends AbstractBlock
     protected $fileRender = 'mail/mail';
     protected $userModel;
 
-    public function setChildModels(User $user): self
+    public function setUser(User $user): self
     {
         $this->userModel = $user;
 
         return $this;
     }
 
-    public function getChildModels(): User
+    public function getUser(): User
     {
         return $this->userModel;
     }

@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Models\Mailer;
+namespace App\Models;
 
 use App\Exception\Exception;
-use App\Models\Environment\Environment;
-use App\Models\User;
 use GuzzleHttp;
 use SendinBlue;
 
@@ -40,7 +38,8 @@ class Mailer
 
     public function prepareMailProperties(
         User $user,
-        string $subject
+        string $subject,
+        string $body
     ): self {
         $this->smtp = new \SendinBlue\Client\Model\SendSmtpEmail();
 
@@ -52,12 +51,6 @@ class Mailer
         $this->smtp['to'] = [
             ['email' => $user->getEmail(), 'name' => $user->getName()],
         ];
-
-        return $this;
-    }
-
-    public function prepareMailBody(string $body): self
-    {
         $this->smtp['htmlContent'] = $body;
 
         return $this;

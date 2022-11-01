@@ -2,12 +2,11 @@
 
 namespace App\Controllers\Web;
 
-use App\Blocks\MailBlock;
 use App\Exception\Exception;
 use App\Exception\ResourceException;
 use App\Models\Resource\UserResource;
+use App\Models\Service\MailService;
 use App\Models\User;
-use App\Models\Mailer\Mailer;
 
 class MailController extends AbstractController
 {
@@ -28,16 +27,10 @@ class MailController extends AbstractController
             throw new Exception($e->getMessage() . PHP_EOL);
         }
 
-        $mailBlock = new MailBlock();
-        $mailBlock->setChildModels($user);
-
-        $mail = Mailer::getInstance()
-            ->prepareMailProperties($user, 'Hello!')
-            ->prepareMailBody($mailBlock->renderMail());
-
-        if (!$mail->sendMail()) {
-            throw new Exception('Something was wrong' . PHP_EOL);
-        }
+        $mailService = new MailService();
+        $mailService
+            ->prepareMail($user)
+            ->checkSendMail();
 
         $this->redirectTo('userList');
     }

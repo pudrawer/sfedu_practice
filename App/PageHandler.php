@@ -11,8 +11,8 @@ use App\Exception\Exception;
 use App\Exception\ForbiddenException;
 use App\Exception\SelectionException;
 use App\Exception\UserApiException;
+use App\Models\Logger;
 use App\Router\AbstractRouter;
-use App\Models\Logger\Logger;
 
 class PageHandler
 {

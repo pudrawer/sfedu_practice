@@ -5,8 +5,7 @@ namespace App\Controllers\Console;
 use App\Exception\Exception;
 use App\Models\ExternalApi\Vehicle;
 use App\Models\Resource\BrandResource;
-use App\Models\Service\VehicleApi\VehicleApiService;
-use App\Models\Validator\Validator;
+use App\Models\Service\VehicleApiService;
 
 class VehicleParseController implements \App\Controllers\ControllerInterface
 {

@@ -15,14 +15,11 @@ class BrandResource extends AbstractResource
      */
     public function createByData(array $data): bool
     {
-        $preparedPlaceholder = array_fill(0, count($data), '(?, ?)');
-        $preparedPlaceholder = implode(',' . PHP_EOL, $preparedPlaceholder);
+        $preparedValuesSql = $this->preparedValuesSql($data, '(?, ?)');
+        $preparedFieldsSql = '(`id`, `name`)';
 
         $stmt = Database::getInstance()->prepare("
-        INSERT INTO
-            `car_brand` (`id`, `name`)
-        VALUES
-            $preparedPlaceholder;
+        INSERT INTO `car_brand` $preparedFieldsSql VALUES $preparedValuesSql;
         ");
 
         $counter = 1;
