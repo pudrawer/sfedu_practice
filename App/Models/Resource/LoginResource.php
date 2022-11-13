@@ -9,8 +9,7 @@ class LoginResource extends AbstractResource
     public function checkLogin(
         string $email
     ): ?array {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             `id`, `password`
         FROM 

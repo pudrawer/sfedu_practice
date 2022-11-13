@@ -3,9 +3,12 @@
 namespace App\Blocks;
 
 use App\Models\Session\Session;
+use Laminas\Di\Di;
 
 abstract class AbstractBlock implements BlockInterface
 {
+    protected $di;
+
     protected $data = [];
     protected $fileRender;
     protected $header = [];
@@ -23,6 +26,11 @@ abstract class AbstractBlock implements BlockInterface
 
     protected $viewsPath = APP_ROOT . '/App/Views';
     protected $srcPath = APP_ROOT . '/src';
+
+    public function __construct(Di $di)
+    {
+        $this->di = $di;
+    }
 
     public function getHeader(string $separator = '&nbsp;'): string
     {
@@ -81,8 +89,8 @@ abstract class AbstractBlock implements BlockInterface
 
     public function render(string $activeLink): self
     {
-        $headerBlock = new HeaderBlock();
-        $footerBlock = new FooterBlock();
+        $headerBlock = $this->di->get(HeaderBlock::class);
+        $footerBlock = $this->di->get(FooterBlock::class);
 
         $this->childStylesheetList = array_merge(
             $this->getStylesheetList(),
@@ -102,7 +110,8 @@ abstract class AbstractBlock implements BlockInterface
 
     public function getCsrfToken(): string
     {
-        return Session::getInstance()->getCsrfToken();
+
+        return $this->di->get(Session::class)->getCsrfToken();
     }
 
     public function normalizeData(string $data): string

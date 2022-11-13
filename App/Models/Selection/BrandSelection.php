@@ -6,7 +6,7 @@ use App\Exception\Exception;
 use App\Exception\SelectionException;
 use App\Models\Brand;
 
-class BrandSelection implements SelectionInterface
+class BrandSelection extends AbstractSelection
 {
     public function selectData(array $haystack): array
     {
@@ -17,7 +17,7 @@ class BrandSelection implements SelectionInterface
             && $haystack['countryId'];
 
         if ($hasNeededData) {
-            $brand = new Brand();
+            $brand = $this->di->get(Brand::class);
             $brand
                 ->setId($haystack['carBrandId'])
                 ->setName($haystack['brandName'])

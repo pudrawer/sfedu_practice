@@ -4,29 +4,16 @@ namespace App\Router;
 
 use App\Controllers\ControllerInterface;
 use App\Controllers\Web\NotFoundController;
+use Laminas\Di\Di;
 
 abstract class AbstractRouter
 {
-    abstract public function chooseController(string $path): ?ControllerInterface;
+    protected $di;
 
-    /**
-     * @return NotFoundController|ControllerInterface
-     */
-    public static function chooseRouter(string $path)
+    public function __construct(Di $di)
     {
-        $routerList = [
-            new WebRouter(),
-            new ApiRouter(),
-        ];
-
-        foreach ($routerList as $router) {
-            $controller = $router->chooseController($path);
-
-            if ($controller) {
-                return $controller;
-            }
-        }
-
-        return new NotFoundController();
+        $this->di = $di;
     }
+
+    abstract public function chooseController(string $path): ?ControllerInterface;
 }

@@ -4,24 +4,45 @@ namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
 use App\Blocks\LoginBlock;
+use App\Models\Environment;
 use App\Models\Randomizer\Randomizer;
 use App\Models\Resource\LoginResource;
 use App\Models\Session\Session;
+use Laminas\Di\Di;
 
 class LoginController extends AbstractController
 {
+    public function __construct(
+        Di $di,
+        Environment $env,
+        LoginResource $resource,
+        LoginBlock $block,
+        Session $session,
+        Randomizer $randomizer,
+        array $params = []
+    ) {
+        parent::__construct(
+            $di,
+            $env,
+            $params,
+            $resource,
+            $block,
+            null,
+            $session,
+            $randomizer
+        );
+    }
+
     public function execute(): BlockInterface
     {
-        if (Session::getInstance()->getUserId()) {
+        if ($this->session->getUserId()) {
             $this->redirectTo('profileInfo');
         }
 
         if ($this->isGetMethod()) {
-            $randomizer = new Randomizer();
-            Session::getInstance()->setCsrfToken($randomizer->generateCsrfToken());
+            $this->session->setCsrfToken($this->randomizer->generateCsrfToken());
 
-            $loginBlock = new LoginBlock();
-            return $loginBlock
+            return $this->block
                 ->setHeader(['LOGIN'])
                 ->render('main');
         }
@@ -39,26 +60,24 @@ class LoginController extends AbstractController
 
         $this->checkCsrfToken();
 
-        $session = Session::getInstance()->start();
+        $this->session->start();
 
         if (!$emailParam || !$passParam) {
-            $session->addError('Invalid email or pass value');
+            $this->session->addError('Invalid email or pass value');
 
             return false;
         }
 
-        $loginRecourse = new LoginResource();
-        $userInfo = $loginRecourse->checkLogin($emailParam);
+        $userInfo = $this->resource->checkLogin($emailParam);
         if (!password_verify($passParam, $userInfo['password'])) {
-            $session->addError('Bad email or pass');
+            $this->session->addError('Bad email or pass');
 
             return false;
         }
 
-        $randomizer = new Randomizer();
-        $session
+        $this->session
             ->setUserId($userInfo['id'])
-            ->setCsrfToken($randomizer->generateCsrfToken($userInfo['id']));
+            ->setCsrfToken($this->randomizer->generateCsrfToken($userInfo['id']));
         return true;
     }
 }

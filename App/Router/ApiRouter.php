@@ -23,24 +23,35 @@ class ApiRouter extends AbstractRouter
         $controller = ucfirst(explode('/', $path)[self::CONTROLLER_NAME]);
         $controller = "App\Controllers\Api\\{$controller}Controller";
         if (class_exists($controller)) {
+            $da = 1;
             set_error_handler(function (
                 int $errno,
                 string $errstr,
                 string $errfile
             ) {
-                $controller = new WrongApiController();
+                $controller = $this->di->get(
+                    WrongApiController::class,
+                    ['di' => $this->di]
+                );
                 $controller->execute();
 
-                Logger::getInstance()->putError(implode(PHP_EOL, [
-                        $errno,
-                        $errstr,
-                        $errfile,
+                $logger = $this->di->get(Logger::class);
+                $logger->putError(implode(PHP_EOL, [
+                    $errno,
+                    $errstr,
+                    $errfile,
                 ]));
 
                 return true;
             }, E_ALL);
 
-            return new $controller($paramList ?? []);
+            return $this->di->get(
+                $controller,
+                [
+                    'di'    => $this->di,
+                    'param' => $paramList ?? [],
+                ]
+            );
         }
 
         return null;

@@ -2,7 +2,8 @@
 /**
  * @var App\Blocks\RegistrationBlock $this
  */
-$session = \App\Models\Session\Session::getInstance();
+
+$session = $this->di->get(\App\Models\Session\Session::class);
 $errMsg = $session->getError()
 ?>
 <div class="registration block">

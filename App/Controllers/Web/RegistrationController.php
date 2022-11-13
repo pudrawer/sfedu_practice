@@ -3,27 +3,51 @@
 namespace App\Controllers\Web;
 
 use App\Blocks\BlockInterface;
+use App\Blocks\ProfileInfoBlock;
 use App\Blocks\RegistrationBlock;
 use App\Exception\Exception;
+use App\Models\Environment;
 use App\Models\Randomizer\Randomizer;
+use App\Models\Resource\AbstractResource;
 use App\Models\Resource\RegistrationResource;
 use App\Models\Session\Session;
+use App\Models\Validator\Validator;
+use Laminas\Di\Di;
 
 class RegistrationController extends AbstractController
 {
+    public function __construct(
+        Di $di,
+        Environment $env,
+        RegistrationBlock $block,
+        RegistrationResource $resource,
+        Validator $validator,
+        Session $session,
+        Randomizer $randomizer,
+        array $params = []
+    ) {
+        parent::__construct(
+            $di,
+            $env,
+            $params,
+            $resource,
+            $block,
+            $validator,
+            $session,
+            $randomizer
+        );
+    }
+
     public function execute(): BlockInterface
     {
-        if (Session::getInstance()->getUserId()) {
+        if ($this->session->start()->getUserId()) {
             $this->redirectTo('profileInfo');
         }
 
         if ($this->isGetMethod()) {
-            $randomizer = new Randomizer();
-            Session::getInstance()->setCsrfToken($randomizer->generateCsrfToken());
+            $this->session->setCsrfToken($this->randomizer->generateCsrfToken());
 
-            $block = new RegistrationBlock();
-
-            return $block
+            return $this->block
                 ->setHeader(['USER REGISTRATION'])
                 ->render('main');
         }
@@ -36,7 +60,7 @@ class RegistrationController extends AbstractController
         throw new Exception('Already registered' . PHP_EOL);
     }
 
-    private function alreadyRegister(): RegistrationResource
+    private function alreadyRegister(): AbstractResource
     {
         $inputEmail = htmlspecialchars($this->getPostParam('email'));
 
@@ -44,16 +68,14 @@ class RegistrationController extends AbstractController
             throw new Exception();
         }
 
-        $model = new RegistrationResource();
-
-        if ($model->checkRegistration($inputEmail)) {
+        if ($this->resource->checkRegistration($inputEmail)) {
             throw new Exception();
         }
 
-        return $model;
+        return $this->resource;
     }
 
-    private function registerUser(RegistrationResource $model): self
+    private function registerUser(AbstractResource $model): self
     {
         $inputEmail  = htmlspecialchars($this->getPostParam('email'));
         $inputPass   = htmlspecialchars($this->getPostParam('pass'));

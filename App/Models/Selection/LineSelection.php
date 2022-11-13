@@ -6,14 +6,14 @@ use App\Exception\Exception;
 use App\Exception\SelectionException;
 use App\Models\Line;
 
-class LineSelection implements SelectionInterface
+class LineSelection extends AbstractSelection
 {
     public function selectData(array $haystack): array
     {
         $hasNeededData = $haystack['lineName'] && $haystack['lineId'];
 
         if ($hasNeededData) {
-            $line = new Line();
+            $line = $this->di->get(Line::class);
             $line
                 ->setId($haystack['lineId'])
                 ->setName($haystack['lineName']);

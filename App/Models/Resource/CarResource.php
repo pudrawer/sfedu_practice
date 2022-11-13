@@ -17,7 +17,7 @@ class CarResource extends AbstractResource
      */
     public function getUserCarList(User $userModel): ?array
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT       
             cm.`name` as model_name,
             cl.`name` as line_name,
@@ -60,7 +60,7 @@ class CarResource extends AbstractResource
 
     private function carSetter(array $data): Car
     {
-        $car = new Car();
+        $car = $this->di->get(Car::class);
         $car
             ->setName(implode(' ', [
                 $data['brandName'],

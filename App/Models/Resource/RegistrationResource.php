@@ -11,8 +11,7 @@ class RegistrationResource extends AbstractResource
         string $email,
         string $pass
     ): bool {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         INSERT INTO 
             `user` (`email`, `password`) 
         VALUES (:email, :pass);
@@ -39,8 +38,7 @@ class RegistrationResource extends AbstractResource
 
     public function checkRegistration(string $email): bool
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             `id` 
         FROM `user` 

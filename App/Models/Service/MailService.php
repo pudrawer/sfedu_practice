@@ -6,15 +6,25 @@ use App\Blocks\MailBlock;
 use App\Exception\Exception;
 use App\Models\Mailer;
 use App\Models\User;
+use Laminas\Di\Di;
 
-class MailService
+class MailService extends AbstractService
 {
+    protected $mailer;
+
+    public function __construct(Di $di, Mailer $mailer)
+    {
+        parent::__construct($di);
+
+        $this->mailer = $mailer;
+    }
+
     public function prepareMail(User $user): self
     {
-        $mailBlock = new MailBlock();
+        $mailBlock = $this->di->get(MailBlock::class);
         $mailBlock->setUser($user);
 
-        Mailer::getInstance()->prepareMailProperties(
+        $this->mailer->prepareMailProperties(
             $user,
             'Hello!',
             $mailBlock->renderMail()
@@ -25,7 +35,7 @@ class MailService
 
     public function checkSendMail()
     {
-        if (!Mailer::getInstance()->sendMail()) {
+        if (!$this->mailer->sendMail()) {
             throw new Exception('Something was wrong' . PHP_EOL);
         }
     }

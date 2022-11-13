@@ -14,9 +14,7 @@ class LineResource extends AbstractResource
         int $brandId,
         int $lineId
     ): array {
-        $connection = Database::getInstance();
-
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             cl.*,
             cb.`name` as brand_name,
@@ -42,7 +40,7 @@ class LineResource extends AbstractResource
             throw new ResourceException('Data not found' . PHP_EOL);
         }
 
-        $brandSelection = new BrandSelection();
+        $brandSelection = $this->di->get(BrandSelection::class);
         $data = $brandSelection->selectData(
             $this->prepareKeyMap($lineInfo)
         );
@@ -58,9 +56,7 @@ class LineResource extends AbstractResource
 
     public function getModelList(int $lineId): array
     {
-        $connection = Database::getInstance();
-
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             car_model.id,
             car_model.`name`
@@ -79,8 +75,7 @@ class LineResource extends AbstractResource
 
     public function getByBrandId(int $brandId): ?array
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             `id`, 
             `name` 
@@ -104,8 +99,7 @@ class LineResource extends AbstractResource
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         UPDATE
             `car_line`
         SET
@@ -127,7 +121,7 @@ class LineResource extends AbstractResource
 
     public function delete(int $id): bool
     {
-        $lineModel = new Line();
+        $lineModel = $this->di->get(Line::class);
         $lineModel->setId($id);
 
         $this->deleteEntity($lineModel, 'car_model', 'car_line_id');
@@ -136,7 +130,7 @@ class LineResource extends AbstractResource
 
     public function getById(int $id): Line
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             *
         FROM
@@ -154,7 +148,7 @@ class LineResource extends AbstractResource
             throw new ResourceException();
         }
 
-        $model = new Line();
+        $model = $this->di->get(Line::class);
         return $model
             ->setName($result['name'])
             ->setBrandId($result['car_brand_id']);
@@ -162,7 +156,7 @@ class LineResource extends AbstractResource
 
     public function createEntity(Line $model): Line
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         INSERT INTO 
             `car_line` (`name`, `car_brand_id`)
         VALUES 
@@ -175,7 +169,7 @@ class LineResource extends AbstractResource
         ]);
 
         if ($stmt->execute()) {
-            return $model;
+            return $this->di->get($model);
         }
 
         throw new ResourceException();

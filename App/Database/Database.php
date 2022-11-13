@@ -6,30 +6,28 @@ use App\Models\Environment;
 
 class Database
 {
-    private static $instance;
+    protected $env;
 
-    public static function getInstance(): \PDO
+    public function __construct(Environment $env)
     {
-        if (self::$instance) {
-            return self::$instance;
-        }
+        $this->env = $env;
+    }
 
-        $envModel = Environment::getInstance();
-
-        $host    = $envModel->getDbHost();
-        $db      = $envModel->getDbName();
-        $user    = $envModel->getDbUser();
-        $pass    = $envModel->getDbPass();
-        $charset = $envModel->getDbChar();
+    public function getPdo(): \PDO
+    {
+        $host    = $this->env->getDbHost();
+        $db      = $this->env->getDbName();
+        $user    = $this->env->getDbUser();
+        $pass    = $this->env->getDbPass();
+        $charset = $this->env->getDbChar();
 
         $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         $opt = [
-            \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-            \PDO::ATTR_EMULATE_PREPARES   => false,
+            \PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
-        self::$instance = new \PDO($dsn, $user, $pass, $opt);
-        return self::$instance;
+        return new \PDO($dsn, $user, $pass, $opt);
     }
 }

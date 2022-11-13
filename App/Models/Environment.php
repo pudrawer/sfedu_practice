@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use App\Models\Cache\CacheFactory;
-use const App\Models\Environment\APP_ROOT;
+use App\Models\Cache\AbstractCache;
+use App\Models\Cache\FileCache;
+use Predis\Client;
 
 class Environment
 {
-    private static $instance;
-    private static $isCachedData = true;
-    private static $data = [];
-
     private $dbHost;
     private $dbName;
     private $dbUser;
@@ -25,32 +22,18 @@ class Environment
     private $sendinBlueSenderEmail;
     private $sendinBlueSenderName;
 
-    public function __construct(string $envPath)
+    public function __construct(AbstractCache $cache)
     {
-        if ($cache = CacheFactory::checkEnvCache()) {
-            $cache = json_decode($cache, true);
-            $this->setProperties($cache);
+        if ($cachedData = $cache->get('env')) {
+            $cachedData = json_decode($cachedData, true);
+            $this->setProperties($cachedData);
 
             return;
         }
 
-        self::$data = parse_ini_file($envPath, true);
-        $this->setter(self::$data);
-        self::$isCachedData = false;
-    }
-
-    public static function getInstance(): self
-    {
-        if (!self::$instance) {
-            self::$instance = new self(APP_ROOT . '/.env');
-        }
-
-        if (!self::$isCachedData) {
-            self::$isCachedData = true;
-            CacheFactory::getInstance()->set('env', json_encode(self::$data));
-        }
-
-        return self::$instance;
+        $data = parse_ini_file(APP_ROOT . '/.env', true);
+        $this->setProperties($data);
+        $cache->set('env', json_encode($data));
     }
 
     public function getDbHost(): string

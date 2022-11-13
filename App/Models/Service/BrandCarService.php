@@ -7,21 +7,19 @@ use App\Exception\ResourceException;
 use App\Exception\ServiceException;
 use App\Models\Resource\BrandResource;
 
-class BrandService extends AbstractService
+class BrandCarService extends AbstractCarService
 {
     public function getList(): array
     {
-        $recourse = new BrandResource();
-        return $recourse->getInformation();
+        return $this->resource->getInformation();
     }
 
     public function getInfo(int $id): array
     {
-        $recourse = new BrandResource();
         $result = [];
 
         try {
-            $brandInfo = $recourse->getBrandInfo($id);
+            $brandInfo = $this->resource->getBrandInfo($id);
         } catch (ResourceException $e) {
             throw new ServiceException();
         }

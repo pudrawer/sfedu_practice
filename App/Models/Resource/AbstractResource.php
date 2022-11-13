@@ -5,16 +5,26 @@ namespace App\Models\Resource;
 use App\Database\Database;
 use App\Exception\ResourceException;
 use App\Models\AbstractCarModel;
+use Laminas\Di\Di;
 
 abstract class AbstractResource
 {
+    protected $di;
+    protected $database;
+
+    public function __construct(Di $di, Database $database)
+    {
+        $this->di       = $di;
+        $this->database = $database;
+    }
+
     protected function prepareValueSimpleMap(
         array $data,
         string $model
     ): AbstractCarModel {
-        $model = '\App\Models\\' . ucfirst($model);
+        $model = 'App\Models\\' . ucfirst($model);
 
-        $tempModel = new $model();
+        $tempModel = $this->di->get($model);
         foreach ($data as $key => $value) {
             $modelParam = 'set' . ucfirst($key);
             $tempModel->$modelParam($value);
@@ -28,10 +38,10 @@ abstract class AbstractResource
         string $model = ''
     ): array {
         $result = [];
-        $model = '\App\Models\\' . ucfirst($model);
+        $model = 'App\Models\\' . ucfirst($model);
 
         foreach ($data as $item) {
-            $tempModel = new $model();
+            $tempModel = $this->di->newInstance($model);
 
             foreach ($item as $key => $value) {
                 $modelParam = 'set' . ucfirst($key);
@@ -83,8 +93,7 @@ abstract class AbstractResource
         string $tableName,
         string $tableRow
     ): bool {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare("
+        $stmt = $this->database->getPdo()->prepare("
         DELETE FROM 
             $tableName 
         WHERE 
@@ -133,7 +142,7 @@ abstract class AbstractResource
             $valueAlias[$value] = $model->getId();
         }
 
-        $stmt = Database::getInstance()->prepare("
+        $stmt = $this->database->getPdo()->prepare("
         DELETE FROM
             $tableName
         WHERE 
@@ -150,7 +159,7 @@ abstract class AbstractResource
 
     public function getAllInformation(string $tableName): array
     {
-        $stmt = Database::getInstance()->prepare("
+        $stmt = $this->database->getPdo()->prepare("
         SELECT * FROM $tableName;
         ");
         $stmt->execute();

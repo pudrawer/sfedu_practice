@@ -2,20 +2,34 @@
 
 namespace App\Controllers\Api;
 
-use App\Controllers\ControllerInterface;
 use App\Exception\ApiException;
 use App\Exception\UserApiException;
-use App\Models\Cache\Cache;
-use App\Models\Cache\CacheFactory;
+use App\Models\Cache\AbstractCache;
+use App\Models\Resource\AbstractResource;
 use App\Models\Service\AbstractService;
+use Laminas\Di\Di;
 
-abstract class AbstractController implements ControllerInterface
+abstract class AbstractController extends \App\Controllers\AbstractController
 {
     protected $param;
+    protected $resource;
+    protected $service;
+    protected $cache;
 
-    public function __construct(array $param)
-    {
+    public function __construct(
+        Di $di,
+        array $param,
+        AbstractCache $cache,
+        ?AbstractService $service,
+        AbstractResource $resource
+    ) {
+        parent::__construct($di);
+
         $this->param = $param;
+
+        $this->cache    = $cache;
+        $this->service  = $service;
+        $this->resource = $resource;
     }
 
     abstract protected function getData();
@@ -85,27 +99,22 @@ abstract class AbstractController implements ControllerInterface
      */
     protected function getEntityFromCache(int $entityId): array
     {
-        $cache = new Cache();
-        $data = json_decode($cache->get(static::$cacheKey), true);
+        $data = json_decode($this->cache->get(static::$cacheKey), true);
 
         return $data[$entityId] ?? false;
     }
 
     protected function restoreCache(AbstractService $service): bool
     {
-        $cache = CacheFactory::getInstance();
-
-        $cache->del(static::$cacheKey);
-        $cache->set(static::$cacheKey, json_encode($service->getList()));
+        $this->cache->del(static::$cacheKey);
+        $this->cache->set(static::$cacheKey, json_encode($service->getList()));
 
         return true;
     }
 
     protected function getDecodedData(): ?array
     {
-        $cache = CacheFactory::getInstance();
-
-        return json_decode($cache->get(static::$cacheKey) ?? [], true);
+        return json_decode($this->cache->get(static::$cacheKey) ?? [], true);
     }
 
     protected function checkCachedData()

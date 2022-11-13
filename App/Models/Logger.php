@@ -4,34 +4,20 @@ namespace App\Models;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger as MonologLogger;
-use const App\Models\Logger\APP_ROOT;
 
 class Logger
 {
-    private static $instance = null;
     private $logger;
 
-    private function __construct()
-    {
-        $this->logger = new MonologLogger('general');
+    public function __construct(
+        MonologLogger $logger,
+        StreamHandler $warningHandler,
+        StreamHandler $errorHandler
+    ) {
+        $this->logger = $logger;
 
-        $this->logger->pushHandler(new StreamHandler(
-            APP_ROOT . '/var/log/warning.log',
-            MonologLogger::WARNING
-        ));
-        $this->logger->pushHandler(new StreamHandler(
-            APP_ROOT . '/var/log/errors.log',
-            MonologLogger::ERROR
-        ));
-    }
-
-    public static function getInstance(): self
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
+        $this->logger->pushHandler($warningHandler);
+        $this->logger->pushHandler($errorHandler);
     }
 
     public function putWarning(string $errstr)

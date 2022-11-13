@@ -4,18 +4,30 @@ namespace App\Controllers\Api;
 
 use App\Exception\ApiException;
 use App\Exception\ResourceException;
+use App\Models\Cache\AbstractCache;
 use App\Models\Model;
+use App\Models\Resource\AbstractResource;
 use App\Models\Resource\ModelResource;
+use App\Models\Service\AbstractService;
+use Laminas\Di\Di;
 
 class ModelsController extends AbstractController
 {
+    public function __construct(
+        Di $di,
+        array $param,
+        AbstractCache $cache,
+        ModelResource $resource,
+        AbstractService $service = null
+    ) {
+        parent::__construct($di, $param, $cache, $service, $resource);
+    }
+
     protected function getData()
     {
-        $modelRecourse = new ModelResource();
-
         if ($this->getEntityIdParam()) {
             try {
-                $model = $modelRecourse->getInfoById($this->getEntityIdParam());
+                $model = $this->resource->getInfoById($this->getEntityIdParam());
                 $this->renderJson([
                     'id'         => $model->getId(),
                     'name'       => $model->getName(),
@@ -31,7 +43,7 @@ class ModelsController extends AbstractController
         }
 
         try {
-            $this->renderJson($modelRecourse->getInformation());
+            $this->renderJson($this->resource->getInformation());
         } catch (ResourceException $e) {
             throw new ApiException();
         }
@@ -46,11 +58,10 @@ class ModelsController extends AbstractController
             'previous_model_id',
         ]);
 
-        $model = new Model();
-        $modelRecourse = new ModelResource();
+        $model = $this->di->get(Model::class);
 
         try {
-            $modelRecourse->createEntity(
+            $this->resource->createEntity(
                 $model
                     ->setName($data['name'])
                     ->setLineId($data['car_line_id'])
@@ -75,10 +86,9 @@ class ModelsController extends AbstractController
             'previous_model_id',
         ]);
 
-        $model = new Model();
-        $modelRecourse = new ModelResource();
+        $model = $this->di->get(Model::class);
         try {
-            $modelRecourse->modifyAllProperties(
+            $this->resource->modifyAllProperties(
                 $model
                     ->setId($this->getEntityIdParam())
                     ->setModifiedId($data['modified_id'])
@@ -103,8 +113,7 @@ class ModelsController extends AbstractController
     protected function deleteData()
     {
         $this->checkEntityIdParam();
-        $modelRecourse = new ModelResource();
-        if (!$modelRecourse->delete($this->getEntityIdParam())) {
+        if (!$this->resource->delete($this->getEntityIdParam())) {
             throw new ApiException();
         }
     }

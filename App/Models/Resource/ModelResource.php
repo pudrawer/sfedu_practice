@@ -16,8 +16,7 @@ class ModelResource extends AbstractResource
         int $lineId,
         int $modelId
     ): array {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             cb.name as brand_name,
             cb.id as car_brand_id,
@@ -63,11 +62,11 @@ class ModelResource extends AbstractResource
 
     private function splitByModel(array $data): array
     {
-        $selection = new BrandSelection();
+        $selection = $this->di->get(BrandSelection::class);
         $data = $selection->selectData($this->prepareKeyMap($data));
         $brandModel = $data['model'];
 
-        $selection = new LineSelection();
+        $selection = $this->di->get(LineSelection::class);
         $data = $selection->selectData($data['data']);
         $lineModel = $data['model'];
 
@@ -87,8 +86,7 @@ class ModelResource extends AbstractResource
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         UPDATE
             `car_model`
         SET
@@ -114,7 +112,7 @@ class ModelResource extends AbstractResource
 
     public function delete(int $id): bool
     {
-        $model = new Model();
+        $model = $this->di->get(Model::class);
         $model->setId($id);
 
         return $this->deleteEntity($model, 'car_model', 'id');
@@ -122,7 +120,7 @@ class ModelResource extends AbstractResource
 
     public function getInfoById(int $id): Model
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             *
         FROM
@@ -151,7 +149,7 @@ class ModelResource extends AbstractResource
 
     public function modifyAllProperties(Model $model): Model
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         UPDATE
             `car_model`
         SET
@@ -181,7 +179,7 @@ class ModelResource extends AbstractResource
 
     public function createEntity(Model $model): Model
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         INSERT INTO
             `car_model` (`name`, `previous_line_model`, `year`, `car_line_id`)
         VALUES 

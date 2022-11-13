@@ -8,32 +8,24 @@ use SendinBlue;
 
 class Mailer
 {
-    private static $instance;
-
     private $mailer;
     private $smtp;
+    private $env;
 
-    private function __construct()
+    public function __construct(Environment $env)
     {
+        $this->env = $env;
+
         $config = SendinBlue\Client\Configuration::getDefaultConfiguration()
             ->setApiKey(
                 'api-key',
-                Environment::getInstance()->getSendinBlueApiKey()
+                $this->env->getSendinBlueApiKey()
             );
 
         $this->mailer = new SendinBlue\Client\Api\TransactionalEmailsApi(
             new GuzzleHttp\Client(),
             $config
         );
-    }
-
-    public static function getInstance(): self
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
     }
 
     public function prepareMailProperties(
@@ -45,8 +37,8 @@ class Mailer
 
         $this->smtp['subject'] = $subject;
         $this->smtp['sender'] = [
-            'name'  => Environment::getInstance()->getSendinBlueSenderName(),
-            'email' => Environment::getInstance()->getSendinBlueSenderEmail(),
+            'name'  => $this->env->getSendinBlueSenderName(),
+            'email' => $this->env->getSendinBlueSenderEmail(),
         ];
         $this->smtp['to'] = [
             ['email' => $user->getEmail(), 'name' => $user->getName()],

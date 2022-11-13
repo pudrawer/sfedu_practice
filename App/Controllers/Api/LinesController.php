@@ -5,42 +5,52 @@ namespace App\Controllers\Api;
 use App\Exception\ApiException;
 use App\Exception\ResourceException;
 use App\Exception\ServiceException;
+use App\Models\Cache\AbstractCache;
 use App\Models\Cache\CacheFactory;
 use App\Models\Line;
+use App\Models\Resource\AbstractResource;
 use App\Models\Resource\LineResource;
-use App\Models\Service\LineService;
+use App\Models\Service\AbstractService;
+use App\Models\Service\LineCarService;
+use Laminas\Di\Di;
 
 class LinesController extends AbstractController
 {
     protected static $cacheKey = 'line_info';
 
+    public function __construct(
+        Di $di,
+        array $param,
+        AbstractCache $cache,
+        LineCarService $service,
+        LineResource $resource
+    ) {
+        parent::__construct($di, $param, $cache, $service, $resource);
+    }
+
     protected function getData()
     {
-        $cache = CacheFactory::getInstance();
-
         if ($data = $this->checkCachedData()) {
             $this->renderJson($data);
 
             return $data;
         }
 
-        $lineService = new LineService();
         $result = [];
-
         if ($this->getEntityIdParam()) {
             try {
-                $this->renderJson($lineService->getInfo(
+                $this->renderJson($this->service->getInfo(
                     $this->getEntityIdParam()
                 ));
             } catch (ServiceException $e) {
                 throw new ApiException();
             }
         } else {
-            $result = $lineService->getList();
+            $result = $this->service->getList();
         }
 
         $this->renderJson($result);
-        $this->restoreCache($lineService);
+        $this->restoreCache($this->service);
 
         return $result;
     }
@@ -52,15 +62,13 @@ class LinesController extends AbstractController
             'brand_id',
         ]);
 
-        $line = new Line();
+        $line = $this->di->get(Line::class);
         $line
             ->setName($data['name'])
             ->setBrandId($data['brand_id']);
 
-        $lineRecourse = new LineResource();
-
         try {
-            $line = $lineRecourse->createEntity($line);
+            $line = $this->resource->createEntity($line);
 
             $this->renderJson([
                 'name'    => $line->getName(),
@@ -70,7 +78,7 @@ class LinesController extends AbstractController
             throw new ApiException();
         }
 
-        return $this->restoreCache(new LineService());
+        return $this->restoreCache($this->service);
     }
 
     protected function putData()
@@ -82,17 +90,15 @@ class LinesController extends AbstractController
             'brand_id',
         ]);
 
-        $line = new Line();
+        $line = $this->di->get(Line::class);
         $line
             ->setId($this->getEntityIdParam())
             ->setName($data['name'])
             ->setBrandId($data['brand_id'])
             ->setModifiedId($data['modified_id']);
 
-        $lineRecourse = new LineResource();
-
         try {
-            $lineRecourse->modifyAllProperties($line);
+            $this->resource->modifyAllProperties($line);
             $this->renderJson([
                 'id'      => $data['modified_id'],
                 'name'    => $data['name'],
@@ -102,16 +108,15 @@ class LinesController extends AbstractController
             throw new ApiException();
         }
 
-        return $this->restoreCache(new LineService());
+        return $this->restoreCache($this->service);
     }
 
     protected function deleteData()
     {
         $this->checkEntityIdParam();
-        $lineRecourse = new LineResource();
 
-        if ($lineRecourse->delete($this->getEntityIdParam())) {
-            return $this->restoreCache(new LineService());
+        if ($this->resource->delete($this->getEntityIdParam())) {
+            return $this->restoreCache($this->service);
         }
 
         throw new ApiException();

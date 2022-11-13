@@ -18,7 +18,7 @@ class BrandResource extends AbstractResource
         $preparedValuesSql = $this->preparedValuesSql($data, '(?, ?)');
         $preparedFieldsSql = '(`id`, `name`)';
 
-        $stmt = Database::getInstance()->prepare("
+        $stmt = $this->database->getPdo()->prepare("
         INSERT INTO `car_brand` $preparedFieldsSql VALUES $preparedValuesSql;
         ");
 
@@ -36,7 +36,7 @@ class BrandResource extends AbstractResource
      */
     public function createNewEntity(AbstractCarModel $model): bool
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         INSERT INTO
             car_brand (`name`, `country_id`)
         VALUES 
@@ -55,8 +55,9 @@ class BrandResource extends AbstractResource
      */
     public function getBrandList(): ?array
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('SELECT `name`, `id` FROM `car_brand`;');
+        $stmt = $this->database->getPdo()->prepare(
+            'SELECT `name`, `id` FROM `car_brand`;'
+        );
         $stmt->execute();
 
         return $this->prepareValueMap($stmt->fetchAll(), 'brand');
@@ -69,8 +70,7 @@ class BrandResource extends AbstractResource
      */
     public function getBrandInfo(int $brandId): AbstractCarModel
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             car_brand.*, 
             country.`name` as country_name 
@@ -89,7 +89,9 @@ class BrandResource extends AbstractResource
             throw new ResourceException('Data not found' . PHP_EOL);
         }
 
-        $lineResource = new LineResource();
+        $lineResource = $this->di->get(LineResource::class, [
+            'database' => $this->database,
+        ]);
         return $this->prepareValueSimpleMap(
             array_merge(
                 $this->prepareKeyMap($brandInfo),
@@ -106,8 +108,7 @@ class BrandResource extends AbstractResource
      */
     public function modifyProperties(AbstractCarModel $model): bool
     {
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         UPDATE
             `car_brand`
         SET
@@ -132,7 +133,7 @@ class BrandResource extends AbstractResource
     public function modifyAllProperties(
         AbstractCarModel $model
     ): bool {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         UPDATE
             `car_brand`
         SET
@@ -154,11 +155,10 @@ class BrandResource extends AbstractResource
 
     public function delete(int $id): bool
     {
-        $brandModel = new Brand();
+        $brandModel = $this->di->get(Brand::class);
         $brandModel->setId($id);
 
-        $connection = Database::getInstance();
-        $stmt = $connection->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             id 
         FROM 
@@ -173,7 +173,7 @@ class BrandResource extends AbstractResource
 
         $lineList = $stmt->fetchAll();
         foreach ($lineList as &$line) {
-            $lineModel = new Line();
+            $lineModel = $this->di->get(Line::class);
             $lineModel->setId($line['id']);
 
             $line = $lineModel;
@@ -191,7 +191,7 @@ class BrandResource extends AbstractResource
 
     public function getById(int $id): array
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             *
         FROM

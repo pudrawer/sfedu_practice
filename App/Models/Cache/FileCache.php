@@ -2,7 +2,7 @@
 
 namespace App\Models\Cache;
 
-class Cache
+class FileCache extends AbstractCache
 {
     protected const CACHE_FILE = APP_ROOT . '/var/cache/';
 

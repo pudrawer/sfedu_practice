@@ -5,29 +5,48 @@ namespace App\Controllers\Web;
 use App\Blocks\BlockInterface;
 use App\Blocks\ProfileInfoBlock;
 use App\Exception\Exception;
+use App\Models\Environment;
 use App\Models\Resource\UserResource;
 use App\Models\Session\Session;
 use App\Models\User;
 use App\Models\Validator\Validator;
+use Laminas\Di\Di;
 
 class ProfileInfoController extends AbstractController
 {
+    public function __construct(
+        Di $di,
+        Environment $env,
+        ProfileInfoBlock $block,
+        UserResource $resource,
+        Validator $validator,
+        Session $session,
+        array $params = []
+    ) {
+        parent::__construct(
+            $di,
+            $env,
+            $params,
+            $resource,
+            $block,
+            $validator,
+            $session
+        );
+    }
+
     public function execute(): BlockInterface
     {
-        $idParam = Session::getInstance()->getUserId();
+        $idParam = $this->session->start()->getUserId();
         if (!$idParam) {
             $this->redirectTo('login');
         }
-        $userModel = new User($idParam);
+        $userModel = $this->di->get(User::class);
+        $userModel->setId($idParam);
 
         if ($this->isGetMethod()) {
-            $block = new ProfileInfoBlock();
-
-            $userRecourse = new UserResource();
-
-            return $block
+            return $this->block
                 ->setHeader(['PROFILE'])
-                ->setChildModels($userRecourse->getInfo($userModel))
+                ->setChildModels($this->resource->getInfo($userModel))
                 ->render('main');
         }
 
@@ -51,8 +70,7 @@ class ProfileInfoController extends AbstractController
             throw new Exception();
         }
 
-        $validator = new Validator();
-        $validator
+        $this->validator
             ->checkEmail($emailParam)
             ->checkPhoneNumber($phoneParam)
             ->checkName($nameParam)
@@ -64,11 +82,10 @@ class ProfileInfoController extends AbstractController
             ->setSurname($surnameParam)
             ->setPhone($phoneParam);
 
-        $userRecourse = new UserResource();
         if (!$passParam) {
-            return $userRecourse->updateInfo($userModel);
+            return $this->resource->updateInfo($userModel);
         }
 
-        return $userRecourse->updateInfo($userModel->setPassword($passParam));
+        return $this->resource->updateInfo($userModel->setPassword($passParam));
     }
 }

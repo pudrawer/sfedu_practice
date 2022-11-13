@@ -5,7 +5,9 @@
         "predis/predis": "^2.0",
         "monolog/monolog": "^2.5",
         "guzzlehttp/guzzle": "^7.0",
-        "sendinblue/api-v3-sdk": "8.x.x"
+        "sendinblue/api-v3-sdk": "8.x.x",
+        "laminas/laminas-di": "^2.0",
+        "laminas/laminas-code": "~3.4.1"
     },
     "autoload": {
         "psr-4": {

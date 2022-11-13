@@ -25,7 +25,7 @@ class Vehicle
         $response = $this->client->request('GET', $webPath . self::API_POSTFIX);
 
         if ($response->getStatusCode() === 200) {
-            $this->data = json_decode($response->getBody(),true);
+            $this->data = json_decode($response->getBody(), true);
 
             return (bool) $this->data;
         }

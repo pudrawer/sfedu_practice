@@ -5,14 +5,14 @@ namespace App\Models\Service;
 use App\Exception\Exception;
 use App\Models\Brand;
 
-class VehicleApiService
+class VehicleApiService extends AbstractService
 {
     protected const BRAND_ID_KEY   = 'Make_ID';
     protected const BRAND_NAME_KEY = 'Make_Name';
 
     public function mapApiResult(array $data): Brand
     {
-        $temp = new Brand();
+        $temp = $this->di->get(Brand::class);
 
         if (
             !is_int($data[self::BRAND_ID_KEY])

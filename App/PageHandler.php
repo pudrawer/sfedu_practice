@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Blocks\NotFoundBlock;
 use App\Controllers\Api\WrongApiController;
 use App\Controllers\Web\ForbiddenController;
 use App\Controllers\Web\NotFoundController;
@@ -11,52 +12,64 @@ use App\Exception\Exception;
 use App\Exception\ForbiddenException;
 use App\Exception\SelectionException;
 use App\Exception\UserApiException;
+use App\Models\DiContainer;
 use App\Models\Logger;
-use App\Router\AbstractRouter;
+use Laminas\Di\Di;
+use Laminas\Di\Exception\RuntimeException;
 
 class PageHandler
 {
-    private static $instance;
+    private $di;
+
+    public function __construct(Di $di)
+    {
+        $this->di = $di;
+    }
 
     public function handlePage()
     {
+        $diContainer = $this->di->get(
+            DiContainer::class,
+            ['di' => $this->di]
+        );
+        $diContainer->assemble();
+
+        $logger = $this->di->get(Logger::class);
+
         try {
-            $controller = AbstractRouter::chooseRouter($_SERVER['REQUEST_URI'] ?? '');
+            /** @var \App\Router\RouterPool $controller */
+            $controller = $this->di->get(\App\Router\RouterPool::class);
+            $controller = $controller->chooseRouter($_SERVER['REQUEST_URI'] ?? '');
 
             $controller->execute();
         } catch (Exception $e) {
-            $controller = new NotFoundController();
+            $controller = $this->di->get(NotFoundController::class, [
+                'block' => NotFoundBlock::class,
+            ]);
             $controller->execute();
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
         } catch (SelectionException $e) {
-            $controller = new NotFoundController();
+            $controller = $this->di->get(NotFoundController::class);
             $controller->execute();
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
         } catch (ForbiddenException $e) {
-            $controller = new ForbiddenController();
+            $controller = $this->di->get(ForbiddenController::class);
             $controller->execute();
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
         } catch (ApiException $e) {
-            $controller = new WrongApiController();
+            $controller = $this->di->get(WrongApiController::class);
             $controller->execute();
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
         } catch (UserApiException $e) {
-            $controller = new WrongApiController();
+            $controller = $this->di->get(WrongApiController::class);
             $controller->execute(403);
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
+        } catch (RuntimeException $e) {
+            $logger->putError($e->getMessage());
         } catch (\Exception $e) {
-            $controller = new WrongController();
+            $controller = $this->di->get(WrongController::class);
             $controller->execute();
-            Logger::getInstance()->putWarning($e->__toString());
+            $logger->putWarning($e->getMessage());
         }
-    }
-
-    public static function getInstance(): self
-    {
-        if (self::$instance) {
-            return self::$instance;
-        }
-
-        return self::$instance = new self();
     }
 }

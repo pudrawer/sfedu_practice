@@ -5,18 +5,27 @@ namespace App\Controllers\Api;
 use App\Exception\ApiException;
 use App\Exception\ServiceException;
 use App\Models\Brand;
-use App\Models\Cache\CacheFactory;
+use App\Models\Cache\AbstractCache;
 use App\Models\Resource\BrandResource;
-use App\Models\Service\BrandService;
+use App\Models\Service\BrandCarService;
+use Laminas\Di\Di;
 
 class BrandsController extends AbstractController
 {
     protected static $cacheKey = 'brand_info';
 
+    public function __construct(
+        Di $di,
+        array $param,
+        AbstractCache $cache,
+        BrandCarService $service,
+        BrandResource $resource
+    ) {
+        parent::__construct($di, $param, $cache, $service, $resource);
+    }
+
     protected function getData()
     {
-        $cache = CacheFactory::getInstance();
-
         if ($data = $this->checkCachedData()) {
             $this->renderJson($data);
 
@@ -24,19 +33,18 @@ class BrandsController extends AbstractController
         }
 
         $result = [];
-        $brandService = new BrandService();
         if ($id = $this->getEntityIdParam()) {
             try {
-                $result = $brandService->getInfo($id);
+                $result = $this->service->getInfo($id);
             } catch (ServiceException $e) {
                 throw new ApiException();
             }
         } else {
-            $result = $brandService->getList();
+            $result = $this->service->getList();
         }
 
         $this->renderJson($result);
-        $this->restoreCache($brandService);
+        $this->restoreCache($this->service);
 
         return $result;
     }
@@ -48,23 +56,22 @@ class BrandsController extends AbstractController
             'country_id',
         ]);
 
-        $brandModel = new Brand();
+        $brandModel = $this->di->get(Brand::class);
         $brandModel
             ->setName($data['name'])
             ->setCountryId($data['country_id']);
 
-        $recourse = new BrandResource();
-        if (!$recourse->createNewEntity($brandModel)) {
+        if (!$this->resource->createNewEntity($brandModel)) {
             throw new ApiException('Something was wrong' . PHP_EOL);
         }
 
         $data = [
-            'name'      => $brandModel->getName(),
+            'name'       => $brandModel->getName(),
             'country_id' => $brandModel->getCountryId(),
         ];
         $this->renderJson($data);
 
-        $this->restoreCache(new BrandService());
+        $this->restoreCache($this->service);
 
         return $data;
     }
@@ -78,22 +85,21 @@ class BrandsController extends AbstractController
             'country_id',
         ]);
 
-        $brandModel = new Brand();
+        $brandModel = $this->di->get(Brand::class);
         $brandModel
             ->setId($this->getEntityIdParam())
             ->setName($data['name'])
             ->setCountryId($data['country_id'])
             ->setModifiedId($data['id']);
 
-        $brandRecourse = new BrandResource();
-        if ($brandRecourse->modifyAllProperties($brandModel)) {
+        if ($this->resource->modifyAllProperties($brandModel)) {
             $this->renderJson([
                 'id'         => $brandModel->getModifiedId(),
                 'name'       => $brandModel->getName(),
                 'country_id' => $brandModel->getCountryId(),
             ]);
 
-            $this->restoreCache(new BrandService());
+            $this->restoreCache($this->service);
 
             return $data;
         }
@@ -105,9 +111,8 @@ class BrandsController extends AbstractController
     {
         $this->checkEntityIdParam();
 
-        $brandRecourse = new BrandResource();
-        if ($brandRecourse->delete($this->getEntityIdParam())) {
-            return $this->restoreCache(new BrandService());
+        if ($this->resource->delete($this->getEntityIdParam())) {
+            return $this->restoreCache($this->service);
         }
 
         throw new ApiException();

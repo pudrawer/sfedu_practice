@@ -4,7 +4,7 @@ namespace App\Controllers\Console;
 
 use App\Blocks\MailBlock;
 use App\Controllers\ControllerInterface;
-use App\Models\Service\MailService;
+use App\Models\Service\MailCarService;
 use App\Models\Resource\UserResource;
 use App\Models\User;
 
@@ -22,7 +22,7 @@ class NotificationSendController implements ControllerInterface
             $user->setEmail($this->userEmail ?? null)
         );
 
-        $mailService = new MailService();
+        $mailService = new MailCarService();
         $mailService
             ->prepareMail($user)
             ->checkSendMail();

@@ -10,7 +10,7 @@ class UserResource extends AbstractResource
 {
     public function getInfo(User $userModel): User
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT
             `email`,
             `phone`,
@@ -52,7 +52,7 @@ class UserResource extends AbstractResource
             ];
         }
 
-        $stmt = Database::getInstance()->prepare("
+        $stmt = $this->database->getPdo()->prepare("
         UPDATE
             `user`
         SET
@@ -78,7 +78,7 @@ class UserResource extends AbstractResource
 
     public function getUserList(): array
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT 
             `id`, `name`, `surname`, `email`
         FROM
@@ -106,7 +106,7 @@ class UserResource extends AbstractResource
 
     public function getByEmail(User $user): User
     {
-        $stmt = Database::getInstance()->prepare('
+        $stmt = $this->database->getPdo()->prepare('
         SELECT `name` FROM `user` WHERE `email` = :user_email;
         ');
 

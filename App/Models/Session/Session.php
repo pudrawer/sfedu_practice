@@ -4,20 +4,11 @@ namespace App\Models\Session;
 
 class Session
 {
-    private static $instance;
-
     public function __construct()
     {
-        session_save_path(APP_ROOT . '/var/sessions');
-    }
-
-    public static function getInstance(): self
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_save_path(APP_ROOT . '/var/sessions');
         }
-
-        return self::$instance;
     }
 
     public function start(): self

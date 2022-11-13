@@ -2,7 +2,9 @@
 /**
  * @var App\Blocks\HeaderBlock $this
  */
-$session = \App\Models\Session\Session::getInstance()->start();
+/** @var App\Models\Session\Session $session */
+$session = $this->di->get(\App\Models\Session\Session::class);
+$session->start();
 ?>
 
 <header

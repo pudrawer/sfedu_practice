@@ -2,26 +2,55 @@
 
 namespace App\Controllers\Web;
 
-use App\Controllers\ControllerInterface;
+use App\Blocks\AbstractBlock;
 use App\Exception\Exception;
 use App\Exception\ForbiddenException;
 use App\Models\Environment;
+use App\Models\Randomizer\Randomizer;
+use App\Models\Resource\AbstractResource;
+use App\Models\Service\AbstractService;
 use App\Models\Session\Session;
+use App\Models\Validator\Validator;
+use Laminas\Di\Di;
 
-abstract class AbstractController implements ControllerInterface
+abstract class AbstractController extends \App\Controllers\AbstractController
 {
-    protected $getParams = [];
+    protected $getParams;
+    protected $block;
+    protected $resource;
+    protected $validator;
+    protected $session;
+    protected $randomizer;
+    protected $service;
+    protected $env;
 
-    public function __construct(array $params = [])
-    {
-        $this->getParams = $params;
+    public function __construct(
+        Di $di,
+        Environment $env,
+        array $params = [],
+        AbstractResource $resource = null,
+        AbstractBlock $block = null,
+        Validator $validator = null,
+        Session $session = null,
+        Randomizer $randomizer = null,
+        AbstractService $service = null
+    ) {
+        parent::__construct($di);
+
+        $this->getParams  = $params;
+
+        $this->block      = $block;
+        $this->resource   = $resource;
+        $this->validator  = $validator;
+        $this->session    = $session;
+        $this->randomizer = $randomizer;
+        $this->service    = $service;
+        $this->env = $env;
     }
 
     public function redirectTo(string $webPath = '')
     {
-        $webUri = Environment::getInstance();
-
-        $host = $webUri->getHost();
+        $host = $this->env->getHost();
         header("Location: $host/$webPath");
         exit;
     }
@@ -55,8 +84,8 @@ abstract class AbstractController implements ControllerInterface
             throw new Exception('Bad post params' . PHP_EOL);
         }
 
-        $model = '\App\Models\\' . ucfirst($neededModel);
-        $model = new $model();
+        $model = 'App\Models\\' . ucfirst($neededModel);
+        $model = $this->di->get($model);
 
         foreach ($paramsValue as $key => $param) {
             $method = 'set' . ucfirst($key);
@@ -64,8 +93,8 @@ abstract class AbstractController implements ControllerInterface
             $model->$method($param);
         }
 
-        $modificator = '\App\Models\Recourse\\' . ucfirst($neededModel) . 'Recourse';
-        $modificator = new $modificator();
+        $modificator = 'App\Models\Recourse\\' . ucfirst($neededModel) . 'Recourse';
+        $modificator = $this->di->get($modificator);
         return $modificator->modifyProperties($model);
     }
 
@@ -78,7 +107,7 @@ abstract class AbstractController implements ControllerInterface
     {
         if (
             $this->getPostParam('csrfToken')
-            != Session::getInstance()->getCsrfToken()
+            != $this->di->get(Session::class)->getCsrfToken()
         ) {
             throw new ForbiddenException();
         }

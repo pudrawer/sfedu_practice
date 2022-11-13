@@ -6,4 +6,7 @@ define('APP_ROOT', __DIR__ . '/..');
 
 require_once APP_ROOT . '/vendor/autoload.php';
 
-PageHandler::getInstance()->handlePage();
+$di = new \Laminas\Di\Di();
+/** @var PageHandler $pageHandler */
+$pageHandler = $di->get(PageHandler::class, ['di' => $di]);
+$pageHandler->handlePage();
