@@ -21,14 +21,4 @@ class MailBlock extends AbstractBlock
     {
         return $this->userModel;
     }
-
-    public function renderMail(): string
-    {
-        ob_start();
-        require APP_ROOT . "/App/Views/{$this->fileRender}.phtml";
-
-        $result = ob_get_contents();
-        ob_end_clean();
-        return $result ?? '';
-    }
 }

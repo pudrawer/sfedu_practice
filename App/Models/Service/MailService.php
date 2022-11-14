@@ -27,7 +27,7 @@ class MailService extends AbstractService
         $this->mailer->prepareMailProperties(
             $user,
             'Hello!',
-            $mailBlock->renderMail()
+            $mailBlock->getTemplateHtml()
         );
 
         return $this;
