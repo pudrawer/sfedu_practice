@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Core\Blocks;
+
+class FooterBlock extends AbstractBlock
+{
+    protected $childStylesheetList = [
+        'footer.css',
+    ];
+
+    protected $data = [
+        'quickLinks' => [],
+        'pageLinks' => [],
+    ];
+
+    public function renderCommonBlock(): self
+    {
+        require "$this->viewsPath/Components/footer.phtml";
+
+        return $this;
+    }
+}

@@ -1,9 +1,9 @@
 <?php
 /**
- * @var App\Blocks\HeaderBlock $this
+ * @var \App\Core\Blocks\HeaderBlock $this
  */
-/** @var App\Models\Session\Session $session */
-$session = $this->di->get(\App\Models\Session\Session::class);
+/** @var \App\Core\Models\Session\Session $session */
+$session = $this->di->get(\App\Core\Models\Session\Session::class);
 $session->start();
 ?>
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * @var App\Blocks\MailBlock $this
- * @var App\Models\User $user
+ * @var \App\Mail\Blocks\MailBlock $this
+ * @var \App\Account\Models\User $user
  */
 
 ?>
@@ -360,7 +360,7 @@
                                     <td>
                                         <p>Hello, <?= $user->getName() ?></p>
                                         <p>A u forgot about us?</p>
-                                        <p>Here is our site - <a href="<?= \App\Models\Environment::getInstance()->getHost() ?>">site</a></p>
+                                        <p>Here is our site - <a href="<?= \App\Core\Models\Environment::getInstance()->getHost() ?>">site</a></p>
                                         <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                             <tbody>
                                             <tr>

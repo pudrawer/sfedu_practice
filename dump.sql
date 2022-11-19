@@ -35,7 +35,7 @@ CREATE TABLE `car` (
   KEY `car_user_id_fk` (`user_id`),
   CONSTRAINT `car_ibfk_1` FOREIGN KEY (`car_model_id`) REFERENCES `car_model` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `car_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `car` (
 
 LOCK TABLES `car` WRITE;
 /*!40000 ALTER TABLE `car` DISABLE KEYS */;
-INSERT INTO `car` VALUES (1,'vb345v',2022,'54vfc',14,4),(2,'v543bv',2022,'cfv45',15,4);
+INSERT INTO `car` VALUES (1,'vb345v',2022,'54vfc',14,4);
 /*!40000 ALTER TABLE `car` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -58,12 +58,12 @@ DROP TABLE IF EXISTS `car_brand`;
 CREATE TABLE `car_brand` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `country_id` int(11) NOT NULL,
+  `country_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `country_id` (`country_id`),
   CONSTRAINT `car_brand_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=11898 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `car_brand` (
 
 LOCK TABLES `car_brand` WRITE;
 /*!40000 ALTER TABLE `car_brand` DISABLE KEYS */;
-INSERT INTO `car_brand` VALUES (1,'BNW',1),(3,'FORD',3),(5,'MERCEDES',3),(6,'TAYOTA',8),(7,'LADA',7),(8,'RANGE ROVER',11),(9,'SKODA',8),(10,'HONDA',8),(11,'NISSAN',1),(13,'HINDAAY',4);
+INSERT INTO `car_brand` VALUES (1,'BNW',1),(3,'FORD',3),(5,'MERCEDES',3),(6,'TAYOTA',8),(8,'RANGE ROVER',11),(9,'SKODA',8),(10,'HONDA',8),(11,'NISSAN',1),(13,'HINDAAY',4),(11897,' MID-TOWN TRAILERS',NULL);
 /*!40000 ALTER TABLE `car_brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,7 +122,7 @@ CREATE TABLE `car_model` (
   KEY `previous_line_model` (`previous_line_model`),
   CONSTRAINT `car_model_ibfk_3` FOREIGN KEY (`car_line_id`) REFERENCES `car_line` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `car_model_ibfk_4` FOREIGN KEY (`previous_line_model`) REFERENCES `car_model` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,7 +131,7 @@ CREATE TABLE `car_model` (
 
 LOCK TABLES `car_model` WRITE;
 /*!40000 ALTER TABLE `car_model` DISABLE KEYS */;
-INSERT INTO `car_model` VALUES (14,8,'DADAYAAA',2000,14),(15,2,'comp',2023,14),(16,1,'DADA',2020,15),(17,1,'DADANET',2007,16);
+INSERT INTO `car_model` VALUES (14,8,'DADAYAAA',2000,14);
 /*!40000 ALTER TABLE `car_model` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,7 +186,7 @@ CREATE TABLE `factory` (
 
 LOCK TABLES `factory` WRITE;
 /*!40000 ALTER TABLE `factory` DISABLE KEYS */;
-INSERT INTO `factory` VALUES (2,'BMW SPORT',8,1),(3,'LADA NE SPORT',1,7),(4,'TAYOTA SPORT',9,6),(6,'FORD USA',9,3),(7,'SKODA CHO-TO S CHEM-TO',7,9),(8,'RANGE ROVER DA',7,8),(9,'MERCEDES PREMIUM',2,5),(10,'HONDA DRIFT',8,10);
+INSERT INTO `factory` VALUES (2,'BMW SPORT',8,1),(4,'TAYOTA SPORT',9,6),(6,'FORD USA',9,3),(7,'SKODA CHO-TO S CHEM-TO',7,9),(8,'RANGE ROVER DA',7,8),(9,'MERCEDES PREMIUM',2,5),(10,'HONDA DRIFT',8,10);
 /*!40000 ALTER TABLE `factory` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,7 +241,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (4,'abutenko@lachestry.com','$2y$10$j971.73x2Z60AXK5sWhNk.lINGKIIjEKG4KlDoVB/9HmBDFS7E66W','Sasha','Butenko','89885319146');
+INSERT INTO `user` VALUES (1,'dvikulin@lachestry.com','$2y$10$j971.73x2Z60AXK5sWhNk.lINGKIIjEKG4KlDoVB/9HmBDFS7E66W','Dima','Vikulin','89885319145'),(4,'abutenko@lachestry.com','$2y$10$j971.73x2Z60AXK5sWhNk.lINGKIIjEKG4KlDoVB/9HmBDFS7E66W','Sasha','Butenko','89885319146');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -254,4 +254,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-12 20:23:17
+-- Dump completed on 2022-11-19 13:12:53

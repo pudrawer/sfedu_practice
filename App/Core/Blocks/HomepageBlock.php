@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Core\Blocks;
+
+class HomepageBlock extends AbstractBlock
+{
+    protected $childStylesheetList = [
+        'description.css',
+        'faq.css',
+        'faq.css',
+        'vehicle.css',
+    ];
+    protected $fileRender = 'homepage';
+}

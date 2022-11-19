@@ -1,9 +1,9 @@
 <?php
 /**
- * @var App\Blocks\RegistrationBlock $this
+ * @var \App\Account\Blocks\RegistrationBlock $this
  */
 
-$session = $this->di->get(\App\Models\Session\Session::class);
+$session = $this->di->get(\App\Core\Models\Session\Session::class);
 $errMsg = $session->getError()
 ?>
 <div class="registration block">

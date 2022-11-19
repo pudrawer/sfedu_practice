@@ -1,6 +1,6 @@
 <?php
 
-use App\PageHandler;
+use App\Core\PageHandler;
 
 define('APP_ROOT', __DIR__ . '/..');
 
