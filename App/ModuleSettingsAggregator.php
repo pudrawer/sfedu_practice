@@ -7,10 +7,11 @@ class ModuleSettingsAggregator
     public const SETTINGS_WEB_ROUTES     = 'web_routes';
     public const SETTINGS_API_ROUTES     = 'api_routes';
     public const SETTINGS_CONSOLE_ROUTES = 'console_routes';
+    public const SETTINGS_DI_CONTAINERS  = 'di_containers';
 
-    static private $originalModules;
-    static private $originalRoutes;
-    static private $resultRoutes;
+    private static $originalModules;
+    private static $originalRoutes;
+    private static $resultRoutes;
 
     public static function getWebRoutes(): array
     {
@@ -25,6 +26,11 @@ class ModuleSettingsAggregator
     public static function getConsoleRoutes(): array
     {
         return self::parseRoutes(self::SETTINGS_CONSOLE_ROUTES);
+    }
+
+    public static function getDiContainers(): array
+    {
+        return self::parseRoutes(self::SETTINGS_DI_CONTAINERS);
     }
 
     protected static function parseRoutes(string $routesName): array

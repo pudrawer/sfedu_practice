@@ -7,4 +7,7 @@ return [
     \App\ModuleSettingsAggregator::SETTINGS_CONSOLE_ROUTES => [
         'notification:send' => \App\Mail\Controllers\Console\NotificationSendController::class,
     ],
+    \App\ModuleSettingsAggregator::SETTINGS_DI_CONTAINERS => [
+        'mail' => \App\Mail\Models\DiContainer::class,
+    ],
 ];

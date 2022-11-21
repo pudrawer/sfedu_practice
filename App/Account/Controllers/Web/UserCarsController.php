@@ -41,6 +41,7 @@ class UserCarsController extends AbstractController
         }
 
         $user = $this->di->get(User::class);
+        $user->setId($idParam);
 
         $modelList = $this->resource->getUserCarList($user);
         foreach ($modelList as $model) {

@@ -2,35 +2,8 @@
 
 namespace App\Core\Models;
 
-use Laminas\Di\Di;
-
-class DiContainer
+class DiContainer extends AbstractDiContainer
 {
-    private $di;
-    private $instanceManager;
-
-    public function __construct(Di $di = null)
-    {
-        if (!$di) {
-            $di = new Di();
-        }
-
-        $this->di = $di;
-        $this->instanceManager = $di->instanceManager();
-    }
-
-    public function assemble()
-    {
-        $reflection = new \ReflectionClass($this);
-
-        foreach ($reflection->getMethods(\ReflectionMethod::IS_PRIVATE) as $method) {
-            if (strpos($method->getName(), 'assemble') === 0) {
-                $method->setAccessible(true);
-                $method->invoke($this);
-            }
-        }
-    }
-
     private function assembleRouters()
     {
         $this->instanceManager->setParameters(
@@ -99,29 +72,6 @@ class DiContainer
 
     private function assembleServices()
     {
-        $this->instanceManager->setParameters(
-            'App\Brand\Models\Service\BrandCarService',
-            [
-                'di'       => $this->di,
-                'resource' => $this->di->get(\App\Brand\Models\Resource\BrandResource::class),
-            ]
-        );
-
-        $this->instanceManager->setParameters(
-            'App\CarLine\Models\Service\LineCarService',
-            [
-                'di'       => $this->di,
-                'resource' => $this->di->get(\App\CarLine\Models\Resource\LineResource::class),
-            ]
-        );
-
-        $this->instanceManager->setParameters(
-            'App\Mail\Models\Service\MailService',
-            [
-                'di' => $this->di,
-            ]
-        );
-
         $this->instanceManager->setParameters(
             'App\Core\Models\Service\VehicleApiService',
             [

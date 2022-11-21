@@ -15,6 +15,7 @@ use App\Core\Exception\SelectionException;
 use App\Core\Exception\UserApiException;
 use App\Core\Models\DiContainer;
 use App\Core\Models\Logger;
+use App\ModuleSettingsAggregator;
 use Laminas\Di\Di;
 use Laminas\Di\Exception\RuntimeException;
 
@@ -71,6 +72,16 @@ class PageHandler
             $controller = $this->di->get(WrongController::class);
             $controller->execute();
             $logger->putWarning($e->getMessage());
+        }
+    }
+
+    protected function prepareDi()
+    {
+        $diContainers = ModuleSettingsAggregator::getDiContainers();
+
+        foreach ($diContainers as $diContainerClass) {
+            $dic = $this->di->get($diContainerClass, ['di' => $this->di]);
+            $dic->assemble();
         }
     }
 }

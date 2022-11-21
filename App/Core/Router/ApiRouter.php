@@ -13,7 +13,7 @@ class ApiRouter extends AbstractRouter
 
     public function chooseController(string $path): ?ControllerInterface
     {
-        $path = rtrim($path, '/');
+        $path = trim($path, '/');
 
         $paramPos = strpos($path, '/');
         $paramList = [];
@@ -23,10 +23,7 @@ class ApiRouter extends AbstractRouter
 
         $controllerList = ModuleSettingsAggregator::getApiRoutes();
 
-        $controller =
-            strpos($path, '/') !== false
-                ? '/' . explode('/', $path)[self::CONTROLLER_NAME]
-                : "/$path";
+        $controller = explode('/', $path)[self::CONTROLLER_NAME];
 
         $controller = $controllerList[$controller] ?? null;
         if (class_exists($controller)) {

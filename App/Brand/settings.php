@@ -7,6 +7,9 @@ return [
         '/carBrandList'   => \App\Brand\Controllers\Web\CarBrandListController::class,
     ],
     \App\ModuleSettingsAggregator::SETTINGS_API_ROUTES => [
-        '/brands' => \App\Brand\Controllers\Api\BrandsController::class,
-    ]
+        'brands' => \App\Brand\Controllers\Api\BrandsController::class,
+    ],
+    \App\ModuleSettingsAggregator::SETTINGS_DI_CONTAINERS => [
+        'brand' => \App\Brand\Models\DiContainer::class,
+    ],
 ];
