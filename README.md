@@ -1,5 +1,9 @@
 # 7 - MVC
 
+# Collaborators
+1. Butenko Alexander Sergeevich (Back-end)
+2. Klyoc Daniil Yourievich (Front-end)
+
 ## About task
 Creation of an MVC application that implements a database of the form: 
 1. Car (make, model, country, series, year of manufacture) - this does not mean a specific car (which belongs to someone), but in general a make-model. The series refers to some kind of car line (for example, Audi A4 1st series, Audi A4 2nd series). And accordingly, in the model of the next series there must be a foreign key to the previous one.
